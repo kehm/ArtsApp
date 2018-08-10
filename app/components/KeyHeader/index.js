@@ -1,11 +1,15 @@
 import React from 'react';
-import { View } from 'react-native';
-import localStyles  from './styles.js';
+import { View, Text } from 'react-native';
+import styles  from './styles.js';
 
 class KeyHeader extends React.Component {
 
   render() {
-    return (<View/>);
+    return (
+      <View style={styles.container}>
+        <Text>KeyHeader</Text>
+      </View>
+    );
   }
 }
 
