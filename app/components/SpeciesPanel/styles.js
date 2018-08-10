@@ -2,10 +2,25 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    borderColor: 'orange',
-    borderWidth: 2,
+    padding: 10,
+    // borderColor: 'orange',
+    // borderWidth: 2,
+    alignItems: 'stretch',
+  },
+  panelHeader: {
+    // borderColor: 'red',
+    // borderWidth: 2,
+    // height: 40,
+    flexDirection: 'row',
     alignItems: 'center',
-    height: 120,
-    justifyContent: 'center',
+    // flex: auto,
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    alignSelf: 'flex-start',
+  },
+  headerButton: {
+    alignSelf: 'flex-end',
   }
+
 });
