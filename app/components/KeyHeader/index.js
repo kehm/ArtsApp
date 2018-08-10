@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import styles  from './styles.js';
 
 type Props = {
@@ -14,8 +14,15 @@ class KeyHeader extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        <Button title={closeTitle} onPress={onClose} />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={onClose}
+        >
+          <Text style={styles.button}>{closeTitle}</Text>
+        </TouchableOpacity>
       </View>
     );
   }
