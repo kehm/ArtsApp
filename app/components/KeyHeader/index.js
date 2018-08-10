@@ -1,20 +1,21 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import styles  from './styles.js';
 
 type Props = {
   title: String,
-  closeButtonTitle: String,
+  closeTitle: String,
   onClose: String,
 }
 class KeyHeader extends React.Component<Props> {
 
   render() {
-    const { title, closeButtonTitle, onClose } = this.props;
-    
+    const { title, closeTitle, onClose } = this.props;
+
     return (
       <View style={styles.container}>
-        <Text>KeyHeader</Text>
+        <Text style={styles.title}>{title}</Text>
+        <Button title={closeTitle} onPress={onClose} />
       </View>
     );
   }
