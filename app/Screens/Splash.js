@@ -92,9 +92,7 @@ class Splash extends Component {
   };
 
   startUp() {
-    setTimeout(() => {
-      Actions.Frontpage();
-    }, 2000);
+    Actions.Frontpage();
   };
 /**
  * Test if the app has been used before, if not, downloads the list of available keys.
