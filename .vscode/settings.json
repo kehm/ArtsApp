@@ -1,0 +1,9 @@
+{
+  "editor.insertSpaces": true,
+  "eslint.enable": true,
+	"eslint.autoFixOnSave": true,
+  	// For flow
+	"flow.runOnAllFiles": true,
+	"flow.useNPMPackagedFlow": true,
+	"javascript.validate.enable": false
+}
