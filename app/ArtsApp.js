@@ -17,6 +17,7 @@ import * as MenuAction from './actions/MenuAction';
 import MenuContent from './components/MenuContent';
 import Frontpage from './Screens/Frontpage';
 import Key from './Screens/Key';
+import Key2 from './Screens/Key2';
 import Observation from './Screens/Observation';
 import Species from './Screens/Species';
 import Splash from './Screens/Splash';
@@ -66,7 +67,7 @@ const scenes = Actions.create(
       <Scene
         key="Key"
         panHandlers={null}
-        component={Key}
+        component={Key2}
       />
       <Scene
         key="ValueInfo"
