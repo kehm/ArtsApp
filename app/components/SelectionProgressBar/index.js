@@ -1,12 +1,26 @@
 import React from 'react';
+import { View } from 'react-native';
 
-import localStyles  from './styles.js';
+import styles  from './styles.js';
 
+type Props = {
+  totalCount: Number,
+  matchingCount: Number,
+  notInRangeCount: Number,
+};
 
-class SelectionProgressBar extends React.Component {
+class SelectionProgressBar extends React.Component<Props> {
 
-  render = () => {
-    return null;
+  render() {
+    const { totalCount, matchingCount, notInRangeCount } = this.props;
+    const eliminatedCount = totalCount - notInRangeCount - matchingCount;
+    return (
+      <View style={styles.bar}>
+        <View style={[styles.matching, { flex: matchingCount }]} />
+        <View style={[styles.notInRange, { flex: notInRangeCount }]} />
+        <View style={[styles.eliminated, { flex: eliminatedCount }]} />
+      </View>
+    );
   }
 
 }

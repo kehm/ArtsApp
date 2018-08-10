@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import styles  from './styles.js';
-import SpeciesIconButton from '../SpeciesIconButton';
+import SpeciesImageButton from '../SpeciesImageButton';
 
 type Props = {
   species: Object,
@@ -17,7 +17,7 @@ class SpeciesPanelElement extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <SpeciesIconButton imagePath={imagePath} onPress={onPress} />
+        <SpeciesImageButton imagePath={imagePath} onPress={onPress} />
         <Text>Cystopteris</Text>
         <Text>Sudetlok</Text>
       </View>

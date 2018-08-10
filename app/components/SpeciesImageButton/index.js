@@ -1,7 +1,7 @@
 import React from 'react';
 
 import localStyles  from './styles.js';
-import IconButton from '../IconButton';
+import ImageButton from '../ImageButton';
 import { mapToImageSource } from '../../utilities/image';
 
 type Props = {
@@ -9,15 +9,15 @@ type Props = {
   onPress: Function,
 };
 
-class SpeciesIconButton extends React.Component<Props> {
+class SpeciesImageButton extends React.Component<Props> {
   render() {
     const { imagePath, onPress } = this.props;
     const source = mapToImageSource(imagePath);
 
     return (
-      <IconButton source={source} onPress={onPress} />
+      <ImageButton source={source} onPress={onPress} />
     );
   }
 }
 
-export default SpeciesIconButton;
+export default SpeciesImageButton;
