@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 
 import styles  from './styles.js';
+import IconButton from '../IconButton';
 import SpeciesPanelElement from '../SpeciesPanelElement';
 import SelectionProgressBar from '../SelectionProgressBar';
 
@@ -17,7 +18,7 @@ class SpeciesPanel extends React.Component<Props> {
       <View style={styles.container}>
         <View style={styles.panelHeader}>
           <Text>45 mulige arter, 14 i nærheten av 49 totalt</Text>
-          <
+          {/* <IconButton /> */}
         </View>
         <SpeciesPanelElement imagePath={imagePath} onPress={this.handleSpeciesOnPress} />
         <SelectionProgressBar totalCount={49} matchingCount={22} notInRangeCount={7} />
