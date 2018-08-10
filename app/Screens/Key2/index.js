@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { View } from 'react-native';
 
 import { Actions } from 'react-native-router-flux';
 
@@ -20,7 +20,7 @@ class Key2 extends React.Component {
   render() {
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <KeyHeader
           title="Nøkler"
           closeTitle="Lukk"
@@ -30,7 +30,7 @@ class Key2 extends React.Component {
         <TraitList />
         <SpeciesPanel />
         <TraitDialog />
-      </SafeAreaView>
+      </View>
     );
 
   }
