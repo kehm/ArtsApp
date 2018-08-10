@@ -16,6 +16,7 @@ class TraitElement extends React.Component<Props> {
     return (
       <View style={styles.container}>
         <Text>{title}</Text>
+        <Text>{included}/{total}</Text>
       </View>
     );
   }

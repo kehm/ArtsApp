@@ -5,8 +5,11 @@ export default StyleSheet.create({
     backgroundColor: 'yellow',
     borderColor: '#444',
     borderWidth: 1,
-    borderRadius: 4,
-    padding: 10,
+    borderRadius: 10,
+    padding: 16,
     margin: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   }
 });

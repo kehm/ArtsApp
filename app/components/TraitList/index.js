@@ -24,6 +24,8 @@ class TraitList extends React.Component {
       >
         <TraitElement
           title={item.traitText}
+          total={item.values.length}
+          included={item.values.length}
         />
       </TouchableOpacity>
     );
