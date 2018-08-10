@@ -13,11 +13,24 @@ import styles  from './styles.js';
 
 class Key2 extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      traits: [
+        { id:1, trait: 'Habitat'},
+        { id:2, trait: 'Sporer'},
+        { id:3, trait: 'Fikenblad'},
+        { id:4, trait: 'Hostesaft'},
+      ],
+    };
+  }
+
   onClose = () => {
     Actions.pop();
   }
 
   render() {
+    const { traits } = this.state;
 
     return (
       <View style={styles.container}>
@@ -27,7 +40,9 @@ class Key2 extends React.Component {
           onClose={this.onClose}
         />
         <TraitPanel />
-        <TraitList />
+        <TraitList
+          data={traits}
+        />
         <SpeciesPanel />
         <TraitDialog />
       </View>
