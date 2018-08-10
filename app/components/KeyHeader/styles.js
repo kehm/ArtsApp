@@ -1,13 +1,15 @@
 import { StyleSheet } from 'react-native';
 
+const statusbarHeight = 28;
+
 export default StyleSheet.create({
   container: {
-    height: 70,
-    paddingTop: 22,
+    height: 85,
+    paddingTop: statusbarHeight,
     alignItems: 'flex-end',
   },
   titleContainer: {
-    paddingTop: 22,
+    paddingTop: statusbarHeight,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
