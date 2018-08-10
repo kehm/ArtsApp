@@ -1,12 +1,24 @@
 import React from 'react';
+import { View, Text } from 'react-native';
 
-import localStyles  from './styles.js';
+import styles  from './styles.js';
 
+type Props = {
+  title: String,
+  total: Number,
+  included: Number,
+}
 
-class TraitElement extends React.Component {
+class TraitElement extends React.Component<Props> {
 
-  render = () => {
-    return null;
+  render() {
+    const { title, total, included } = this.props;
+    return (
+      <View style={styles.container}>
+        <Text>{title}</Text>
+        <Text>{included}/{total}</Text>
+      </View>
+    );
   }
 
 }
