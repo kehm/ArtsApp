@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, TouchableOpacity, View, Text } from 'react-native';
 
 import TraitElement from '../TraitElement';
 
@@ -11,13 +11,21 @@ type Props = {
 }
 class TraitList extends React.Component {
 
+  onPress = (item) => {
+    const { onSelect } = this.props;
+    onSelect && onSelect(item);
+  }
+
   renderItem = ({ item }) => {
     return (
-      <View style={styles.row}>
+      <TouchableOpacity
+        style={styles.row}
+        onPress={() => this.onPress(item)}
+      >
         <TraitElement
-          title={item.trait}
+          title={item.traitText}
         />
-      </View>
+      </TouchableOpacity>
     );
   }
 
@@ -29,7 +37,7 @@ class TraitList extends React.Component {
           data={data}
           extraData={this.props}
           renderItem={this.renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.trait_id}
         />
       </View>
     );
