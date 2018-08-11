@@ -12,6 +12,8 @@ type State = {
   species: Array,
   speciesImages: Map,
   isCollapsed: Boolean,
+  totalSpecies: Number,
+  foundSpecies: Number,
   onToggleClick: Function,
   onSpeciesClick: Function,
 }
@@ -44,12 +46,12 @@ class SpeciesPanel extends React.Component<Props,State> {
   }
 
   render() {
-    const { isCollapsed, species, speciesImages } = this.props;
+    const { isCollapsed, species, speciesImages, totalSpecies, foundSpecies } = this.props;
 
     return (
       <View style={styles.container}>
         <View style={styles.panelHeader}>
-          <Text>45 mulige arter, 14 i nærheten av 49 totalt</Text>
+          <Text>{foundSpecies + ' mulige arter, XX i nærheten av ' + totalSpecies + ' totalt'}</Text>
           {isCollapsed &&
           <IconButton icon='chevron-small-up' onPress={this.handleToggleCollapsed} />
           }
@@ -65,7 +67,11 @@ class SpeciesPanel extends React.Component<Props,State> {
         />
         }
         <View style={styles.progress}>
-          <SelectionProgressBar totalCount={49} matchingCount={13} notInRangeCount={7} />
+          <SelectionProgressBar
+            totalCount={totalSpecies}
+            matchingCount={foundSpecies}
+            notInRangeCount={0}
+          />
         </View>
       </View>
     );
