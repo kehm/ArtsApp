@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, LayoutAnimation } from 'react-native';
 
 import {connect} from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -16,18 +16,43 @@ type Props = {
   title: String,
 }
 
-class Key2 extends React.Component<Props> {
+type State = {
+  isSpeciesPanelToggled: Boolean
+}
+
+class Key2 extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = { isSpeciesPanelToggled: true };
+  }
+
+  setStateAnimated(callback: (state: State) => void) {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    this.setState(callback);
+  }
 
   onClose = () => {
     Actions.pop();
   }
 
-  onTraitSelect = (trait) => {
+  toggleSpeciesPanel = () => {
+    this.setStateAnimated((prevState) => ({
+      ...prevState,
+      isSpeciesPanelToggled: !prevState.isSpeciesPanelToggled
+    }));
+  }
+
+  onSpeciesSelected = (species) => {
+    console.log(species);
+  }
+
+  onTraitSelected = (trait) => {
     console.log(trait);
   }
 
   render() {
-    const { title, traits } = this.props;
+    const { title, traits, species, speciesImages } = this.props;
+    const { isSpeciesPanelToggled } = this.state;
 
     return (
       <View style={styles.container}>
@@ -39,9 +64,15 @@ class Key2 extends React.Component<Props> {
         <TraitPanel />
         <TraitList
           data={traits}
-          onSelect={this.onTraitSelect}
+          onSelect={this.onTraitSelected}
         />
-        <SpeciesPanel />
+        <SpeciesPanel
+          species={species}
+          speciesImages={speciesImages}
+          isCollapsed={isSpeciesPanelToggled}
+          onToggleClick={this.toggleSpeciesPanel}
+          onSpeciesClick={this.onSpeciesSelected}
+        />
         <TraitDialog />
       </View>
     );
@@ -51,8 +82,10 @@ class Key2 extends React.Component<Props> {
 
 function mapStateToProps({ key }) {
   return ({
+    species: key.fullSpList,
     title: key.chosenKeyTitle,
-    traits: key.traitValueCombo
+    traits: key.traitValueCombo,
+    speciesImages: key.spesiecImageList
   });
 };
 

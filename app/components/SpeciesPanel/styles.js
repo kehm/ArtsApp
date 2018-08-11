@@ -2,25 +2,28 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    padding: 10,
-    // borderColor: 'orange',
-    // borderWidth: 2,
     alignItems: 'stretch',
   },
   panelHeader: {
-    // borderColor: 'red',
-    // borderWidth: 2,
-    // height: 40,
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingRight: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    // flex: auto,
     justifyContent: 'space-between',
   },
   headerTitle: {
+    padding: 10,
     alignSelf: 'flex-start',
   },
   headerButton: {
+    padding: 10,
     alignSelf: 'flex-end',
+  },
+  progress: {
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: 'white',
   }
-
 });

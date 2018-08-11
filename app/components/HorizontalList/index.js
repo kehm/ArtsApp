@@ -6,12 +6,13 @@ import styles  from './styles.js';
 type Props =  {
   data: Object,
   renderItem: Function,
+  keyExtractor: Function,
 }
 
 class HorizontalList extends React.Component<Props> {
 
   render() {
-    const { data, renderItem } = this.props;
+    const { data, renderItem, keyExtractor } = this.props;
     return (
       <FlatList
         style={styles.list}
@@ -19,6 +20,7 @@ class HorizontalList extends React.Component<Props> {
         data={data}
         extraData={this.props}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
       />
     );
   }
