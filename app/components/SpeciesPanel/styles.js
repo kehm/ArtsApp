@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     alignItems: 'stretch',
+    borderTopColor: '#CCC',
+    borderTopWidth: 1,
   },
   panelHeader: {
     paddingLeft: 10,

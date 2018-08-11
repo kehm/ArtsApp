@@ -6,6 +6,7 @@ export default StyleSheet.create({
     // borderWidth: 2,
     alignItems: 'center',
     height: 120,
+    width: 100,
     paddingLeft: 10,
     justifyContent: 'center',
   },
