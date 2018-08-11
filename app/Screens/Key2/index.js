@@ -97,12 +97,19 @@ class Key2 extends React.Component<Props, State> {
 
   render() {
     const { title, traits, species, speciesImages, valueImages,
-      chosenValues, totalSpecies, foundSpecies } = this.props;
+      chosenValues, totalSpecies, foundSpecies, chosenTraits } = this.props;
+
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
     // Find selected value in selected trait (if dialog is visible)
     const selectedValue = selectedTrait ?
       selectedTrait.values.find(v => chosenValues.indexOf(v.value_id) > -1) : null;
+
+    // Find used traits
+    const unusedTraits = traits.filter(trait => chosenTraits.indexOf(trait.trait_id) === -1);
+
+    // Find unused traits
+    const usedTraits = traits.filter(trait => chosenTraits.indexOf(trait.trait_id) !== -1);
 
     return (
       <View style={styles.container}>
@@ -111,9 +118,15 @@ class Key2 extends React.Component<Props, State> {
           closeTitle="Lukk"
           onClose={this.onClose}
         />
-        <TraitPanel />
+        <TraitPanel
+          traits={usedTraits}
+          chosenValues={chosenValues}
+          onSelect={this.onTraitSelected}
+          emptyHeader='Egenskaper ved arter'
+          emptyDescription='Du har ikke valgt noen egenskaper enda.'
+        />
         <TraitList
-          data={traits}
+          traits={unusedTraits}
           onSelect={this.onTraitSelected}
         />
         <SpeciesPanel

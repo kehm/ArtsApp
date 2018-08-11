@@ -6,9 +6,10 @@ import TraitElement from '../TraitElement';
 import styles  from './styles.js';
 
 type Props = {
-  data: Array,
+  traits: Array,
   onSelect: Function
 }
+
 class TraitList extends React.Component {
 
   onPress = (item) => {
@@ -32,11 +33,11 @@ class TraitList extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { traits } = this.props;
     return (
       <View style={styles.container}>
         <FlatList
-          data={data}
+          data={traits}
           extraData={this.props}
           renderItem={this.renderItem}
           keyExtractor={(item) => item.trait_id}

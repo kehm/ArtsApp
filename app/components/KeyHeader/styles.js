@@ -7,6 +7,8 @@ export default StyleSheet.create({
     height: 85,
     paddingTop: statusbarHeight,
     alignItems: 'flex-end',
+    borderBottomColor: '#CCC',
+    borderBottomWidth: 1,
   },
   titleContainer: {
     paddingTop: statusbarHeight,
