@@ -37,7 +37,7 @@ class TraitDialog extends React.Component<Props> {
     if (imagePaths) imagePath = imagePaths[0];
 
     const selected = selectedValue && selectedValue.value_id === item.value_id;
-    const isActive = selectedValue || activeValues.length === 0 || activeValues.indexOf(item.value_id) > -1;
+    const isActive = activeValues.length === 0 || activeValues.indexOf(item.value_id) > -1;
 
     return (
       <TraitValueButton

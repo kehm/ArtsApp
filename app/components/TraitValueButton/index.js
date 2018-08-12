@@ -35,7 +35,7 @@ class TraitValueButton extends React.Component {
 
     const containerStyle = [styles.container];
     if (selected) containerStyle.push(styles.selected);
-    if (!isActive) containerStyle.push(styles.inActive);
+    if (!isActive) containerStyle.push(styles.inactive);
 
     return (
       <TouchableOpacity

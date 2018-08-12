@@ -8,12 +8,15 @@ export default StyleSheet.create({
     marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: 'transparent',
   },
   selected: {
     backgroundColor: '#00FA1222',
     borderColor: '#00FA1288',
   },
-  inActive: {
+  inactive: {
     backgroundColor: '#FF000022',
     borderColor: '#FF000044',
     opacity: 0.5,
