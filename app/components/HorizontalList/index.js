@@ -21,6 +21,7 @@ class HorizontalList extends React.Component<Props> {
         extraData={this.props}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        showsHorizontalScrollIndicator={false}
       />
     );
   }

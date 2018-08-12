@@ -122,6 +122,7 @@ class Key2 extends React.Component<Props, State> {
           traits={usedTraits}
           chosenValues={chosenValues}
           onSelect={this.onTraitSelected}
+          valueImages={valueImages}
           emptyHeader='Egenskaper ved arter'
           emptyDescription='Du har ikke valgt noen egenskaper enda.'
         />

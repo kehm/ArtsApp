@@ -5,17 +5,21 @@ import styles  from './styles.js';
 
 type Props = {
   source: ImageSourcePropType,
+  borderColor: String,
   onPress: Function,
 };
 
 class ImageButton extends React.Component<Props> {
 
   render() {
-    const { source, onPress } = this.props;
+    const { source, borderColor, onPress } = this.props;
+
+    const borderStyle = { borderColor: (borderColor ? borderColor : '#CCC') };
+
     return (
       <TouchableOpacity onPress={onPress}>
         {source && source.uri &&
-          <Image source={source} style={styles.image}/>
+          <Image source={source} style={[styles.image, borderStyle]}/>
         }
         {(!source || !source.uri) &&
           <View style={styles.image}/>

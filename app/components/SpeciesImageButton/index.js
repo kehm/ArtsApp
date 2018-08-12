@@ -15,7 +15,11 @@ class SpeciesImageButton extends React.Component<Props> {
     const source = mapToImageSource(imagePath);
 
     return (
-      <ImageButton source={source} onPress={onPress} />
+      <ImageButton
+        source={source}
+        borderColor={'#0706'}
+        onPress={onPress}
+      />
     );
   }
 }

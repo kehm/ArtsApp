@@ -7,7 +7,10 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   selected: {
-    backgroundColor: '#EE00FF',
+    backgroundColor: '#00FA1222',
+    borderRadius: 8,
+    borderColor: '#00FA1288',
+    borderWidth: 1,
   },
   image: {
     height: 40,

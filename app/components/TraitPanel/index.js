@@ -10,6 +10,7 @@ type Props = {
   traits: Array,
   traitImages: Map,
   chosenValues: Array,
+  valueImages: Map,
   onSelect: Function,
   emptyHeader: String,
   emptyDescription: String,
@@ -23,10 +24,13 @@ class TraitPanel extends React.Component<Props> {
   }
 
   renderItem = (item) => {
-    const { chosenValues } = this.props;
+    const { valueImages, chosenValues } = this.props;
 
-    const imagePath = null;
     const selectedValue = item.values.find(val => chosenValues.indexOf(val.value_id) > -1);
+
+    const imagePaths = valueImages.get(selectedValue.value_id);
+    let imagePath = null;
+    if (imagePaths) imagePath = imagePaths[0];
 
     return (
       <TraitPanelElement
