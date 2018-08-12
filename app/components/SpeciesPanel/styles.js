@@ -14,6 +14,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  emptyDescription: {
+    padding: 10,
+    height: 44,
+    fontSize: 12,
+  },
   headerTitle: {
     padding: 10,
     alignSelf: 'flex-start',

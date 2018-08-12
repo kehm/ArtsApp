@@ -2,20 +2,19 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    // borderColor: 'red',
-    // borderWidth: 2,
     alignItems: 'center',
     height: 120,
-    width: 100,
-    paddingLeft: 10,
+    width: 120,
+    paddingLeft: 5,
+    marginLeft: 5,
     justifyContent: 'center',
   },
   name: {
-    maxWidth: 90,
+    maxWidth: 120,
     paddingTop: 2,
   },
   latinName: {
-    maxWidth: 100,
+    maxWidth: 120,
     paddingTop: 2,
     fontSize: 11,
   }

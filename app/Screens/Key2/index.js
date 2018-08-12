@@ -118,17 +118,19 @@ class Key2 extends React.Component<Props, State> {
           closeTitle="Lukk"
           onClose={this.onClose}
         />
-        <TraitPanel
-          traits={usedTraits}
-          chosenValues={chosenValues}
-          onSelect={this.onTraitSelected}
-          valueImages={valueImages}
-          emptyHeader='Egenskaper ved arter'
-          emptyDescription='Du har ikke valgt noen egenskaper enda.'
-        />
         <TraitList
           traits={unusedTraits}
           onSelect={this.onTraitSelected}
+          HeaderComponent={() => (
+            <TraitPanel
+              traits={usedTraits}
+              chosenValues={chosenValues}
+              onSelect={this.onTraitSelected}
+              valueImages={valueImages}
+              emptyHeader='Egenskaper ved arter'
+              emptyDescription='Du har ikke valgt noen egenskaper enda.'
+            />
+          )}
         />
         <SpeciesPanel
           species={species}
@@ -138,6 +140,7 @@ class Key2 extends React.Component<Props, State> {
           onSpeciesClick={this.onSpeciesSelected}
           totalSpecies={totalSpecies}
           foundSpecies={foundSpecies}
+          emptyDescription='Ingen arter funnet med valgte egenskaper'
         />
         <TraitDialog
           isVisible={isTraitDialogVisible}

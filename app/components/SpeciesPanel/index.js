@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/Entypo';
 
 import styles  from './styles.js';
-import IconButton from '../IconButton';
 import HorizontalList from '../HorizontalList';
 import SpeciesPanelElement from '../SpeciesPanelElement';
 import SelectionProgressBar from '../SelectionProgressBar';
@@ -14,6 +14,7 @@ type State = {
   isCollapsed: Boolean,
   totalSpecies: Number,
   foundSpecies: Number,
+  emptyDescription: String,
   onToggleClick: Function,
   onSpeciesClick: Function,
 }
@@ -46,25 +47,32 @@ class SpeciesPanel extends React.Component<Props,State> {
   }
 
   render() {
-    const { isCollapsed, species, speciesImages, totalSpecies, foundSpecies } = this.props;
+    const { isCollapsed, species, emptyDescription, speciesImages,
+      totalSpecies, foundSpecies } = this.props;
 
     return (
       <View style={styles.container}>
-        <View style={styles.panelHeader}>
+        <TouchableOpacity
+          style={styles.panelHeader}
+          onPress={this.handleToggleCollapsed}
+        >
           <Text>{foundSpecies + ' mulige arter, XX i nærheten av ' + totalSpecies + ' totalt'}</Text>
           {isCollapsed &&
-          <IconButton icon='chevron-small-up' onPress={this.handleToggleCollapsed} />
+          <Icon name='chevron-small-up' size={30} />
           }
           {!isCollapsed &&
-          <IconButton icon='chevron-small-down' onPress={this.handleToggleCollapsed} />
+          <Icon name='chevron-small-down' size={30} />
           }
-        </View>
-        {!isCollapsed &&
+        </TouchableOpacity>
+        {!isCollapsed && species.length > 0 &&
         <HorizontalList
           data={species}
           keyExtractor={(item) => item.species_id}
           renderItem={({item}) => this.renderItem(item)}
         />
+        }
+        {!isCollapsed && species.length === 0 &&
+          <Text style={styles.emptyDescription}>{emptyDescription}</Text>
         }
         <View style={styles.progress}>
           <SelectionProgressBar

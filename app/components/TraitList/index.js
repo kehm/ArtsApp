@@ -7,6 +7,7 @@ import styles  from './styles.js';
 
 type Props = {
   traits: Array,
+  HeaderComponent: Component,
   onSelect: Function
 }
 
@@ -33,11 +34,12 @@ class TraitList extends React.Component {
   }
 
   render() {
-    const { traits } = this.props;
+    const { traits, HeaderComponent } = this.props;
     return (
       <View style={styles.container}>
         <FlatList
           data={traits}
+          ListHeaderComponent={HeaderComponent}
           extraData={this.props}
           renderItem={this.renderItem}
           keyExtractor={(item) => item.trait_id}
