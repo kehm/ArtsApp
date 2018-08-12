@@ -8,6 +8,9 @@ export default StyleSheet.create({
     height: 8,
     backgroundColor: '#0002',
   },
+  notFiltered: {
+    backgroundColor: '#CCC',
+  },
   matching: {
     backgroundColor: Colors.AAIconGreen,
   },

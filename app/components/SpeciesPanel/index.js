@@ -56,12 +56,17 @@ class SpeciesPanel extends React.Component<Props,State> {
           style={styles.panelHeader}
           onPress={this.handleToggleCollapsed}
         >
-          <Text>{foundSpecies + ' mulige arter, XX i nærheten av ' + totalSpecies + ' totalt'}</Text>
+          {foundSpecies === 0 &&
+            <Text>{totalSpecies + ' arter totalt'}</Text>
+          }
+          {foundSpecies > 0 &&
+            <Text>{foundSpecies + ' mulige arter, XX i nærheten av ' + totalSpecies + ' totalt'}</Text>
+          }
           {isCollapsed &&
-          <Icon name='chevron-small-up' size={30} />
+            <Icon name='chevron-small-up' size={30} />
           }
           {!isCollapsed &&
-          <Icon name='chevron-small-down' size={30} />
+            <Icon name='chevron-small-down' size={30} />
           }
         </TouchableOpacity>
         {!isCollapsed && species.length > 0 &&
