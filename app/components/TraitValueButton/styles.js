@@ -11,9 +11,12 @@ export default StyleSheet.create({
   },
   selected: {
     backgroundColor: '#00FA1222',
-    borderRadius: 8,
     borderColor: '#00FA1288',
-    borderWidth: 1,
+  },
+  inActive: {
+    backgroundColor: '#FF000022',
+    borderColor: '#FF000044',
+    opacity: 0.5,
   },
   image: {
     height: 40,

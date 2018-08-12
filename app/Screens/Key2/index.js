@@ -98,7 +98,7 @@ class Key2 extends React.Component<Props, State> {
   render() {
     const { title, traits, species, speciesImages, valueImages,
       chosenValues, totalSpecies, foundSpecies, chosenTraits,
-      activeTraits } = this.props;
+      activeTraits, activeValues } = this.props;
 
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
@@ -123,6 +123,7 @@ class Key2 extends React.Component<Props, State> {
         <TraitList
           traits={unusedTraits}
           activeTraits={activeTraits}
+          activeValues={activeValues}
           onSelect={this.onTraitSelected}
           HeaderComponent={() => (
             <TraitPanel
@@ -153,6 +154,7 @@ class Key2 extends React.Component<Props, State> {
           traitValues={selectedTrait ? selectedTrait.values : []}
           selectedValue={selectedValue}
           valueImages={valueImages}
+          activeValues={activeValues}
         />
       </View>
     );
@@ -174,6 +176,7 @@ function mapStateToProps({ key }) {
     chosenValues: key.chosenValues,
     chosenTraits: key.chosenTraits,
     activeTraits: isUnfiltered ? key.traitValueCombo : key.relevant,
+    activeValues: key.spValues,
   });
 };
 

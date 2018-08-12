@@ -10,6 +10,7 @@ type Props = {
   title: String,
   traitValues: Array,
   selectedValue: Object,
+  activeValues: Array,
   valueImages: Map,
   onValueSelected: Function,
   onCancelDialog: Function,
@@ -28,16 +29,22 @@ class TraitDialog extends React.Component<Props> {
   }
 
   renderItem = (item) => {
-    const { valueImages, onValueSelected, selectedValue } = this.props;
+    const { valueImages, onValueSelected, selectedValue, activeValues } = this.props;
+
+    // Path to image
     const imagePaths = valueImages.get(item.value_id);
     let imagePath = null;
     if (imagePaths) imagePath = imagePaths[0];
 
+    const selected = selectedValue && selectedValue.value_id === item.value_id;
+    const isActive = selectedValue || activeValues.length === 0 || activeValues.indexOf(item.value_id) > -1;
+
     return (
       <TraitValueButton
         value={item}
+        isActive={isActive}
         imagePath={imagePath}
-        selected={selectedValue && selectedValue.value_id === item.value_id}
+        selected={selected}
         onPress={() => this.onValueSelected(item)}
       />
     );

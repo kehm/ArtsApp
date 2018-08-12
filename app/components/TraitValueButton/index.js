@@ -12,6 +12,7 @@ type Props = {
   value: Object,
   imagePath: String,
   selected: Boolean,
+  isActive: Boolean,
   onPress: Function,
   onInfo: Function,
 }
@@ -23,17 +24,23 @@ class TraitValueButton extends React.Component {
     onInfo && onInfo(value);
   }
 
+  onClick = () => {
+    const { value, isActive, onPress } = this.props;
+    isActive && onPress && onPress(value);
+  }
+
   render() {
-    const { value, selected, imagePath, onPress } = this.props;
+    const { value, selected, imagePath, isActive } = this.props;
     const source = mapToImageSource(imagePath);
 
     const containerStyle = [styles.container];
-    if(selected) containerStyle.push(styles.selected);
+    if (selected) containerStyle.push(styles.selected);
+    if (!isActive) containerStyle.push(styles.inActive);
 
     return (
       <TouchableOpacity
         style={containerStyle}
-        onPress={() => onPress(value)}
+        onPress={this.onClick}
       >
         {source && source.uri &&
           <Image source={source} style={styles.image}/>

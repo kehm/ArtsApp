@@ -6,6 +6,7 @@ import styles  from './styles.js';
 type Props = {
   title: String,
   total: Number,
+  activeValues: Array,
   isActive: Boolean,
   included: Number,
 }
