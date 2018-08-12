@@ -3,6 +3,9 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     padding: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -27,9 +30,10 @@ export default StyleSheet.create({
     flex: 1,
   },
   title: {
-
+    flex: 1,
+    paddingRight: 5,
   },
   icon: {
-    color: '#333'
+    color: '#AAA'
   }
 });

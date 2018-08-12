@@ -15,8 +15,19 @@ class TraitElement extends React.Component<Props> {
     const { title, total, included } = this.props;
     return (
       <View style={styles.container}>
-        <Text>{title}</Text>
-        <Text>{included}/{total}</Text>
+        <Text
+          style={styles.text}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {title}
+        </Text>
+        <Text
+          style={styles.numbers}
+          numberOfLines={1}
+        >
+          {included}/{total}
+        </Text>
       </View>
     );
   }

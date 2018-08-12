@@ -25,16 +25,17 @@ export default StyleSheet.create({
     elevation: 2,
   },
   dialogHeaderContainer: {
-    height: 44,
+    padding: 15,
     alignItems: 'center',
     justifyContent: 'center',
+    borderBottomColor: '#CCC',
+    borderBottomWidth: 1,
   },
   dialogHeader: {
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   valuesContainer: {
     flex: 1,
-    padding: 10,
-    paddingBottom: 20,
   }
 });

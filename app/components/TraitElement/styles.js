@@ -13,5 +13,12 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  text: {
+    flex: 1,
+    paddingRight: 5,
+  },
+  numbers: {
+
   }
 });
