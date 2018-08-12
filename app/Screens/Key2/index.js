@@ -97,7 +97,8 @@ class Key2 extends React.Component<Props, State> {
 
   render() {
     const { title, traits, species, speciesImages, valueImages,
-      chosenValues, totalSpecies, foundSpecies, chosenTraits } = this.props;
+      chosenValues, totalSpecies, foundSpecies, chosenTraits,
+      activeTraits } = this.props;
 
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
@@ -106,7 +107,8 @@ class Key2 extends React.Component<Props, State> {
       selectedTrait.values.find(v => chosenValues.indexOf(v.value_id) > -1) : null;
 
     // Find used traits
-    const unusedTraits = traits.filter(trait => chosenTraits.indexOf(trait.trait_id) === -1);
+    const unusedTraits = traits
+      .filter(trait => chosenTraits.indexOf(trait.trait_id) === -1);
 
     // Find unused traits
     const usedTraits = traits.filter(trait => chosenTraits.indexOf(trait.trait_id) !== -1);
@@ -120,6 +122,7 @@ class Key2 extends React.Component<Props, State> {
         />
         <TraitList
           traits={unusedTraits}
+          activeTraits={activeTraits}
           onSelect={this.onTraitSelected}
           HeaderComponent={() => (
             <TraitPanel
@@ -158,10 +161,10 @@ class Key2 extends React.Component<Props, State> {
 }
 
 function mapStateToProps({ key }) {
-  const isFiltered = key.speciesLeft.length === 0 && key.chosenValues.length === 0;
+  const isUnfiltered = key.speciesLeft.length === 0 && key.chosenValues.length === 0;
   return ({
     keyId: key.chosenKey,
-    species: isFiltered ? key.fullSpList : key.speciesLeft,
+    species: isUnfiltered ? key.fullSpList : key.speciesLeft,
     totalSpecies: key.fullSpList.length,
     foundSpecies: key.speciesLeft.length,
     title: key.chosenKeyTitle,
@@ -170,6 +173,7 @@ function mapStateToProps({ key }) {
     valueImages: key.valueImages,
     chosenValues: key.chosenValues,
     chosenTraits: key.chosenTraits,
+    activeTraits: isUnfiltered ? key.traitValueCombo : key.relevant,
   });
 };
 

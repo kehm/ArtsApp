@@ -6,15 +6,18 @@ import styles  from './styles.js';
 type Props = {
   title: String,
   total: Number,
+  isActive: Boolean,
   included: Number,
 }
 
 class TraitElement extends React.Component<Props> {
 
   render() {
-    const { title, total, included } = this.props;
+    const { title, total, included, isActive } = this.props;
+    const activeStyle = isActive ? styles.active : {};
+
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, activeStyle]}>
         <Text
           style={styles.text}
           numberOfLines={1}

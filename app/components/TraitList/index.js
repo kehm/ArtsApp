@@ -8,6 +8,7 @@ import styles  from './styles.js';
 type Props = {
   traits: Array,
   HeaderComponent: Component,
+  activeTraits: Array,
   onSelect: Function
 }
 
@@ -19,6 +20,9 @@ class TraitList extends React.Component {
   }
 
   renderItem = ({ item }) => {
+    const { activeTraits, inactiveTraits } = this.props;
+    const isActive = activeTraits.indexOf(item) > -1;
+
     return (
       <TouchableOpacity
         style={styles.row}
@@ -28,6 +32,7 @@ class TraitList extends React.Component {
           title={item.traitText}
           total={item.values.length}
           included={item.values.length}
+          isActive={isActive}
         />
       </TouchableOpacity>
     );
