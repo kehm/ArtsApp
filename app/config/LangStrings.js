@@ -13,6 +13,7 @@ export default class LangStrings {
     this.language = 'no';
     this.strings = {
       en:{
+        frontpageTitle: 'Keys',
         keys: 'Keys',
         exit: 'Press once more for exiting the app.',
         noText: 'text is missing',
@@ -100,6 +101,7 @@ export default class LangStrings {
         noKeysDownloaded: 'There is no Keys downloaded. '
       },
       no: {
+        frontpageTitle: 'Nøkler',
         keys: 'Nøkler',
         exit: 'Trykk en gang til for å gå ut av applikasjonen',
         noText: 'manglende tekst',
