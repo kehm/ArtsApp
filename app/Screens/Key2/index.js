@@ -61,7 +61,7 @@ class Key2 extends React.Component<Props, State> {
     Actions.pop();
   }
 
-  onInfo = () => {
+  onKeyInfo = () => {
     Actions.Info();
   }
 
@@ -73,15 +73,24 @@ class Key2 extends React.Component<Props, State> {
   }
 
   onSpeciesSelected = (species) => {
-    // TODO: Open species dialog
+    Actions.Species({nerby: 0, selectedSpecies: species});
   }
 
   onValueSelected = (value) => {
     const { actions, keyId } = this.props;
 
+    // Update state
     actions.selectTraitValue(keyId, value);
 
+    // Hide dialog (not in state)
     this.onTraitSelected(undefined);
+  }
+
+  onValueInfo = (value) => {
+    const { valueImages } = this.props;
+    let images = valueImages.get(value.value_id);
+    if(!images) images = [];
+    Actions.ValueInfo({valueInfo: value.valueInfo, title: value.valueText, images});
   }
 
   onTraitSelected = (trait) => {
@@ -117,7 +126,7 @@ class Key2 extends React.Component<Props, State> {
             title={title}
             closeTitle="Lukk"
             onClose={this.onClose}
-            onInfo={this.onInfo}
+            onInfo={this.onKeyInfo}
           />
           <View style={styles.container} >
             <TraitList
@@ -131,6 +140,7 @@ class Key2 extends React.Component<Props, State> {
                   chosenValues={chosenValues}
                   onSelect={this.onTraitSelected}
                   valueImages={valueImages}
+                  header='Valgte egenskaper:'
                   emptyHeader='Egenskaper ved arter'
                   emptyDescription='Du har ikke valgt noen egenskaper enda.'
                 />
@@ -155,6 +165,7 @@ class Key2 extends React.Component<Props, State> {
               selectedValue={selectedValue}
               valueImages={valueImages}
               activeValues={activeValues}
+              onInfo={this.onValueInfo}
             />
           </View>
         </Container>

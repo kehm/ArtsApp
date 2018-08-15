@@ -27,7 +27,7 @@ export default class TabInfo extends Component {
    * @return {String}  description text of species, null if non exists.
    */
   textValidate() {
-    if (this.props.info !== null) {
+    if (this.props.info) {
       if (this.props.info.length > 3) {
         return this.props.info;
       }

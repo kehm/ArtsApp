@@ -13,10 +13,16 @@ type Props = {
   activeValues: Array,
   valueImages: Map,
   onValueSelected: Function,
+  onInfo: Function,
   onCancelDialog: Function,
 }
 
 class TraitDialog extends React.Component<Props> {
+
+  onValueInfo = (item) => {
+    const { onInfo } = this.props;
+    onInfo && onInfo(item);
+  }
 
   onCancelDialog = () => {
     const { onCancelDialog } = this.props;
@@ -46,6 +52,7 @@ class TraitDialog extends React.Component<Props> {
         imagePath={imagePath}
         selected={selected}
         onPress={() => this.onValueSelected(item)}
+        onInfo={() => this.onValueInfo(item)}
       />
     );
   }
