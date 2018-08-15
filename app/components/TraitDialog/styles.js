@@ -15,7 +15,7 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     width: Dimensions.get('window').width * 0.8,
     height: Dimensions.get('window').height * 0.5,
-    borderColor: '#000',
+    borderColor: '#AAA',
     borderWidth: 1,
     borderRadius: 10,
     shadowColor: '#AAA',
