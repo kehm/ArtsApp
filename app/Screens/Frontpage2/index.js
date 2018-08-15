@@ -12,9 +12,10 @@ import androidTablet from '../../native-base-theme/variables/androidTablet';
 import styles  from './styles.js';
 
 import FrontpageHeader from '../../components/FrontpageHeader';
+import Explanation from '../../components/Explanation';
+import KeyPanel from '../../components/KeyPanel';
 
 type Props = {
-  title: String,
   deviceTypeAndroidTablet: Boolean,
   strings: Object,
 }
@@ -30,15 +31,24 @@ class Frontpage2 extends React.Component<Props, State> {
   }
 
   render() {
-    const { strings } = this.props;
+    const { keys, strings } = this.props;
     return (
       <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
         <Container>
           <FrontpageHeader
-            title={strings.frontpageTitle}
-            onInfo={this.onInfo}
+              title={strings.frontpageTitle}
+              onInfo={this.onInfo}
           />
           <View style={styles.container} >
+            <Explanation
+              title={strings.frontpageTopTitle}
+              description={strings.frontpageTopDescription}
+            />
+            <KeyPanel keys={keys} betaTitle={strings.beta} />
+            <Explanation
+              title={strings.frontpageBottomTitle}
+              description={strings.frontpageBottomDescription}
+            />
           </View>
         </Container>
       </StyleProvider>

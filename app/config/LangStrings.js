@@ -14,6 +14,11 @@ export default class LangStrings {
     this.strings = {
       en:{
         frontpageTitle: 'Keys',
+        frontpageTopTitle: 'Keys explained',
+        frontpageTopDescription: 'You can download keys to your device and then try out categorization and bla bla of different species.',
+        frontpageBottomTitle: '',
+        frontpageBottomDescription: 'Tap on keys in list above to read more about each key or to start categorization of species! (blah blah).',
+        beta: 'BETA',
         keys: 'Keys',
         exit: 'Press once more for exiting the app.',
         noText: 'text is missing',
@@ -102,6 +107,11 @@ export default class LangStrings {
       },
       no: {
         frontpageTitle: 'Nøkler',
+        frontpageTopTitle: 'Forklaring på nøkler',
+        frontpageTopDescription: 'Du kan laste ned nøklene til telefonen din og forsøke deg på kategorisering og bla bla på forskjellige arter.',
+        frontpageBottomTitle: '',
+        frontpageBottomDescription: 'Klikk på nøklene i listen over for å lese mer om de enkelte nøklene eller for å begynne artsutvelgelse! (blah blah).',
+        beta: 'BETA',
         keys: 'Nøkler',
         exit: 'Trykk en gang til for å gå ut av applikasjonen',
         noText: 'manglende tekst',

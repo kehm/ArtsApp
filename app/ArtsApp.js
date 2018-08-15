@@ -16,6 +16,7 @@ import { bindActionCreators } from 'redux';
 import * as MenuAction from './actions/MenuAction';
 import MenuContent from './components/MenuContent';
 import Frontpage from './Screens/Frontpage';
+import Frontpage2 from './Screens/Frontpage2';
 import Key from './Screens/Key';
 import Key2 from './Screens/Key2';
 import Observation from './Screens/Observation';
@@ -58,9 +59,8 @@ const scenes = Actions.create(
       />
       <Scene
         key="Frontpage"
-        component={Frontpage}
+        component={Frontpage2}
         panHandlers={null}
-        title="Frontpage"
         hideNavBar
         type={ActionConst.RESET}
       />
