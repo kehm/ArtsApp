@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
 
+import * as Colors from '../../lib/colors';
+
 export default StyleSheet.create({
   container: {
-    backgroundColor: 'yellow',
-    borderColor: '#444',
+    backgroundColor: '#FF000022',
+    borderColor: '#FF000044',
     borderWidth: 1,
     borderRadius: 10,
     padding: 16,
@@ -11,5 +13,16 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  active: {
+    backgroundColor: Colors.AAIconBrownLX,
+    borderColor: Colors.AAIconBrownL,
+  },
+  text: {
+    flex: 1,
+    paddingRight: 5,
+  },
+  numbers: {
+
   }
 });

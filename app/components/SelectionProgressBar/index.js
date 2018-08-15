@@ -14,11 +14,14 @@ class SelectionProgressBar extends React.Component<Props> {
   render() {
     const { totalCount, matchingCount, notInRangeCount } = this.props;
     const eliminatedCount = totalCount - notInRangeCount - matchingCount;
+    const eliminatedStyle = matchingCount === 0 && notInRangeCount === 0 ?
+      styles.notFiltered : styles.eliminated;
+
     return (
       <View style={styles.bar}>
         <View style={[styles.matching, { flex: matchingCount }]} />
         <View style={[styles.notInRange, { flex: notInRangeCount }]} />
-        <View style={[styles.eliminated, { flex: eliminatedCount }]} />
+        <View style={[eliminatedStyle, { flex: eliminatedCount }]} />
       </View>
     );
   }

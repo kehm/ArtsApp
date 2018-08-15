@@ -6,6 +6,6 @@ export default StyleSheet.create({
     width: 60,
     borderRadius: 30,
     borderWidth: 3,
-    borderColor: '#0706',
+    borderColor: '#CCC',
   }
 });

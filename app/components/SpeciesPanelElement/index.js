@@ -18,8 +18,18 @@ class SpeciesPanelElement extends React.Component<Props> {
     return (
       <View style={styles.container}>
         <SpeciesImageButton imagePath={imagePath} onPress={onPress} />
-        <Text>Cystopteris</Text>
-        <Text>Sudetlok</Text>
+        <Text
+          style={styles.name}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >{species.localName}
+        </Text>
+        <Text
+          style={styles.latinName}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >{species.latinName}
+        </Text>
       </View>
     );
   }

@@ -6,14 +6,14 @@ export default StyleSheet.create({
     height: 120,
     width: 120,
     paddingLeft: 5,
-    marginLeft: 5,
+    marginLeft: 10,
     justifyContent: 'center',
   },
-  name: {
+  text: {
     maxWidth: 120,
     paddingTop: 2,
   },
-  latinName: {
+  value: {
     maxWidth: 120,
     paddingTop: 2,
     fontSize: 11,

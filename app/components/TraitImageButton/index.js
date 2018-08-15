@@ -9,7 +9,7 @@ type Props = {
   onPress: Function,
 };
 
-class SpeciesImageButton extends React.Component<Props> {
+class TraitImageButton extends React.Component<Props> {
   render() {
     const { imagePath, onPress } = this.props;
     const source = mapToImageSource(imagePath);
@@ -17,11 +17,10 @@ class SpeciesImageButton extends React.Component<Props> {
     return (
       <ImageButton
         source={source}
-        borderColor={'#0706'}
         onPress={onPress}
       />
     );
   }
 }
 
-export default SpeciesImageButton;
+export default TraitImageButton;

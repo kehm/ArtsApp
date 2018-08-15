@@ -1,18 +1,23 @@
 import { StyleSheet } from 'react-native';
 
+import * as Colors from '../../lib/colors';
+
 export default StyleSheet.create({
   bar: {
     flexDirection: 'row',
     height: 8,
     backgroundColor: '#0002',
   },
+  notFiltered: {
+    backgroundColor: '#CCC',
+  },
   matching: {
-    backgroundColor: 'green',
+    backgroundColor: Colors.AAIconGreen,
   },
   notInRange: {
-    backgroundColor: 'yellow',
+    backgroundColor: Colors.AAIconBlue,
   },
   eliminated: {
-    backgroundColor: 'orange',
+    backgroundColor: Colors.AAIconBrown,
   }
 });
