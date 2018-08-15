@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
+import { Container, StyleProvider, Header, Footer, Subtitle,
+  FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem,
+  Left, Body, Right} from 'native-base';
 
 import {connect} from 'react-redux';
 import { Actions } from 'react-native-router-flux';

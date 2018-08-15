@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
+import { Header, Title, Button, Icon, Left, Body, Right} from 'native-base';
 import styles  from './styles.js';
 
 type Props = {
