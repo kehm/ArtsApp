@@ -56,22 +56,22 @@ const DEFAULT_STATE = {onLogging: false,
   resetting: false,
 };
 
-export default function(state = DEFAULT_STATE, actions) {
-  switch(actions.type) {
+export default function(state = DEFAULT_STATE, action) {
+  switch(action.type) {
   case actionTypes.TEST_ACTION_TYPE_ONE:
     return{...state,
       test: state.test + 1,
     };
   case actionTypes.ACTION_CHOSEN_KEY:
     return{...state,
-      chosenKey: actions.chosenKey,
-      chosenKeyTitle: actions.chosenKeyTitle
+      chosenKey: action.chosenKey,
+      chosenKeyTitle: action.chosenKeyTitle
     };
   case actionTypes.ACTION_VALUE_CHANGE:
     return{...state,
       loading: true,
-      chosenValues: actions.chosenValues,
-      chosenTraits: actions.chosenTraits,
+      chosenValues: action.chosenValues,
+      chosenTraits: action.chosenTraits,
     };
   case `${actionTypes.ACTION_SP_LEFT}_LOADING`:
     return{...state,
@@ -79,7 +79,7 @@ export default function(state = DEFAULT_STATE, actions) {
     };
   case `${actionTypes.ACTION_SP_LEFT}_SUCCESS`:
     let temp = [];
-    let ret = actions.payload.map((item) => {
+    let ret = action.payload.map((item) => {
       let i = _.findIndex(state.fullSpList, {species_id: item.species_id});
       temp = temp.concat(state.fullSpList[i].values);
       return state.fullSpList[i].traits;
@@ -113,35 +113,35 @@ export default function(state = DEFAULT_STATE, actions) {
       relevant: tempRel,
       irelevant: tempIRel,
       speciesLeftLoading: false,
-      speciesLeft: actions.payload
+      speciesLeft: action.payload
     };
   case `${actionTypes.ACTION_SP_LEFT}_ERROR`:
     return{...state,
       speciesLeft: [],
       speciesLeftLoading: false,
-      speciesLeftError: actions.payload
+      speciesLeftError: action.payload
     };
   case `${actionTypes.ACTION_FULL_SPECIES}_SUCCESS`:
     return {...state,
-      fullSpList: actions.payload
+      fullSpList: action.payload
     };
   case `${actionTypes.ACTION_FULL_SPECIES}_ERROR`:
     return{...state,
       fullSpList: [],
-      fullSpListError: actions.payload
+      fullSpListError: action.payload
     };
   case actionTypes.ACTION_SELCTED_SP:
     return{...state,
-      selectedSpecies: actions.selectedSpecies,
+      selectedSpecies: action.selectedSpecies,
     };
   case `${actionTypes.ACTION_ALL_KEYS}_SUCCESS`:
     return{...state,
-      keys: actions.payload,
+      keys: action.payload,
       keyDownloaded_SUCCESS: false,
     };
   case `${actionTypes.ACTION_ALL_KEYS}_ERROR`:
     return{...state,
-      keysError: actions.payload
+      keysError: action.payload
     };
   case actionTypes.RESETTING_RESET:
     return {...state,
@@ -158,42 +158,42 @@ export default function(state = DEFAULT_STATE, actions) {
     };
   case `${actionTypes.TRAIT_VALUE_COMBO}_SUCCESS`:
     return{...state,
-      traitValueCombo: actions.payload,
+      traitValueCombo: action.payload,
       speciesLeft: [],
     };
   case `${actionTypes.TRAIT_VALUE_COMBO}_LOADING`:
   case `${actionTypes.TRAIT_VALUE_COMBO}_ERROR`:
     return{...state,
       traitValueCombo: [],
-      traitValueComboError: actions.payload
+      traitValueComboError: action.payload
     };
   case `${actionTypes.KEY_DETAILS}_SUCCESS`:
     return{...state,
-      key: actions.payload
+      key: action.payload
     };
   case `${actionTypes.KEY_DETAILS}_LOADING`:
   case `${actionTypes.KEY_DETAILS}_ERROR`:
     return{...state,
       key: '',
-      keyError: actions.payload
+      keyError: action.payload
     };
   case `${actionTypes.VALUE_IMAGES}_SUCCESS`:
     return{...state,
-      valueImages: actions.payload
+      valueImages: action.payload
     };
   case `${actionTypes.VALUE_IMAGES}_LOADING`:
   case `${actionTypes.VALUE_IMAGES}_ERROR`:
     return{...state,
-      valueImageError: actions.payload,
+      valueImageError: action.payload,
     };
   case `${actionTypes.ALL_SPECIES_IMAGES}_SUCCESS`:
     return{...state,
-      spesiecImageList: actions.payload
+      spesiecImageList: action.payload
     };
   case `${actionTypes.ALL_SPECIES_IMAGES}_LOADING`:
   case `${actionTypes.ALL_SPECIES_IMAGES}_ERROR`:
     return{...state,
-      speciesImageError: actions.payload,
+      speciesImageError: action.payload,
     };
   case `${actionTypes.DOWNLOAD_KEY}_SUCCESS`:
     return{...state,
@@ -208,10 +208,48 @@ export default function(state = DEFAULT_STATE, actions) {
     };
   case `${actionTypes.DOWNLOAD_KEY}_ERROR`:
     return{...state,
-      keyDownloaded_ERROR: actions.payload,
+      keyDownloaded_ERROR: action.payload,
       keyDownloaded_LOADING: false,
     };
+  case actionTypes.SELECT_TRAIT_VALUE: {
+    return selectTraitValue(
+      action.payload.keyId,
+      action.payload.value,
+      state
+    );
+  }
   default:
     return state;
   }
+}
+
+function selectTraitValue(keyId, value, state) {
+  let tempValueList = [...state.chosenValues];
+  const tempTraitList = [...state.chosenTraits];
+  const selectedTrait = state.traitValueCombo.find(tp => tp.trait_id === value.trait_id);
+
+  const isSelected = state.chosenValues.find(v => v === value.value_id) !== undefined;
+
+  // remove all selected values for trait
+  tempValueList = tempValueList
+      .filter(v => selectedTrait.values.find(tv => tv.value_id === v) === undefined);
+
+    // remove selected trait from traits
+  const traitIndex = tempTraitList.indexOf(selectedTrait.trait_id);
+  if(traitIndex > -1) {
+    tempTraitList.splice(traitIndex, 1);
+  }
+
+    // Not selected
+  if(!isSelected) {
+    tempValueList.push(value.value_id);
+    tempTraitList.push(selectedTrait.trait_id);
+  }
+
+  return {
+    ...state,
+    loading: true,
+    chosenValues: tempValueList,
+    chosenTraits: tempTraitList,
+  };
 }

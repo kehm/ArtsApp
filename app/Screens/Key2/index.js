@@ -65,33 +65,9 @@ class Key2 extends React.Component<Props, State> {
   }
 
   onValueSelected = (value) => {
-    const { actions, chosenValues, chosenTraits, keyId } = this.props;
-    const { selectedTrait } = this.state;
+    const { actions, keyId } = this.props;
 
-    // TODO: Move to reducer
-    let tempValueList = [...chosenValues];
-    const tempTraitList = [...chosenTraits];
-
-    const isSelected = chosenValues.find(v => v === value.value_id) !== undefined;
-
-    // remove all selected values for trait
-    tempValueList = tempValueList
-      .filter(v => selectedTrait.values.find(tv => tv.value_id === v) === undefined);
-
-    // remove selected trait from traits
-    const traitIndex = tempTraitList.indexOf(selectedTrait.trait_id);
-    if(traitIndex > -1) {
-      tempTraitList.splice(traitIndex, 1);
-    }
-
-    // Not selected
-    if(!isSelected) {
-      tempValueList.push(value.value_id);
-      tempTraitList.push(selectedTrait.trait_id);
-    }
-
-    actions.changeValues(tempValueList, tempTraitList, keyId);
-    actions.setSpeciesLeft(tempValueList, keyId);
+    actions.selectTraitValue(keyId, value);
 
     this.onTraitSelected(undefined);
   }
