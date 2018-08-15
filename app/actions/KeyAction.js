@@ -122,3 +122,14 @@ export function downloadKey(keyWebName) {
     },
   };
 }
+
+export function selectTraitValue(keyId, value) {
+  this.DB_helper = new DB_helper();
+  return (dispatch, getState) => {
+    dispatch({
+      type: actionTypes.SELECT_TRAIT_VALUE,
+      payload: { keyId, value }
+    });
+    dispatch(setSpeciesLeft(getState().key.chosenValues, keyId));
+  };
+}
