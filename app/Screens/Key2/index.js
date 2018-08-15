@@ -1,9 +1,14 @@
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
+import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
 
 import {connect} from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { bindActionCreators } from 'redux';
+
+import getTheme from '../../native-base-theme/components';
+import common from '../../native-base-theme/variables/commonColor';
+import androidTablet from '../../native-base-theme/variables/androidTablet';
 
 import KeyHeader from '../../components/KeyHeader';
 import TraitPanel from '../../components/TraitPanel';
@@ -42,6 +47,10 @@ class Key2 extends React.Component<Props, State> {
 
   onClose = () => {
     Actions.pop();
+  }
+
+  onInfo = () => {
+    Actions.Info();
   }
 
   toggleSpeciesPanel = () => {
@@ -114,49 +123,54 @@ class Key2 extends React.Component<Props, State> {
     const usedTraits = traits.filter(trait => chosenTraits.indexOf(trait.trait_id) !== -1);
 
     return (
-      <View style={styles.container}>
-        <KeyHeader
-          title={title}
-          closeTitle="Lukk"
-          onClose={this.onClose}
-        />
-        <TraitList
-          traits={unusedTraits}
-          activeTraits={activeTraits}
-          activeValues={activeValues}
-          onSelect={this.onTraitSelected}
-          HeaderComponent={() => (
-            <TraitPanel
-              traits={usedTraits}
-              chosenValues={chosenValues}
+      <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
+        <Container>
+          <KeyHeader
+            title={title}
+            closeTitle="Lukk"
+            onClose={this.onClose}
+            onInfo={this.onInfo}
+          />
+          <View style={styles.container} >
+            <TraitList
+              traits={unusedTraits}
+              activeTraits={activeTraits}
+              activeValues={activeValues}
               onSelect={this.onTraitSelected}
-              valueImages={valueImages}
-              emptyHeader='Egenskaper ved arter'
-              emptyDescription='Du har ikke valgt noen egenskaper enda.'
+              HeaderComponent={() => (
+                <TraitPanel
+                  traits={usedTraits}
+                  chosenValues={chosenValues}
+                  onSelect={this.onTraitSelected}
+                  valueImages={valueImages}
+                  emptyHeader='Egenskaper ved arter'
+                  emptyDescription='Du har ikke valgt noen egenskaper enda.'
+                />
+              )}
             />
-          )}
-        />
-        <SpeciesPanel
-          species={species}
-          speciesImages={speciesImages}
-          isCollapsed={isSpeciesPanelToggled}
-          onToggleClick={this.toggleSpeciesPanel}
-          onSpeciesClick={this.onSpeciesSelected}
-          totalSpecies={totalSpecies}
-          foundSpecies={foundSpecies}
-          emptyDescription='Ingen arter funnet med valgte egenskaper'
-        />
-        <TraitDialog
-          isVisible={isTraitDialogVisible}
-          onCancelDialog={this.onTraitSelected}
-          onValueSelected={this.onValueSelected}
-          title={selectedTrait ? selectedTrait.traitText : ''}
-          traitValues={selectedTrait ? selectedTrait.values : []}
-          selectedValue={selectedValue}
-          valueImages={valueImages}
-          activeValues={activeValues}
-        />
-      </View>
+            <SpeciesPanel
+              species={species}
+              speciesImages={speciesImages}
+              isCollapsed={isSpeciesPanelToggled}
+              onToggleClick={this.toggleSpeciesPanel}
+              onSpeciesClick={this.onSpeciesSelected}
+              totalSpecies={totalSpecies}
+              foundSpecies={foundSpecies}
+              emptyDescription='Ingen arter funnet med valgte egenskaper'
+            />
+            <TraitDialog
+              isVisible={isTraitDialogVisible}
+              onCancelDialog={this.onTraitSelected}
+              onValueSelected={this.onValueSelected}
+              title={selectedTrait ? selectedTrait.traitText : ''}
+              traitValues={selectedTrait ? selectedTrait.values : []}
+              selectedValue={selectedValue}
+              valueImages={valueImages}
+              activeValues={activeValues}
+            />
+          </View>
+        </Container>
+      </StyleProvider>
     );
 
   }
