@@ -18,6 +18,7 @@ class SelectionProgressBar extends React.Component<Props> {
       totalCount, matchingCount, notInRangeCount
     };
   }
+
   componentWillReceiveProps(nextProps) {
     const { totalCount, matchingCount, notInRangeCount } = nextProps;
     this.setStateAnimated((prevState) => ({

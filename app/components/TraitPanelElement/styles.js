@@ -4,6 +4,9 @@ const imageSize = 32;
 
 export default StyleSheet.create({
   container: {
+
+  },
+  buttonContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: 12,

@@ -21,7 +21,7 @@ class TraitList extends React.Component {
   }
 
   renderItem = (item) => {
-    const { activeTraits, activeValues } = this.props;
+    const { traits, activeTraits, activeValues } = this.props;
     const isTraitActive = activeTraits.indexOf(item) > -1;
 
     // Find number of values that are active
@@ -43,6 +43,7 @@ class TraitList extends React.Component {
         onPress={() => this.onPress(item)}
       >
         <TraitListElement
+          index={traits.indexOf(item)}
           title={item.traitText}
           total={item.values.length}
           included={activeValueCount}
