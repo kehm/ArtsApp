@@ -2,6 +2,7 @@
 import * as actionTypes from './actionTypes';
 import DB_helper from '../config/DB/DB_helper';
 import KeyDownload  from '../config/network/KeyDownload';
+import { setSpNerby } from './ObservationAction';
 
 export function setTest() {
   return {
@@ -13,11 +14,23 @@ export function resettingReset() {
     type: actionTypes.RESETTING_RESET,
   };
 }
-export function setKey(key, title) {
-  return {
-    type: actionTypes.ACTION_CHOSEN_KEY,
-    chosenKey: key,
-    chosenKeyTitle: title,
+export function setKey(keyId, title) {
+  return async (dispatch, getState) => {
+    const isSameKey = getState().key.chosenKey === keyId;
+    dispatch({
+      type: actionTypes.ACTION_CHOSEN_KEY,
+      chosenKey: keyId,
+      chosenKeyTitle: title,
+    });
+    if(!isSameKey) {
+      dispatch(resetKey(keyId));
+      dispatch(setTraitValuecombo(keyId));
+      dispatch(setAllSpToKEy(keyId));
+      dispatch(setSpNerby(keyId));
+      dispatch(getAllSpImages(keyId));
+      dispatch(getValueImages(keyId));
+      dispatch(setSpeciesLeft([], keyId));
+    }
   };
 }
 

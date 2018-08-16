@@ -10,7 +10,7 @@ type Props = {
   HeaderComponent: Component,
   activeTraits: Array,
   activeValues: Array,
-  onSelect: Function
+  onSelect: Function,
 }
 
 class TraitList extends React.Component {

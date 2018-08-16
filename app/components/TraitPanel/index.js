@@ -12,6 +12,7 @@ type Props = {
   chosenValues: Array,
   valueImages: Map,
   onSelect: Function,
+  header: String,
   emptyHeader: String,
   emptyDescription: String,
 }
@@ -43,7 +44,7 @@ class TraitPanel extends React.Component<Props> {
   }
 
   render() {
-    const { traits, emptyHeader, emptyDescription } = this.props;
+    const { traits, header, emptyHeader, emptyDescription } = this.props;
 
     return (
       <View style={styles.container}>
@@ -51,6 +52,11 @@ class TraitPanel extends React.Component<Props> {
         <View style={styles.emptyContainer}>
           <Text style={styles.header}>{emptyHeader}</Text>
           <Text style={styles.description}>{emptyDescription}</Text>
+        </View>
+        }
+        {traits.length > 0 && header &&
+        <View style={styles.headerContainer}>
+          <Text style={styles.label}>{header}</Text>
         </View>
         }
         {traits.length > 0 &&

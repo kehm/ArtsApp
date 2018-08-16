@@ -8,6 +8,7 @@ import {
   BackHandler,
   ToastAndroid,
   Platform,
+  UIManager
 } from 'react-native';
 import {connect } from 'react-redux';
 import {Drawer } from 'native-base';
@@ -130,6 +131,10 @@ class ArtsApp extends Component {
     this.state = {
       exit: 0,
     };
+
+    if (Platform.OS === 'android') {
+      UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
   };
 
   componentDidMount() {
