@@ -109,35 +109,18 @@ class Frontpage extends Component {
   /**
    * onClick-handler, if downloaded the key opens, if not the info page opens with options to download the key.
    * if the key has been opened earlier the key opens ones more with same state as user left it, if not the key is reset and the new chosen key is opened.
-   * @see this.runKey
    * @param {integer} id         id of selected key
    * @param {String} title      Title of selected key
    * @param {bool} downloaded is key downloaded.
    * @return {void}
    */
   onClick = (id, title, downloaded) => {
-    oldKeyID = this.props.chosenKey;
     this.props.actions.setKey(id, title);
     if (downloaded) {
-      if (oldKeyID == -1) {
-        this.runKey(id, false);
-      }
-      else if (id === oldKeyID) {
-        this.runKey(id, true);
-      }
-      else {
-        this.props.actions.resetKey();
-        this.runKey(id, false);
-
-      }
+      Actions.Key();
     }
     else {
-      this.setState({loading: true});
-
-      setTimeout(() => {
-        this.setState({loading: false});
-        Actions.Info({showDownload: true});
-      }, 700);
+      Actions.Info({showDownload: true});
     }
   }
 
@@ -153,32 +136,6 @@ class Frontpage extends Component {
 
   onClickMenu = () => {
     this.props.actions.openMenu();
-  }
-
-  /**
-   * opens key with or without previous state. If without state, it is loading the data of the new key.
-   * @see KeyAction .setTraitValuecombo .setAllSpToKEy .setSpNerby .getAllSpImages .getValueImages
-   * @param {integer} id         id of selected key
-   * @param {bool} secondTime true if it is the second time in a row the user is using the selected key.
-   * @return {void} opens selected key
-   */
-  runKey(id, secondTime) {
-    if (secondTime) {
-      Actions.Key({sameKey: true});
-    }
-    else {
-      this.setState({loading: true});
-      this.props.actions.setTraitValuecombo(id);
-      this.props.actions.setAllSpToKEy(id);
-      this.props.actions.setSpNerby(id);
-      this.props.actions.getAllSpImages(id);
-      this.props.actions.getValueImages(id);
-      setTimeout(() => {
-        this.setState({loading: false});
-        Actions.Key({sameKey: false});
-      }, 700);
-    }
-
   }
 
   renderItem = ({item}) => {
