@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import styles  from './styles.js';
 import TraitImageButton from '../TraitImageButton';
@@ -40,7 +41,7 @@ class KeyPanelElement extends React.Component<Props> {
     const { keyObject, size, strings, onPress, onDownload } = this.props;
     const { isBeta, isDownloaded, title, imageSource } = mapKey(keyObject);
     const containerSize = { height: size, width: size };
-    const imageMargin = isBeta ? 50 : 32;
+    const imageMargin = isBeta ? 50 : 40;
     const imageSize = { height: size - 2 * imageMargin, width: size - 2 * imageMargin };
 
     return (
@@ -51,6 +52,10 @@ class KeyPanelElement extends React.Component<Props> {
           <View style={styles.imageContainer}>
             <Image source={imageSource} resizeMode='contain' style={[styles.image, imageSize]} />
           </View>
+          {!isDownloaded &&
+            <Icon name='cloud-download' style={styles.download} size={24} />
+          }
+
         </View>
       </View>
     );
