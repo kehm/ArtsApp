@@ -9,7 +9,7 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 3,
     backgroundColor: 'white',
-    // backgroundColor: '#AA5533',
+    alignSelf: 'center',
   },
   innerContainer: {
     borderColor: '#979797',
@@ -18,10 +18,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    // height: 250,
-    // width: 250,
-    // backgroundColor: 'white',
-    // backgroundColor: '#AA5533',
   },
   beta: {
     backgroundColor: '#B8E986',

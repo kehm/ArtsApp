@@ -16,9 +16,8 @@ class Explanation extends React.Component<Props> {
     return (
       <View style={styles.container}>
         {hasTitle &&
-         <Text style={styles.title}>
-          {title}
-         </Text>}
+        <Text style={styles.title}>{title}</Text>
+        }
         <Text style={styles.description}>{description}</Text>
       </View>
     );

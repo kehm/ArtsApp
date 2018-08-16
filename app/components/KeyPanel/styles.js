@@ -2,17 +2,10 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
-    // backgroundColor: '#44AACC',
-    alignItems: 'center',
+    // backgroundColor: '#CC44AA',
+    height: 300,
   },
-  // emptyContainer:{
-  //   alignItems: 'center',
-  // },
-  // header: {
-  //   fontWeight: 'bold',
-  //   paddingBottom: 8,
-  // },
-  // description: {
-
-  // }
+  swiper: {
+    // backgroundColor: '#44AACC',
+  },
 });

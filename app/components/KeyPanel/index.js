@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import Swiper from 'react-native-swiper';
 
 import HorizontalList from '../HorizontalList';
-import TraitPanelElement from '../TraitPanelElement';
+import KeyPanelElement from '../KeyPanelElement';
 
 import styles  from './styles.js';
-import KeyPanelElement from '../KeyPanelElement';
+// import KeySwiper from '../KeySwiper';
 
 type Props = {
   keys: Array,
@@ -45,26 +46,17 @@ class KeyPanel extends React.Component<Props> {
       />
     );
   }
-
   render() {
+    const { betaTitle } = this.props;
     // const { traits, emptyHeader, emptyDescription } = this.props;
 
     return (
       <View style={styles.container}>
-        {this.renderItem()}
-        {/* {traits.length === 0 &&
-        <View style={styles.emptyContainer}>
-          <Text style={styles.header}>{emptyHeader}</Text>
-          <Text style={styles.description}>{emptyDescription}</Text>
-        </View>
-        }
-        {traits.length > 0 &&
-          <HorizontalList
-            data={traits}
-            keyExtractor={(item) => item.trait_id}
-            renderItem={({item}) => this.renderItem(item)}
-          />
-        } */}
+        <Swiper style={styles.swiper}>
+          {this.renderItem()}
+          {this.renderItem()}
+          {this.renderItem()}
+        </Swiper>
       </View>
     );
   }

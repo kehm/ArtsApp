@@ -8,9 +8,11 @@ export default StyleSheet.create({
   title: {
     paddingBottom: 20,
     textAlign: 'center',
+    fontWeight: '100',
   },
   description: {
     fontSize: 12,
     textAlign: 'center',
+    fontWeight: '100',
   }
 });
