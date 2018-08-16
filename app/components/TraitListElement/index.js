@@ -26,6 +26,8 @@ class TraitListElement extends React.Component<Props> {
         <View style={[styles.elementContainer, activeStyle]}>
           <Text
             style={styles.text}
+            numberOfLines={2}
+            ellipsizeMode={'tail'}
           >
             {title}
           </Text>

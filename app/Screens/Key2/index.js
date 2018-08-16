@@ -42,15 +42,15 @@ class Key2 extends React.Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const prevValues = this.props.chosenValues;
-    const nextValues = nextProps.chosenValues;
-    const { isSpeciesPanelToggled } = this.state;
+  // componentWillReceiveProps(nextProps) {
+  //   const prevValues = this.props.chosenValues;
+  //   const nextValues = nextProps.chosenValues;
+  //   const { isSpeciesPanelToggled } = this.state;
 
-    if(prevValues.length === 0 && nextValues.length > 0 && isSpeciesPanelToggled) {
-      this.toggleSpeciesPanel();
-    }
-  }
+  //   if(prevValues.length === 0 && nextValues.length > 0 && isSpeciesPanelToggled) {
+  //     this.toggleSpeciesPanel();
+  //   }
+  // }
 
   setStateAnimated(callback: (state: State) => void) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
