@@ -39,14 +39,18 @@ class KeyPanelElement extends React.Component<Props> {
   render() {
     const { keyObject, size, strings, onPress, onDownload } = this.props;
     const { isBeta, isDownloaded, title, imageSource } = mapKey(keyObject);
-    // const dim = { height: size, width: size };
-    const dim = { height: 250, width: 250 };
+    const containerSize = { height: size, width: size };
+    const imageMargin = isBeta ? 50 : 32;
+    const imageSize = { height: size - 2 * imageMargin, width: size - 2 * imageMargin };
 
     return (
-      <View style={[styles.outerContainer, dim]}>
-        <View style={[styles.innerContainer, dim]}>
+      <View style={[styles.outerContainer, containerSize]}>
+        <View style={[styles.innerContainer, containerSize]}>
           {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
-          <Image source={imageSource} resizeMode='contain' style={styles.image} />
+          <Text style={styles.title}>{title}</Text>
+          <View style={styles.imageContainer}>
+            <Image source={imageSource} resizeMode='contain' style={[styles.image, imageSize]} />
+          </View>
         </View>
       </View>
     );

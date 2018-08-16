@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import HorizontalList from '../HorizontalList';
@@ -19,8 +19,12 @@ class KeyPanel extends React.Component<Props> {
   //   const { onSelect } = this.props;
   //   onSelect && onSelect(trait);
   // }
+  getElementSize = () => {
+    const { width } = Dimensions.get('window');
+    return width - 80;
+  }
 
-  renderItem = (item) => {
+  renderItem = (item, size) => {
     const { strings } = this.props;
     // const { valueImages, chosenValues } = this.props;
 
@@ -43,23 +47,23 @@ class KeyPanel extends React.Component<Props> {
         key={item.key_id}
         keyObject={item}
         strings={strings}
-        size={250}
+        size={size}
       />
     );
   }
   render() {
     const { keys } = this.props;
-    // const { traits, emptyHeader, emptyDescription } = this.props;
+    const size = this.getElementSize();
+    const containerSize = { height: size + 40 };
 
     return (
-      <View style={styles.container}>
-        <Swiper style={styles.swiper}>
-          {keys.map(k => this.renderItem(k))}
+      <View style={[styles.container, containerSize]}>
+        <Swiper style={styles.swiper} dotStyle={styles.dotStyle} activeDotStyle={styles.activeDot}>
+          {keys.map(k => this.renderItem(k, size))}
         </Swiper>
       </View>
     );
   }
-
 }
 
 export default KeyPanel;
