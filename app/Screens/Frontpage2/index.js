@@ -3,7 +3,7 @@ import { View, LayoutAnimation } from 'react-native';
 import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
 
 import { bindActionCreators } from 'redux';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 // theme
 import getTheme from '../../native-base-theme/components';
@@ -20,6 +20,8 @@ import * as SettingsAction from '../../actions/SettingsAction';
 import FrontpageHeader from '../../components/FrontpageHeader';
 import Explanation from '../../components/Explanation';
 import KeyPanel from '../../components/KeyPanel';
+
+import { sortKeys } from '../../utilities/keys';
 
 type Props = {
   deviceTypeAndroidTablet: Boolean,
@@ -68,9 +70,8 @@ class Frontpage2 extends React.Component<Props, State> {
 
 function mapStateToProps({ key, settings }) {
   const { deviceTypeAndroidTablet, strings } = settings;
-  const { keys } = key;
   return {
-    keys,
+    keys: sortKeys(key.keys),
     deviceTypeAndroidTablet,
     strings,
   };

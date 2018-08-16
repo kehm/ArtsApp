@@ -35,15 +35,11 @@ export default StyleSheet.create({
     top: 16,
   },
   imageContainer: {
-    paddingTop: 20,
+    paddingTop: 10,
   },
-  text: {
-    maxWidth: 120,
-    paddingTop: 2,
-  },
-  value: {
-    maxWidth: 120,
-    paddingTop: 2,
-    fontSize: 11,
+  download: {
+    position: 'absolute',
+    bottom: 6,
+    color: '#0009',
   },
 });
