@@ -28,12 +28,12 @@ class SpeciesPanelElement extends React.Component<Props> {
           ellipsizeMode='tail'
         >{species.localName}
         </Text>
-        <Text
+        {/* <Text
           style={styles.latinName}
           numberOfLines={1}
           ellipsizeMode='tail'
         >{species.latinName}
-        </Text>
+        </Text> */}
       </View>
     );
   }
