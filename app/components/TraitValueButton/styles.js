@@ -21,12 +21,25 @@ export default StyleSheet.create({
     borderColor: '#FF000044',
     opacity: 0.5,
   },
-  image: {
+  imageContainer: {
     height: 40,
     width: 40,
     borderRadius: 20,
     borderWidth: 2,
     borderColor: '#CCC',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  image: {
+    height: 35,
+    width: 35,
+    borderRadius: 20,
+  },
+  selectedImage: {
+    borderColor: '#00A212',
+  },
+  inactiveImage: {
+    borderColor: '#A2000022',
   },
   titleIconContainer: {
     flexDirection: 'row',

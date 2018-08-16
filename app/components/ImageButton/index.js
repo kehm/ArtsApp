@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Image, View, ImageSourcePropType } from 'react-native';
+import { TouchableOpacity, Image,Text, View, ImageSourcePropType } from 'react-native';
 
 import styles  from './styles.js';
 
@@ -17,12 +17,12 @@ class ImageButton extends React.Component<Props> {
     const borderStyle = { borderColor: (borderColor ? borderColor : '#CCC') };
 
     return (
-      <TouchableOpacity onPress={onPress}>
+      <TouchableOpacity onPress={onPress} style={[styles.container, borderStyle]}>
         {source && source.uri &&
-          <Image source={source} style={[styles.image, borderStyle]}/>
+          <Image collapsable={false} source={source} style={styles.image}/>
         }
         {(!source || !source.uri) &&
-          <View style={styles.image}/>
+          <View style={styles.image} />
         }
       </TouchableOpacity>
     );

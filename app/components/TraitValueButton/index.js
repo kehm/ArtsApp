@@ -37,17 +37,23 @@ class TraitValueButton extends React.Component {
     if (selected) containerStyle.push(styles.selected);
     if (!isActive) containerStyle.push(styles.inactive);
 
+    const imageContainerStyle = [styles.imageContainer];
+    if (selected) imageContainerStyle.push(styles.selectedImage);
+    if (!isActive) imageContainerStyle.push(styles.inactiveImage);
+
     return (
       <TouchableOpacity
         style={containerStyle}
         onPress={this.onClick}
       >
-        {source && source.uri &&
-          <Image source={source} style={styles.image}/>
-        }
-        {(!source || !source.uri) &&
-          <View style={styles.image}/>
-        }
+        <View style={imageContainerStyle}>
+          {source && source.uri &&
+            <Image source={source} style={styles.image}/>
+          }
+          {(!source || !source.uri) &&
+            <View style={styles.image}/>
+          }
+        </View>
         <View style={styles.titleIconContainer}>
           <Text style={styles.title}>{value.valueText}</Text>
           <TouchableOpacity onPress={this.onInfoPress}>
