@@ -19,7 +19,8 @@ export default function configureStore(initialState: any = undefined) {
   const logger = createLogger({ predicate: (getState, action) => __DEV__  });
   const enhancer = compose(
     applyMiddleware(thunk),
-    applyMiddleware(promise, promiseMiddleware({ promiseTypeSuffixes: ['LOADING', 'SUCCESS', 'ERROR']})),
+    // applyMiddleware(promise, promiseMiddleware({ promiseTypeSuffixes: ['LOADING', 'SUCCESS', 'ERROR']})),
+    applyMiddleware(promiseMiddleware({ promiseTypeSuffixes: ['LOADING', 'SUCCESS', 'ERROR']})),
     // applyMiddleware(logger),
   );
   return createStore(rootReducer, initialState, enhancer);

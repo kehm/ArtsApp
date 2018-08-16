@@ -37,9 +37,17 @@ export default StyleSheet.create({
   imageContainer: {
     paddingTop: 10,
   },
-  download: {
+  downloadContainer: {
     position: 'absolute',
     bottom: 6,
-    color: '#0009',
+  },
+  download: {
+    color: '#999999',
+  },
+  downloadSpinner: {
+    position: 'absolute',
+    bottom: 6,
+    width: 32,
+    height: 32,
   },
 });

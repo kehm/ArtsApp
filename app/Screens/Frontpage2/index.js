@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, LayoutAnimation } from 'react-native';
+import { View, LayoutAnimation, Alert } from 'react-native';
 import { Container, StyleProvider } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 
@@ -53,6 +53,21 @@ class Frontpage2 extends React.Component<Props, State> {
     }
   }
 
+  handleOnDownloadKey = (key) => {
+    if (!this.props.isConnected) {
+      new Alert.alert(this.props.strings.noNetwork,
+        '',
+        [
+          {text: this.props.strings.ok, onPress: () => {}},
+        ],
+        { cancelable: false }
+      );
+    }
+    else {
+      this.props.downloadKey(key.keyWeb);
+    }
+  }
+
   render() {
     const { keys, strings } = this.props;
     return (
@@ -67,7 +82,7 @@ class Frontpage2 extends React.Component<Props, State> {
               title={strings.frontpageTopTitle}
               description={strings.frontpageTopDescription}
             />
-            <KeyPanel keys={keys} strings={strings} onPress={this.handleOnPressKey} />
+            <KeyPanel keys={keys} strings={strings} onPress={this.handleOnPressKey} onDownload={this.handleOnDownloadKey} />
             <Explanation
               title={strings.frontpageBottomTitle}
               description={strings.frontpageBottomDescription}
@@ -80,22 +95,23 @@ class Frontpage2 extends React.Component<Props, State> {
 }
 
 function mapStateToProps({ key, settings }) {
-  const { deviceTypeAndroidTablet, strings } = settings;
+  const { deviceTypeAndroidTablet, isConnected, strings } = settings;
   return {
     keys: sortKeys(key.keys),
     deviceTypeAndroidTablet,
+    isConnected,
     strings,
   };
 };
 
 function mapDispatchToProps(dispatch) {
-  const { setAllKeys, setKey } = bindActionCreators({ ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction }, dispatch);
+  const { setAllKeys, setKey, downloadKey } = bindActionCreators({ ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction }, dispatch);
 
   return {
     loadAllKeys: setAllKeys,
     setKey,
+    downloadKey,
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Frontpage2);
-

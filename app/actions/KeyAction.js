@@ -133,6 +133,7 @@ export function downloadKey(keyWebName) {
     payload: {
       promise: this.KeyDownload.downloadKey(keyWebName),
     },
+    meta: { keyWeb: keyWebName },
   };
 }
 

@@ -9,7 +9,7 @@ export function sortKeys(keys: Array) {
       return a.keyStatus === 'beta' ? 1 : -1;
     }
 
-    return 0;
+    return a.title > b.title;
   });
 
   return sorted;

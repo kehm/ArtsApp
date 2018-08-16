@@ -4,6 +4,10 @@
  * @author Kjetil Fossheim
  */
 
+
+import findIndex from 'lodash/findIndex';
+import merge from 'lodash/merge';
+
 import * as actionTypes from '../actions/actionTypes';
 
 
@@ -195,17 +199,29 @@ export default function(state = DEFAULT_STATE, action) {
     return{...state,
       speciesImageError: action.payload,
     };
-  case `${actionTypes.DOWNLOAD_KEY}_SUCCESS`:
-    return{...state,
+  case `${actionTypes.DOWNLOAD_KEY}_SUCCESS`: {
+    const { keyWeb } = action.meta;
+    const keys = updateKey(state.keys, 'keyWeb', keyWeb, { isDownloading: false, keyDownloaded: 1 });
+
+    return {
+      ...state,
+      keys,
       keyDownloaded_SUCCESS: true,
       keyDownloaded_LOADING: false,
       chosenKey: -1,
       chosenKeyTitle: '',
     };
-  case `${actionTypes.DOWNLOAD_KEY}_LOADING`:
-    return{...state,
+  }
+  case `${actionTypes.DOWNLOAD_KEY}_LOADING`: {
+    const { keyWeb } = action.meta;
+    const keys = updateKey(state.keys, 'keyWeb', keyWeb, { isDownloading: true });
+
+    return {
+      ...state,
+      keys,
       keyDownloaded_LOADING: true,
     };
+  }
   case `${actionTypes.DOWNLOAD_KEY}_ERROR`:
     return{...state,
       keyDownloaded_ERROR: action.payload,
@@ -252,4 +268,25 @@ function selectTraitValue(keyId, value, state) {
     chosenValues: tempValueList,
     chosenTraits: tempTraitList,
   };
+}
+
+function findKeyByProperty(keys, propName, propValue) {
+  const index = findIndex(keys, [propName, propValue]);
+  return {
+    key: index >= 0 ? keys[index] : null,
+    index,
+  };
+}
+
+function updateKey(keys, lookupProp, lookupValue, changes) {
+  const { key, index } = findKeyByProperty(keys, lookupProp, lookupValue);
+  if (!key) {
+    return keys;
+  }
+
+  const newKey = merge({}, key, changes);
+  // keys[index] = newKey;
+  // return keys;
+  const newKeys = keys.map((k, i) => (i === index) ? newKey : k);
+  return newKeys;
 }
