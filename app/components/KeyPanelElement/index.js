@@ -5,7 +5,10 @@ import styles  from './styles.js';
 import TraitImageButton from '../TraitImageButton';
 import { setContentStrings } from '../../actions/SettingsAction.js';
 
-import { getKeyInfoImageSource } from '../../utilities/image';
+import {
+  getKeyThumbImageSource,
+  getKeyInfoImageSource
+} from '../../utilities/image';
 
 type Props = {
   size: Number,
@@ -19,11 +22,15 @@ type Props = {
 };
 
 const mapKey = key => {
+  const imageSource = (key.image === 1)
+    ? getKeyInfoImageSource(key.key_id)
+    : getKeyThumbImageSource(key.key_id);
+
   return {
     isBeta: key.keyStatus === 'beta',
     isDownloaded: key.keyDownloaded > 0,
     title: key.title,
-    imageSource: getKeyInfoImageSource(key.key_id),
+    imageSource,
   };
 };
 
