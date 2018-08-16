@@ -5,6 +5,12 @@ export default StyleSheet.create({
     flex: 1,
   },
   row: {
-
+    flex: 1,
+  },
+  rowWrapper: {
+    justifyContent: 'space-between',
+  },
+  footer: {
+    height: 16,
   }
 });

@@ -60,7 +60,7 @@ const scenes = Actions.create(
       />
       <Scene
         key="Frontpage"
-        component={Frontpage2}
+        component={Frontpage}
         panHandlers={null}
         hideNavBar
         type={ActionConst.RESET}

@@ -129,22 +129,20 @@ class Key2 extends React.Component<Props, State> {
             onInfo={this.onKeyInfo}
           />
           <View style={styles.container} >
+            <TraitPanel
+                traits={usedTraits}
+                chosenValues={chosenValues}
+                onSelect={this.onTraitSelected}
+                valueImages={valueImages}
+                header='Valgte egenskaper:'
+                emptyHeader='Egenskaper ved arter'
+                emptyDescription='Du har ikke valgt noen egenskaper enda.'
+              />
             <TraitList
               traits={unusedTraits}
               activeTraits={activeTraits}
               activeValues={activeValues}
               onSelect={this.onTraitSelected}
-              HeaderComponent={() => (
-                <TraitPanel
-                  traits={usedTraits}
-                  chosenValues={chosenValues}
-                  onSelect={this.onTraitSelected}
-                  valueImages={valueImages}
-                  header='Valgte egenskaper:'
-                  emptyHeader='Egenskaper ved arter'
-                  emptyDescription='Du har ikke valgt noen egenskaper enda.'
-                />
-              )}
             />
             <SpeciesPanel
               species={species}

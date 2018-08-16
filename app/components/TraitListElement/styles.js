@@ -1,39 +1,43 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 import * as Colors from '../../lib/colors';
 
 export default StyleSheet.create({
   container: {
-    margin: 8,
+    margin: 16,
+    marginBottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 54,
+    height: 80,
+    width: (Dimensions.get('window').width * 0.5) - 10,
   },
   elementContainer: {
     borderWidth: 1,
     borderRadius: 4,
-    padding: 16,
-    height: 44,
-    margin: 6,
+    padding: 10,
+    marginTop: 16,
+    marginRight: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flex: 1,
   },
   all: {
-    backgroundColor: Colors.AAIconGreen + '22',
+    backgroundColor: '#E1ECDF',
     borderColor: Colors.AAIconGreenD + '22',
   },
   reduced: {
-    backgroundColor: Colors.AAIconBrown + '22',
+    backgroundColor: '#F4E9D7',
     borderColor: Colors.AAIconBrownL + '44',
   },
   empty: {
-    backgroundColor: '#FF000022',
+    backgroundColor: '#F6D5D5',
     borderColor: '#FF000022',
   },
   text: {
     flex: 1,
     paddingRight: 5,
+    textAlign: 'center',
   },
   numbers: {
     fontSize: 10,
@@ -48,7 +52,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    right: 0,
+    right: 14,
     top: 0,
   },
   numberBadgeFull: {

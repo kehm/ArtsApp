@@ -11,7 +11,7 @@ type Props = {
   included: Number,
 }
 
-class TraitElement extends React.Component<Props> {
+class TraitListElement extends React.Component<Props> {
 
   render() {
     const { title, total, included, isActive } = this.props;
@@ -26,8 +26,6 @@ class TraitElement extends React.Component<Props> {
         <View style={[styles.elementContainer, activeStyle]}>
           <Text
             style={styles.text}
-            numberOfLines={1}
-            ellipsizeMode='tail'
           >
             {title}
           </Text>
@@ -46,4 +44,4 @@ class TraitElement extends React.Component<Props> {
 
 }
 
-export default TraitElement;
+export default TraitListElement;
