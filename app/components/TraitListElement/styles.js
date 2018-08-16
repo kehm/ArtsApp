@@ -38,6 +38,7 @@ export default StyleSheet.create({
     flex: 1,
     paddingRight: 5,
     textAlign: 'center',
+    maxHeight: 70,
   },
   numbers: {
     fontSize: 10,

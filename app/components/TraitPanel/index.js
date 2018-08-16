@@ -24,7 +24,7 @@ class TraitPanel extends React.Component<Props> {
     onSelect && onSelect(trait);
   }
 
-  renderItem = (item) => {
+  renderItem = (item, truncate) => {
     const { valueImages, chosenValues } = this.props;
 
     const selectedValue = item.values.find(val => chosenValues.indexOf(val.value_id) > -1);
@@ -36,6 +36,7 @@ class TraitPanel extends React.Component<Props> {
     return (
       <TraitPanelElement
         trait={item}
+        truncate={truncate}
         selectedValue={selectedValue}
         imagePath={imagePath}
         onPress={() => this.handleTraitSelected(item)}
@@ -63,7 +64,7 @@ class TraitPanel extends React.Component<Props> {
           <HorizontalList
             data={traits}
             keyExtractor={(item) => item.trait_id}
-            renderItem={({item}) => this.renderItem(item)}
+            renderItem={({item, index}) => this.renderItem(item, index !== traits.length - 1)}
           />
         }
       </View>
