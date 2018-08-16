@@ -11,6 +11,7 @@ import styles  from './styles.js';
 type Props = {
   keys: Array,
   strings: Object,
+  onPress: Function,
 }
 
 class KeyPanel extends React.Component<Props> {
@@ -25,7 +26,7 @@ class KeyPanel extends React.Component<Props> {
   }
 
   renderItem = (item, size) => {
-    const { strings } = this.props;
+    const { strings, onPress } = this.props;
     // const { valueImages, chosenValues } = this.props;
 
     // const selectedValue = item.values.find(val => chosenValues.indexOf(val.value_id) > -1);
@@ -48,6 +49,7 @@ class KeyPanel extends React.Component<Props> {
         keyObject={item}
         strings={strings}
         size={size}
+        onPress={onPress}
       />
     );
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { TouchableOpacity, View, Text, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import styles  from './styles.js';
@@ -45,19 +45,20 @@ class KeyPanelElement extends React.Component<Props> {
     const imageSize = { height: size - 2 * imageMargin, width: size - 2 * imageMargin };
 
     return (
-      <View style={[styles.outerContainer, containerSize]}>
-        <View style={[styles.innerContainer, containerSize]}>
-          {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
-          <Text style={styles.title}>{title}</Text>
-          <View style={styles.imageContainer}>
-            <Image source={imageSource} resizeMode='contain' style={[styles.image, imageSize]} />
+      <TouchableOpacity onPress={() => onPress(keyObject)}>
+        <View style={[styles.outerContainer, containerSize]}>
+          <View style={[styles.innerContainer, containerSize]}>
+            {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
+            <Text style={styles.title}>{title}</Text>
+            <View style={styles.imageContainer}>
+              <Image source={imageSource} resizeMode='contain' style={[styles.image, imageSize]} />
+            </View>
+            {!isDownloaded &&
+              <Icon name='cloud-download' style={styles.download} size={24} />
+            }
           </View>
-          {!isDownloaded &&
-            <Icon name='cloud-download' style={styles.download} size={24} />
-          }
-
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 

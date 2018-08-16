@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
+import { Container, StyleProvider } from 'native-base';
+import { Actions } from 'react-native-router-flux';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -42,6 +43,16 @@ class Frontpage2 extends React.Component<Props, State> {
     this.props.loadAllKeys();
   }
 
+  handleOnPressKey = (key) => {
+    this.props.setKey(key.key_id, key.title);
+    if (key.keyDownloaded) {
+      Actions.Key();
+    }
+    else {
+      Actions.Info({showDownload: true});
+    }
+  }
+
   render() {
     const { keys, strings } = this.props;
     return (
@@ -56,7 +67,7 @@ class Frontpage2 extends React.Component<Props, State> {
               title={strings.frontpageTopTitle}
               description={strings.frontpageTopDescription}
             />
-            <KeyPanel keys={keys} strings={strings} />
+            <KeyPanel keys={keys} strings={strings} onPress={this.handleOnPressKey} />
             <Explanation
               title={strings.frontpageBottomTitle}
               description={strings.frontpageBottomDescription}
@@ -78,10 +89,11 @@ function mapStateToProps({ key, settings }) {
 };
 
 function mapDispatchToProps(dispatch) {
-  const { setAllKeys } = bindActionCreators({ ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction }, dispatch);
+  const { setAllKeys, setKey } = bindActionCreators({ ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction }, dispatch);
 
   return {
     loadAllKeys: setAllKeys,
+    setKey,
   };
 };
 
