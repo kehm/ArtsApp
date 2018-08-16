@@ -4,10 +4,11 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
-  row: {
+  item: {
     flex: 1,
   },
-  rowWrapper: {
+  row: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
   },
   footer: {
