@@ -30,6 +30,10 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     fontWeight: '100',
   },
+  image: {
+    width: 200,
+    height: 200,
+  },
   text: {
     maxWidth: 120,
     paddingTop: 2,

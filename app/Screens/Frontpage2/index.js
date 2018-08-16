@@ -2,6 +2,7 @@ import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
 import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
 
+import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 
 // theme
@@ -10,6 +11,11 @@ import common from '../../native-base-theme/variables/commonColor';
 import androidTablet from '../../native-base-theme/variables/androidTablet';
 
 import styles  from './styles.js';
+
+import * as KeyAction from '../../actions/KeyAction';
+import * as MenuAction from '../../actions/MenuAction';
+import * as ObservationAction from '../../actions/ObservationAction';
+import * as SettingsAction from '../../actions/SettingsAction';
 
 import FrontpageHeader from '../../components/FrontpageHeader';
 import Explanation from '../../components/Explanation';
@@ -30,6 +36,10 @@ class Frontpage2 extends React.Component<Props, State> {
     };
   }
 
+  componentDidMount() {
+    this.props.loadAllKeys();
+  }
+
   render() {
     const { keys, strings } = this.props;
     return (
@@ -44,7 +54,7 @@ class Frontpage2 extends React.Component<Props, State> {
               title={strings.frontpageTopTitle}
               description={strings.frontpageTopDescription}
             />
-            <KeyPanel keys={keys} betaTitle={strings.beta} />
+            <KeyPanel keys={keys} strings={strings} />
             <Explanation
               title={strings.frontpageBottomTitle}
               description={strings.frontpageBottomDescription}
@@ -57,15 +67,21 @@ class Frontpage2 extends React.Component<Props, State> {
 }
 
 function mapStateToProps({ key, settings }) {
-  const {  deviceTypeAndroidTablet, strings } = settings;
+  const { deviceTypeAndroidTablet, strings } = settings;
+  const { keys } = key;
   return {
+    keys,
     deviceTypeAndroidTablet,
     strings,
   };
 };
 
 function mapDispatchToProps(dispatch) {
-  return { };
+  const { setAllKeys } = bindActionCreators({ ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction }, dispatch);
+
+  return {
+    loadAllKeys: setAllKeys,
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Frontpage2);

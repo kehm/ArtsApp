@@ -10,7 +10,7 @@ import styles  from './styles.js';
 
 type Props = {
   keys: Array,
-  betaTitle: String,
+  strings: Object,
 }
 
 class KeyPanel extends React.Component<Props> {
@@ -21,7 +21,7 @@ class KeyPanel extends React.Component<Props> {
   // }
 
   renderItem = (item) => {
-    const { betaTitle } = this.props;
+    const { strings } = this.props;
     // const { valueImages, chosenValues } = this.props;
 
     // const selectedValue = item.values.find(val => chosenValues.indexOf(val.value_id) > -1);
@@ -40,22 +40,21 @@ class KeyPanel extends React.Component<Props> {
     // );
     return (
       <KeyPanelElement
-        isBeta={true}
-        betaTitle={betaTitle}
+        key={item.key_id}
+        keyObject={item}
+        strings={strings}
         size={250}
       />
     );
   }
   render() {
-    const { betaTitle } = this.props;
+    const { keys } = this.props;
     // const { traits, emptyHeader, emptyDescription } = this.props;
 
     return (
       <View style={styles.container}>
         <Swiper style={styles.swiper}>
-          {this.renderItem()}
-          {this.renderItem()}
-          {this.renderItem()}
+          {keys.map(k => this.renderItem(k))}
         </Swiper>
       </View>
     );

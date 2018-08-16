@@ -1,46 +1,45 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 
 import styles  from './styles.js';
 import TraitImageButton from '../TraitImageButton';
 import { setContentStrings } from '../../actions/SettingsAction.js';
 
+import { getKeyInfoImageSource } from '../../utilities/image';
+
 type Props = {
   size: Number,
-  isBeta: Boolean,
-  betaTitle: String,
+  keyObject: Object,
   isDownloaded: Boolean,
   title: String,
-  imagePath: String,
+  imageSource: Object,
   onPress: Function,
   onDownload: Function,
   strings: Object,
 };
 
+const mapKey = key => {
+  return {
+    isBeta: key.keyStatus === 'beta',
+    isDownloaded: key.keyDownloaded > 0,
+    title: key.title,
+    imageSource: getKeyInfoImageSource(key.key_id),
+  };
+};
+
 class KeyPanelElement extends React.Component<Props> {
 
   render() {
-    const { size, isBeta, betaTitle, isDownloaded, title, imagePath, onPress, onDownload } = this.props;
+    const { keyObject, size, strings, onPress, onDownload } = this.props;
+    const { isBeta, isDownloaded, title, imageSource } = mapKey(keyObject);
     // const dim = { height: size, width: size };
     const dim = { height: 250, width: 250 };
 
     return (
       <View style={[styles.outerContainer, dim]}>
         <View style={[styles.innerContainer, dim]}>
-          {isBeta && <Text style={styles.beta}>{betaTitle}</Text>}
-          {/* <TraitImageButton imagePath={imagePath} onPress={onPress} />
-          <Text
-            style={styles.text}
-            numberOfLines={1}
-            ellipsizeMode='tail'
-          >{trait.traitText}
-          </Text>
-          <Text
-            style={styles.value}
-            numberOfLines={1}
-            ellipsizeMode='tail'
-          >{selectedValue && selectedValue.valueText}
-          </Text> */}
+          {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
+          <Image source={imageSource} resizeMode='contain' style={styles.image} />
         </View>
       </View>
     );
