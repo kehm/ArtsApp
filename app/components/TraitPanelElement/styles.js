@@ -5,8 +5,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     height: 120,
     width: 120,
-    paddingLeft: 5,
-    marginLeft: 10,
+    paddingLeft: 10,
+
     justifyContent: 'center',
   },
   text: {
