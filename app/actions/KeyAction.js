@@ -24,13 +24,13 @@ export function setKey(keyId, title) {
     });
     if(!isSameKey) {
       dispatch(resetKey(keyId));
+      dispatch(setTraitValuecombo(keyId));
+      dispatch(setAllSpToKEy(keyId));
+      dispatch(setSpNerby(keyId));
+      dispatch(getAllSpImages(keyId));
+      dispatch(getValueImages(keyId));
+      dispatch(setSpeciesLeft([], keyId));
     }
-    dispatch(setTraitValuecombo(keyId));
-    dispatch(setAllSpToKEy(keyId));
-    dispatch(setSpNerby(keyId));
-    dispatch(getAllSpImages(keyId));
-    dispatch(getValueImages(keyId));
-    dispatch(setSpeciesLeft([], keyId));
   };
 }
 
