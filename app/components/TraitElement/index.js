@@ -15,23 +15,31 @@ class TraitElement extends React.Component<Props> {
 
   render() {
     const { title, total, included, isActive } = this.props;
-    const activeStyle = isActive ? styles.active : {};
+    const activeStyle = isActive ? included < total ? styles.reduced : styles.all : styles.empty;
+
+    let numberBadgeStyle = styles.numberBadgeFull;
+    if(included === 0) numberBadgeStyle = styles.numberBadgeEmpty;
+    else if(included < total) numberBadgeStyle = styles.numberBadgeReduced;
 
     return (
-      <View style={[styles.container, activeStyle]}>
-        <Text
-          style={styles.text}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {title}
-        </Text>
-        <Text
-          style={styles.numbers}
-          numberOfLines={1}
-        >
-          {included}/{total}
-        </Text>
+      <View style={styles.container}>
+        <View style={[styles.elementContainer, activeStyle]}>
+          <Text
+            style={styles.text}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+          >
+            {title}
+          </Text>
+        </View>
+        <View style={[styles.numberBadge, numberBadgeStyle]}>
+          <Text
+            style={styles.numbers}
+            numberOfLines={1}
+          >
+            {included}/{total}
+          </Text>
+        </View>
       </View>
     );
   }
