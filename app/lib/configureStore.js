@@ -20,7 +20,7 @@ export default function configureStore(initialState: any = undefined) {
   const enhancer = compose(
     applyMiddleware(thunk),
     applyMiddleware(promise, promiseMiddleware({ promiseTypeSuffixes: ['LOADING', 'SUCCESS', 'ERROR']})),
-    applyMiddleware(logger),
+    // applyMiddleware(logger),
   );
   return createStore(rootReducer, initialState, enhancer);
 }

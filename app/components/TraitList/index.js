@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, TouchableOpacity, View, Text } from 'react-native';
 
-import TraitElement from '../TraitElement';
+import TraitListElement from '../TraitListElement';
 
 import styles  from './styles.js';
 
@@ -42,7 +42,7 @@ class TraitList extends React.Component {
         style={styles.row}
         onPress={() => this.onPress(item)}
       >
-        <TraitElement
+        <TraitListElement
           title={item.traitText}
           total={item.values.length}
           included={activeValueCount}
@@ -60,9 +60,12 @@ class TraitList extends React.Component {
         <FlatList
           data={traits}
           ListHeaderComponent={HeaderComponent}
+          ListFooterComponent={() => <View style={styles.footer}/>}
           extraData={this.props}
           renderItem={this.renderItem}
           keyExtractor={(item) => item.trait_id}
+          numColumns={2}
+          columnWrapperStyle={styles.rowWrapper}
         />
       </View>
     );
