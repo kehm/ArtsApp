@@ -5,6 +5,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     justifyContent: 'space-around',
-    paddingVertical: 30,
+    paddingTop: 30,
+    paddingBottom: 40,
   }
 });

@@ -30,9 +30,12 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
     fontWeight: '100',
   },
-  image: {
-    width: 200,
-    height: 200,
+  title: {
+    position: 'absolute',
+    top: 16,
+  },
+  imageContainer: {
+    paddingTop: 20,
   },
   text: {
     maxWidth: 120,
@@ -42,5 +45,5 @@ export default StyleSheet.create({
     maxWidth: 120,
     paddingTop: 2,
     fontSize: 11,
-  }
+  },
 });

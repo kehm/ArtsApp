@@ -3,9 +3,15 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     // backgroundColor: '#CC44AA',
-    height: 300,
   },
   swiper: {
     // backgroundColor: '#44AACC',
   },
+  dotStyle: {
+    transform: [{ translateY: 20}],
+  },
+  activeDot: {
+    backgroundColor: '#000',
+    transform: [{ translateY: 20}],
+  }
 });
