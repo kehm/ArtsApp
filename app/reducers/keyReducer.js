@@ -201,7 +201,7 @@ export default function(state = DEFAULT_STATE, action) {
     };
   case `${actionTypes.DOWNLOAD_KEY}_SUCCESS`: {
     const { keyWeb } = action.meta;
-    const keys = updateKey(state.keys, 'keyWeb', keyWeb, { isDownloading: false, keyDownloaded: 1 });
+    const keys = updateKey(state.keys, 'keyWeb', keyWeb, { keyDownloaded: 1 });
 
     return {
       ...state,
@@ -213,12 +213,8 @@ export default function(state = DEFAULT_STATE, action) {
     };
   }
   case `${actionTypes.DOWNLOAD_KEY}_LOADING`: {
-    const { keyWeb } = action.meta;
-    const keys = updateKey(state.keys, 'keyWeb', keyWeb, { isDownloading: true });
-
     return {
       ...state,
-      keys,
       keyDownloaded_LOADING: true,
     };
   }
@@ -285,8 +281,6 @@ function updateKey(keys, lookupProp, lookupValue, changes) {
   }
 
   const newKey = merge({}, key, changes);
-  // keys[index] = newKey;
-  // return keys;
   const newKeys = keys.map((k, i) => (i === index) ? newKey : k);
   return newKeys;
 }
