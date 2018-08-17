@@ -14,9 +14,9 @@ export function resettingReset() {
     type: actionTypes.RESETTING_RESET,
   };
 }
-export function setKey(keyId, title) {
+export function setKey(keyId, title, force = false) {
   return async (dispatch, getState) => {
-    const isSameKey = getState().key.chosenKey === keyId;
+    const isSameKey = !force && getState().key.chosenKey === keyId;
     dispatch({
       type: actionTypes.ACTION_CHOSEN_KEY,
       chosenKey: keyId,

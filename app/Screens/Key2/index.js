@@ -42,6 +42,7 @@ class Key2 extends React.Component<Props, State> {
     };
   }
 
+  // TODO: Toggle panel not working on Android
   // componentWillReceiveProps(nextProps) {
   //   const prevValues = this.props.chosenValues;
   //   const nextValues = nextProps.chosenValues;
@@ -76,6 +77,10 @@ class Key2 extends React.Component<Props, State> {
     Actions.Species({nerby: 0, selectedSpecies: species});
   }
 
+  onViewAllSpecies = () => {
+    Actions.SpeciesLeft({});
+  }
+
   onValueSelected = (value) => {
     const { actions, keyId } = this.props;
 
@@ -101,10 +106,15 @@ class Key2 extends React.Component<Props, State> {
     }));
   }
 
+  onTraitReset = () => {
+    const { keyId, title } = this.props;
+    this.props.actions.setKey(keyId, title, true);
+  }
+
   render() {
     const { title, traits, species, speciesImages, valueImages,
       chosenValues, totalSpecies, foundSpecies, chosenTraits,
-      activeTraits, activeValues } = this.props;
+      activeTraits, activeValues, strings } = this.props;
 
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
@@ -133,10 +143,12 @@ class Key2 extends React.Component<Props, State> {
                 traits={usedTraits}
                 chosenValues={chosenValues}
                 onSelect={this.onTraitSelected}
+                onReset={this.onTraitReset}
                 valueImages={valueImages}
-                header='Valgte egenskaper:'
-                emptyHeader='Egenskaper ved arter'
-                emptyDescription='Du har ikke valgt noen egenskaper enda.'
+                header={strings.chosenTraits}
+                emptyHeader={strings.chosenTraitsHeader}
+                emptyDescription={strings.noTraitsSelected}
+                resetTitle={strings.reset}
               />
             <TraitList
               traits={unusedTraits}
@@ -150,9 +162,11 @@ class Key2 extends React.Component<Props, State> {
               isCollapsed={isSpeciesPanelToggled}
               onToggleClick={this.toggleSpeciesPanel}
               onSpeciesClick={this.onSpeciesSelected}
+              onViewAllClick={this.onViewAllSpecies}
               totalSpecies={totalSpecies}
               foundSpecies={foundSpecies}
-              emptyDescription='Ingen arter funnet med valgte egenskaper'
+              emptyDescription={strings.noSpeciesLeft}
+              strings={strings}
             />
             <TraitDialog
               isVisible={isTraitDialogVisible}
@@ -173,7 +187,7 @@ class Key2 extends React.Component<Props, State> {
   }
 }
 
-function mapStateToProps({ key }) {
+function mapStateToProps({ key, settings }) {
   const isUnfiltered = key.speciesLeft.length === 0 && key.chosenValues.length === 0;
   return ({
     keyId: key.chosenKey,
@@ -188,6 +202,7 @@ function mapStateToProps({ key }) {
     chosenTraits: key.chosenTraits,
     activeTraits: isUnfiltered ? key.traitValueCombo : key.relevant,
     activeValues: key.spValues,
+    strings: settings.strings,
   });
 };
 

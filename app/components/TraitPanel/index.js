@@ -1,20 +1,24 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { TouchableOpacity, View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import HorizontalList from '../HorizontalList';
 import TraitPanelElement from '../TraitPanelElement';
 
 import styles  from './styles.js';
+import ImageButton from '../ImageButton';
 
 type Props = {
   traits: Array,
   traitImages: Map,
   chosenValues: Array,
   valueImages: Map,
-  onSelect: Function,
   header: String,
   emptyHeader: String,
   emptyDescription: String,
+  resetTitle: String,
+  onSelect: Function,
+  onReset: Function,
 }
 
 class TraitPanel extends React.Component<Props> {
@@ -25,27 +29,50 @@ class TraitPanel extends React.Component<Props> {
   }
 
   renderItem = (item, truncate) => {
-    const { valueImages, chosenValues } = this.props;
+    const { valueImages, chosenValues, onReset } = this.props;
 
-    const selectedValue = item.values.find(val => chosenValues.indexOf(val.value_id) > -1);
+    if(item.type === 'button') {
+      return (
+        <TouchableOpacity style={styles.resetButton} onPress={onReset}>
+          <View style={styles.resetButtonImage}>
+            <Icon name={item.icon} size={21} color='#AAA'/>
+          </View>
+          <Text style={styles.resetButtonText}>{item.title}</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    const trait = item.trait;
+    const selectedValue = trait.values.find(val => chosenValues.indexOf(val.value_id) > -1);
 
     const imagePaths = valueImages.get(selectedValue.value_id);
     let imagePath = null;
     if (imagePaths) imagePath = imagePaths[0];
 
     return (
-      <TraitPanelElement
-        trait={item}
-        truncate={truncate}
-        selectedValue={selectedValue}
-        imagePath={imagePath}
-        onPress={() => this.handleTraitSelected(item)}
-      />
+        <TraitPanelElement
+          trait={trait}
+          truncate={truncate}
+          selectedValue={selectedValue}
+          imagePath={imagePath}
+          onPress={() => this.handleTraitSelected(trait)}
+        />
     );
   }
 
   render() {
-    const { traits, header, emptyHeader, emptyDescription } = this.props;
+    const { traits, header, resetTitle, emptyHeader, emptyDescription } = this.props;
+
+    const mappedElements = traits.map(t => ({
+      type: 'trait',
+      trait: t,
+    }));
+
+    mappedElements.push({
+      type: 'button',
+      title: resetTitle,
+      icon: 'refresh',
+    });
 
     return (
       <View style={styles.container}>
@@ -62,9 +89,9 @@ class TraitPanel extends React.Component<Props> {
         }
         {traits.length > 0 &&
           <HorizontalList
-            data={traits}
-            keyExtractor={(item) => item.trait_id}
-            renderItem={({item, index}) => this.renderItem(item, index !== traits.length - 1)}
+            data={mappedElements}
+            keyExtractor={(item) => item.trait ? item.trait.trait_id : item.title }
+            renderItem={({item, index}) => this.renderItem(item, index !== mappedElements.length - 1)}
           />
         }
       </View>
