@@ -11,18 +11,33 @@ type Props = {
   keys: Array,
   strings: Object,
   onPress: Function,
-  onDownload: Function,
 }
 
-class KeyPanel extends React.Component<Props> {
+type State = {
+  currentKeyId: Number,
+}
+
+class KeyPanel extends React.Component<Props,State> {
+  constructor(props) {
+    super(props);
+  }
+
+  _currentKeyId: null;
 
   getElementSize = () => {
     const { width } = Dimensions.get('window');
-    return width - 80;
+    return width - 60;
+  }
+
+  handleIndexChanged = index => {
+    const keyId = this.props.keys[index].key_id;
+    if (keyId !== this._currentKeyId) {
+      this._currentKeyId = keyId;
+    }
   }
 
   renderItem = (item, size) => {
-    const { strings, onPress, onDownload } = this.props;
+    const { strings, onPress } = this.props;
 
     return (
       <KeyPanelElement
@@ -31,9 +46,22 @@ class KeyPanel extends React.Component<Props> {
         strings={strings}
         size={size}
         onPress={onPress}
-        onDownload={onDownload}
       />
     );
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this._currentKeyId !== null && this._swiper) {
+      const oldIndex = this.props.keys.findIndex(k => k.key_id === this._currentKeyId);
+      const newIndex = nextProps.keys.findIndex(k => k.key_id === this._currentKeyId);
+
+      if (newIndex !== oldIndex) {
+        const offset = newIndex - oldIndex;
+        setTimeout(() => {
+          this._swiper.scrollBy(offset, true);
+        }, 500);
+      }
+    }
   }
 
   render() {
@@ -43,7 +71,15 @@ class KeyPanel extends React.Component<Props> {
 
     return (
       <View style={[styles.container, containerSize]}>
-        <Swiper style={styles.swiper} dotStyle={styles.dotStyle} activeDotStyle={styles.activeDot}>
+        <Swiper
+          style={styles.swiper}
+          dotStyle={styles.dotStyle}
+          activeDotStyle={styles.activeDot}
+          onIndexChanged={this.handleIndexChanged}
+          ref={(swiper) => {
+            this._swiper = swiper;
+          }}
+        >
           {keys.map(k => this.renderItem(k, size))}
         </Swiper>
       </View>
