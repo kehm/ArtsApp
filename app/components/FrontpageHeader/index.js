@@ -5,22 +5,19 @@ import styles  from './styles.js';
 
 type Props = {
   title: String,
-  onInfo: Function
+  onMenu: Function,
 }
 class FrontpageHeader extends React.Component<Props> {
 
   render() {
-    const { title, onInfo } = this.props;
+    const { title, onInfo, onMenu } = this.props;
 
     return (
       <Header>
         <Left>
-          {/* <Button transparent onPress={onInfo}>
-              <Icon
-                name='ios-information-circle-outline'
-                style={this.props.deviceTypeAndroidTablet ? {fontSize: 44} : {fontSize: 22}}
-              />
-            </Button> */}
+          <Button transparent onPress={onMenu}>
+              <Icon name='ios-menu' />
+          </Button>
         </Left>
         <Body>
           <Title>{title}</Title>

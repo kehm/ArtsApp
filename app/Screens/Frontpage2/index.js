@@ -43,6 +43,10 @@ class Frontpage2 extends React.Component<Props, State> {
     this.props.loadAllKeys();
   }
 
+  handleOnMenuPress = () => {
+    this.props.openMenu();
+  }
+
   handleOnPressKey = (key) => {
     this.props.setKey(key.key_id, key.title);
     if (key.keyDownloaded) {
@@ -75,7 +79,7 @@ class Frontpage2 extends React.Component<Props, State> {
         <Container>
           <FrontpageHeader
               title={strings.frontpageTitle}
-              onInfo={this.onInfo}
+              onMenu={this.handleOnMenuPress}
           />
           <View style={styles.container} >
             <Explanation
@@ -107,12 +111,18 @@ function mapStateToProps({ key, settings }) {
 };
 
 function mapDispatchToProps(dispatch) {
-  const { setAllKeys, setKey, downloadKey } = bindActionCreators({ ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction }, dispatch);
+  const { setAllKeys, openMenu, setKey, downloadKey } = bindActionCreators({
+    ...KeyAction,
+    ...MenuAction,
+    ...ObservationAction,
+    ...SettingsAction
+  }, dispatch);
 
   return {
     loadAllKeys: setAllKeys,
     setKey,
     downloadKey,
+    openMenu
   };
 };
 
