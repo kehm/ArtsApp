@@ -15,7 +15,7 @@ export default StyleSheet.create({
     backgroundColor: Colors.AAIconGreen,
   },
   notInRange: {
-    backgroundColor: Colors.AAIconBlue,
+    backgroundColor: Colors.AAIconGreenL,
   },
   eliminated: {
     backgroundColor: Colors.AAIconBrown,

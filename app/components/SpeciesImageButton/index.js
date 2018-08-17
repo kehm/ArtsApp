@@ -6,18 +6,19 @@ import { mapToImageSource } from '../../utilities/image';
 
 type Props = {
   imagePath: String,
+  borderColor: String,
   onPress: Function,
 };
 
 class SpeciesImageButton extends React.Component<Props> {
   render() {
-    const { imagePath, onPress } = this.props;
+    const { imagePath, borderColor, onPress } = this.props;
     const source = mapToImageSource(imagePath);
 
     return (
       <ImageButton
         source={source}
-        borderColor={'#0706'}
+        borderColor={borderColor}
         onPress={onPress}
       />
     );

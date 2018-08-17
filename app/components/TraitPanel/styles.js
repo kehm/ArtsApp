@@ -5,6 +5,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     borderBottomColor: '#CCC',
     borderBottomWidth: 1,
+    backgroundColor: '#65C86012'
   },
   emptyContainer:{
     alignItems: 'center',

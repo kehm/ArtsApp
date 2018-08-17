@@ -78,7 +78,8 @@ class Key2 extends React.Component<Props, State> {
   }
 
   onViewAllSpecies = () => {
-    Actions.SpeciesLeft({});
+    const { observationsNearby } = this.props;
+    Actions.SpeciesLeft({ leftNerbyList: observationsNearby });
   }
 
   onValueSelected = (value) => {
@@ -113,8 +114,8 @@ class Key2 extends React.Component<Props, State> {
 
   render() {
     const { title, traits, species, speciesImages, valueImages,
-      chosenValues, totalSpecies, foundSpecies, chosenTraits,
-      activeTraits, activeValues, strings } = this.props;
+      chosenValues, totalSpecies, foundSpecies, chosenTraits, isFiltered,
+      activeTraits, activeValues, observationsNearby, strings } = this.props;
 
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
@@ -165,8 +166,10 @@ class Key2 extends React.Component<Props, State> {
               onViewAllClick={this.onViewAllSpecies}
               totalSpecies={totalSpecies}
               foundSpecies={foundSpecies}
+              observationsNearby={observationsNearby}
               emptyDescription={strings.noSpeciesLeft}
               strings={strings}
+              isFiltered={isFiltered}
             />
             <TraitDialog
               isVisible={isTraitDialogVisible}
@@ -187,7 +190,7 @@ class Key2 extends React.Component<Props, State> {
   }
 }
 
-function mapStateToProps({ key, settings }) {
+function mapStateToProps({ key, settings, observations }) {
   const isUnfiltered = key.speciesLeft.length === 0 && key.chosenValues.length === 0;
   return ({
     keyId: key.chosenKey,
@@ -203,6 +206,12 @@ function mapStateToProps({ key, settings }) {
     activeTraits: isUnfiltered ? key.traitValueCombo : key.relevant,
     activeValues: key.spValues,
     strings: settings.strings,
+    isFiltered: !isUnfiltered,
+    observationsNearby: observations.nerbyList
+      .filter(obs => isUnfiltered ?
+        key.fullSpList.find(s => obs.species_id === s.species_id) :
+        key.speciesLeft.find(s => obs.species_id === s.species_id))
+      .map(obs => key.fullSpList.find(s => s.species_id === obs.species_id)),
   });
 };
 

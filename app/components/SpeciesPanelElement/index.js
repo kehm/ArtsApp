@@ -4,9 +4,12 @@ import { View, Text } from 'react-native';
 import styles  from './styles.js';
 import SpeciesImageButton from '../SpeciesImageButton';
 
+import * as Colors from '../../lib/colors';
+
 type Props = {
   species: Object,
   imagePath: String,
+  state: String,
   onPress: Function,
 };
 
@@ -17,23 +20,26 @@ class SpeciesPanelElement extends React.Component<Props> {
     onPress && onPress(species);
   }
   render() {
-    const { species, imagePath, onPress } = this.props;
+    const { species, imagePath, state, onPress } = this.props;
+
+    const elementColor = state === 'match' ?
+      Colors.AAIconGreenL : state === 'nearby' ?
+      Colors.AAIconGreen : Colors.AAIconBrown;
 
     return (
       <View style={styles.container}>
-        <SpeciesImageButton imagePath={imagePath} onPress={this.onSpeciesSelected} />
+        <SpeciesImageButton
+          imagePath={imagePath}
+          onPress={this.onSpeciesSelected}
+          borderColor={elementColor}
+        />
         <Text
           style={styles.name}
           numberOfLines={1}
           ellipsizeMode='tail'
+          textColor={elementColor}
         >{species.localName}
         </Text>
-        {/* <Text
-          style={styles.latinName}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >{species.latinName}
-        </Text> */}
       </View>
     );
   }
