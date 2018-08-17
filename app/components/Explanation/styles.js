@@ -1,12 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 export default StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    paddingHorizontal: DeviceInfo.isTablet() ? 80 : 20,
     alignItems: 'center',
   },
   description: {
-    fontSize: 11,
+    fontSize: DeviceInfo.isTablet() ? 16 : 11,
     textAlign: 'center',
   }
 });
