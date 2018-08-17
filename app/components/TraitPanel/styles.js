@@ -22,4 +22,27 @@ export default StyleSheet.create({
   headerContainer: {
     padding: 12,
   },
+  resetButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  },
+  resetButtonImage: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#ECECEC',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  resetButtonIcon: {
+    fontSize: 12,
+    backgroundColor: '#FF0000'
+  },
+  resetButtonText: {
+    paddingLeft: 8,
+  }
 });

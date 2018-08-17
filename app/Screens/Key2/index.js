@@ -42,6 +42,7 @@ class Key2 extends React.Component<Props, State> {
     };
   }
 
+  // TODO: Toggle panel not working on Android
   // componentWillReceiveProps(nextProps) {
   //   const prevValues = this.props.chosenValues;
   //   const nextValues = nextProps.chosenValues;
@@ -101,6 +102,11 @@ class Key2 extends React.Component<Props, State> {
     }));
   }
 
+  onTraitReset = () => {
+    const { keyId, title } = this.props;
+    this.props.actions.setKey(keyId, title, true);
+  }
+
   render() {
     const { title, traits, species, speciesImages, valueImages,
       chosenValues, totalSpecies, foundSpecies, chosenTraits,
@@ -133,6 +139,7 @@ class Key2 extends React.Component<Props, State> {
                 traits={usedTraits}
                 chosenValues={chosenValues}
                 onSelect={this.onTraitSelected}
+                onReset={this.onTraitReset}
                 valueImages={valueImages}
                 header='Valgte egenskaper:'
                 emptyHeader='Egenskaper ved arter'
