@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Easing, Animated, View, Text } from 'react-native';
+import { Platform, Dimensions, Easing, Animated, View, Text } from 'react-native';
 
 import styles  from './styles.js';
 
@@ -17,14 +17,15 @@ class TraitListElement extends React.Component<Props> {
 
   componentDidMount() {
     const { index } = this.props;
-
-    Animated.timing(this._animation, {
-      toValue: 1.0,
-      duration: 350,
-      delay: index * 45,
-      easing: Easing.inOut(Easing.cubic),
-      useNativeDriver: true
-    }).start();
+    if(Platform.OS === 'ios') {
+      Animated.timing(this._animation, {
+        toValue: 1.0,
+        duration: 350,
+        delay: index * 45,
+        easing: Easing.inOut(Easing.cubic),
+        useNativeDriver: true
+      }).start();
+    }
   }
 
   render() {
