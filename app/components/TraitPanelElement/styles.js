@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import * as Colors from '../../lib/colors';
 
 const imageSize = 32;
 
@@ -18,7 +19,7 @@ export default StyleSheet.create({
     width: imageSize,
     borderRadius: imageSize * 0.5,
     borderWidth: 2,
-    borderColor: '#E1ECDF',
+    borderColor: Colors.AAIconGreenL,
     marginRight: 8,
     alignItems: 'center',
     justifyContent: 'center'

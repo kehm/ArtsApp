@@ -137,7 +137,7 @@ class SpeciesPanel extends React.Component<Props,State> {
 const getStatusText = (foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies) => {
   const observedCountText = numberOfObservedSpecies > 0 ? numberOfObservedSpecies.toString() : 'Ingen';
   if(foundSpecies === 0) {
-    return observedCountText + ' arter i nærheten, ' + totalSpecies + ' arter totalt';
+    return observedCountText + ' i nærheten, ' + totalSpecies + ' arter totalt';
   }
 
   return observedCountText + ' arter i nærheten av ' + foundSpecies + ' mulige - totalt ' + totalSpecies + ' arter.';

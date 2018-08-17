@@ -1,19 +1,22 @@
 import { StyleSheet } from 'react-native';
 
+const size = 60;
+const borderSize = 6;
+
 export default StyleSheet.create({
   container: {
-    height: 60,
-    width: 60,
-    borderRadius: 30,
-    borderWidth: 6,
+    height: size,
+    width: size,
+    borderRadius: size * 0.5,
+    borderWidth: borderSize,
     borderColor: '#AAA',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden'
   },
   image: {
-    height: 58,
-    width: 58,
-    borderRadius: 58 * 0.5,
+    height: size - borderSize,
+    width: size - borderSize,
+    borderRadius: (size - borderSize) * 0.5,
   }
 });

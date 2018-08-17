@@ -3,6 +3,8 @@ import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
 
 import TraitListElement from '../TraitListElement';
 
+import { arraysDiffer, reshape } from '../../utilities/array';
+
 import styles  from './styles.js';
 
 type Props = {
@@ -14,6 +16,18 @@ type Props = {
 }
 
 class TraitList extends React.Component {
+
+  shouldComponentUpdate(nextProps) {
+    return arraysDiffer(this.props.traits, nextProps.traits,
+      (a,b) => a.trait_id === b.trait_id) ||
+      arraysDiffer(this.props.activeValues, nextProps.activeValues,
+        (a, b) => a.value_id === b.value_id);
+  }
+
+  componentDidUpdate() {
+    console.log('did update');
+    this._scrollView.scrollTo({x: 0, y: 0, animated: false});
+  }
 
   onPress = (item) => {
     const { onSelect } = this.props;
@@ -56,10 +70,9 @@ class TraitList extends React.Component {
 
   render() {
     const { traits, HeaderComponent } = this.props;
-    const traitPairs = this.reshape(traits, 2);
-
+    const traitPairs = reshape(traits, 2);
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} ref={(ref) => this._scrollView = ref}>
         {traitPairs.map( traitPair => (
           <View style={styles.row} key={traitPair[0].trait_id}>
             {this.renderItem(traitPair[0])}
@@ -70,22 +83,6 @@ class TraitList extends React.Component {
       </ScrollView>
     );
   }
-
-  reshape = (arr, cols) => {
-    var copy = arr.slice(0); // Copy all elements.
-    const retVal = [];
-    for (let r = 0; r < arr.length; r++) {
-      const row = [];
-      for (let c = 0; c < cols; c++) {
-        const i = r * cols + c;
-        if (i < copy.length) {
-          row.push(copy[i]);
-        }
-      }
-      retVal.push(row);
-    }
-    return retVal.filter(a => a.length > 0);
-  };
 
 }
 
