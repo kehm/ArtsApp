@@ -26,6 +26,9 @@ class TraitListElement extends React.Component<Props> {
         useNativeDriver: true
       }).start();
     }
+    else {
+      _animation = new Animated.Value(1.0);
+    }
   }
 
   render() {
