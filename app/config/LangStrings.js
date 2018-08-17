@@ -13,6 +13,11 @@ export default class LangStrings {
     this.language = 'no';
     this.strings = {
       en:{
+        chosenTraitsHeader: 'Key properties',
+        noTraitsSelected: 'No properties chosen',
+        chosenTraits: 'Chosen properties:',
+        noSpeciesLeft: 'No species found.',
+
         frontpageTitle: 'Keys',
         frontpageTopDescription: 'You can download keys to your device and then try out categorization and bla bla of different species.',
         frontpageBottomDescription: 'Tap on keys in list above to read more about each key or to start categorization of species! (blah blah).',
@@ -104,6 +109,11 @@ export default class LangStrings {
         noKeysDownloaded: 'There is no Keys downloaded. '
       },
       no: {
+        chosenTraitsHeader: 'Egenskaper ved nøkkel',
+        noTraitsSelected: 'Du har ikke valgt noen egenskaper',
+        chosenTraits: 'Valgte egenskaper:',
+        noSpeciesLeft: 'Ingen arter funnet med valgte egenskaper',
+
         frontpageTitle: 'Nøkler',
         frontpageTopDescription: 'Du kan laste ned nøklene til telefonen din og forsøke deg på kategorisering og bla bla på forskjellige arter.',
         frontpageBottomDescription: 'Klikk på nøklene i listen over for å lese mer om de enkelte nøklene eller for å begynne artsutvelgelse! (blah blah).',

@@ -44,5 +44,6 @@ export default StyleSheet.create({
   },
   resetButtonText: {
     paddingLeft: 8,
+    paddingRight: 10,
   }
 });

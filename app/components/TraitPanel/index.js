@@ -16,6 +16,7 @@ type Props = {
   header: String,
   emptyHeader: String,
   emptyDescription: String,
+  resetTitle: String,
   onSelect: Function,
   onReset: Function,
 }
@@ -60,7 +61,7 @@ class TraitPanel extends React.Component<Props> {
   }
 
   render() {
-    const { traits, header, emptyHeader, emptyDescription } = this.props;
+    const { traits, header, resetTitle, emptyHeader, emptyDescription } = this.props;
 
     const mappedElements = traits.map(t => ({
       type: 'trait',
@@ -69,7 +70,7 @@ class TraitPanel extends React.Component<Props> {
 
     mappedElements.push({
       type: 'button',
-      title: 'Nullstill',
+      title: resetTitle,
       icon: 'refresh',
     });
 
