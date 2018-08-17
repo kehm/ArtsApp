@@ -17,6 +17,7 @@ export default class LangStrings {
         noTraitsSelected: 'No properties chosen',
         chosenTraits: 'Chosen properties:',
         noSpeciesLeft: 'No species found.',
+        seeAllSpecies: 'View all',
 
         frontpageTitle: 'Keys',
         frontpageTopDescription: 'You can download keys to your device and then try out categorization and bla bla of different species.',
@@ -113,6 +114,7 @@ export default class LangStrings {
         noTraitsSelected: 'Du har ikke valgt noen egenskaper',
         chosenTraits: 'Valgte egenskaper:',
         noSpeciesLeft: 'Ingen arter funnet med valgte egenskaper',
+        seeAllSpecies: 'Vis alle',
 
         frontpageTitle: 'Nøkler',
         frontpageTopDescription: 'Du kan laste ned nøklene til telefonen din og forsøke deg på kategorisering og bla bla på forskjellige arter.',

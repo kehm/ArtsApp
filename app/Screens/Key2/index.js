@@ -77,6 +77,10 @@ class Key2 extends React.Component<Props, State> {
     Actions.Species({nerby: 0, selectedSpecies: species});
   }
 
+  onViewAllSpecies = () => {
+    Actions.SpeciesLeft({});
+  }
+
   onValueSelected = (value) => {
     const { actions, keyId } = this.props;
 
@@ -158,9 +162,11 @@ class Key2 extends React.Component<Props, State> {
               isCollapsed={isSpeciesPanelToggled}
               onToggleClick={this.toggleSpeciesPanel}
               onSpeciesClick={this.onSpeciesSelected}
+              onViewAllClick={this.onViewAllSpecies}
               totalSpecies={totalSpecies}
               foundSpecies={foundSpecies}
               emptyDescription={strings.noSpeciesLeft}
+              strings={strings}
             />
             <TraitDialog
               isVisible={isTraitDialogVisible}

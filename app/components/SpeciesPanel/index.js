@@ -17,6 +17,7 @@ type State = {
   emptyDescription: String,
   onToggleClick: Function,
   onSpeciesClick: Function,
+  onViewAllClick: Function,
 }
 
 class SpeciesPanel extends React.Component<Props,State> {
@@ -32,14 +33,27 @@ class SpeciesPanel extends React.Component<Props,State> {
   }
 
   renderItem = (item) => {
-    const { speciesImages } = this.props;
-    const imagePaths = speciesImages.get(item.species_id);
+
+    const { onViewAllClick, speciesImages } = this.props;
+
+    if(item.type === 'button') {
+      return (
+        <TouchableOpacity style={styles.viewAllContainer} onPress={onViewAllClick}>
+          <Icon style={styles.viewAllIcon} name={item.icon} size={30} color='#AAA'/>
+          <Text style={styles.viewAllText}>{item.title}</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    const species = item.species;
+
+    const imagePaths = speciesImages.get(species.species_id);
     let imagePath = null;
     if (imagePaths) imagePath = imagePaths[0];
 
     return (
       <SpeciesPanelElement
-        species={item}
+        species={species}
         imagePath={imagePath}
         onPress={this.handleSpeciesOnPress}
       />
@@ -47,8 +61,19 @@ class SpeciesPanel extends React.Component<Props,State> {
   }
 
   render() {
-    const { isCollapsed, species, emptyDescription, speciesImages,
+    const { isCollapsed, species, strings, emptyDescription, speciesImages,
       totalSpecies, foundSpecies } = this.props;
+
+    const mappedElements = species.map(s => ({
+      type: 'species',
+      species: s,
+    }));
+
+    mappedElements.push({
+      type: 'button',
+      title: strings.seeAllSpecies,
+      icon: 'chevron-right',
+    });
 
     return (
       <View style={styles.container}>
@@ -71,8 +96,8 @@ class SpeciesPanel extends React.Component<Props,State> {
         </TouchableOpacity>
         {!isCollapsed && species.length > 0 &&
         <HorizontalList
-          data={species}
-          keyExtractor={(item) => item.species_id}
+          data={mappedElements}
+          keyExtractor={(item) => item.species ? item.species.species_id : item.title}
           renderItem={({item}) => this.renderItem(item)}
         />
         }
