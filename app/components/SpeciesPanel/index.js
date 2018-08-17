@@ -140,7 +140,7 @@ const getStatusText = (foundSpecies, totalSpecies, numberOfObservedSpecies, numb
     return observedCountText + ' i nærheten, ' + totalSpecies + ' arter totalt';
   }
 
-  return observedCountText + ' arter i nærheten av ' + foundSpecies + ' mulige - totalt ' + totalSpecies + ' arter.';
+  return observedCountText + ' i nærheten av ' + foundSpecies + ' mulige - totalt ' + totalSpecies + ' arter.';
 };
 
 export default SpeciesPanel;
