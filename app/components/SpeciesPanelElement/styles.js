@@ -16,5 +16,5 @@ export default StyleSheet.create({
     maxWidth: 120,
     paddingTop: 2,
     fontSize: 11,
-  }
+  },
 });

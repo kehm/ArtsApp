@@ -5,14 +5,15 @@ export default StyleSheet.create({
     height: 60,
     width: 60,
     borderRadius: 30,
-    borderWidth: 3,
-    borderColor: '#CCC',
+    borderWidth: 6,
+    borderColor: '#AAA',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    overflow: 'hidden'
   },
   image: {
-    height: 57,
-    width: 57,
-    borderRadius: 57 * 0.5,
+    height: 58,
+    width: 58,
+    borderRadius: 58 * 0.5,
   }
 });

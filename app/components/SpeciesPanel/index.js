@@ -14,6 +14,8 @@ type State = {
   isCollapsed: Boolean,
   totalSpecies: Number,
   foundSpecies: Number,
+  isFiltered: Boolean,
+  observationsNearby: Array,
   emptyDescription: String,
   onToggleClick: Function,
   onSpeciesClick: Function,
@@ -34,7 +36,7 @@ class SpeciesPanel extends React.Component<Props,State> {
 
   renderItem = (item) => {
 
-    const { onViewAllClick, speciesImages } = this.props;
+    const { onViewAllClick, speciesImages, foundSpecies, observationsNearby } = this.props;
 
     if(item.type === 'button') {
       return (
@@ -51,10 +53,17 @@ class SpeciesPanel extends React.Component<Props,State> {
     let imagePath = null;
     if (imagePaths) imagePath = imagePaths[0];
 
+    let state = 'match';
+    if(observationsNearby
+      .find(obs => obs.species_id === species.species_id)) {
+      state = 'nearby';
+    }
+
     return (
       <SpeciesPanelElement
         species={species}
         imagePath={imagePath}
+        state={state}
         onPress={this.handleSpeciesOnPress}
       />
     );
@@ -62,12 +71,16 @@ class SpeciesPanel extends React.Component<Props,State> {
 
   render() {
     const { isCollapsed, species, strings, emptyDescription, speciesImages,
-      totalSpecies, foundSpecies } = this.props;
+      totalSpecies, foundSpecies, observationsNearby, isFiltered } = this.props;
 
     const mappedElements = species.map(s => ({
       type: 'species',
       species: s,
-    }));
+    })).sort((a, b) => {
+      const obsa = observationsNearby.find(obs => obs.species_id === a.species.species_id) !== undefined;
+      const obsb = observationsNearby.find(obs => obs.species_id === b.species.species_id) !== undefined;
+      return obsa < obsb;
+    });
 
     mappedElements.push({
       type: 'button',
@@ -75,18 +88,23 @@ class SpeciesPanel extends React.Component<Props,State> {
       icon: 'chevron-right',
     });
 
+    let numberOfObservedSpecies = observationsNearby.length;
+    let numberOfFoundSpecies = foundSpecies - numberOfObservedSpecies;
+    if(!isFiltered) {
+      numberOfObservedSpecies = observationsNearby.length;
+      numberOfFoundSpecies = totalSpecies - numberOfObservedSpecies;
+    }
+
+    const statusText = getStatusText(foundSpecies,
+      totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies);
+
     return (
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.panelHeader}
           onPress={this.handleToggleCollapsed}
         >
-          {foundSpecies === 0 &&
-            <Text>{totalSpecies + ' arter totalt'}</Text>
-          }
-          {foundSpecies > 0 &&
-            <Text>{foundSpecies + ' mulige arter, XX i nærheten av ' + totalSpecies + ' totalt'}</Text>
-          }
+          <Text>{statusText}</Text>
           {isCollapsed &&
             <Icon name='chevron-small-up' size={30} />
           }
@@ -107,13 +125,22 @@ class SpeciesPanel extends React.Component<Props,State> {
         <View style={styles.progress}>
           <SelectionProgressBar
             totalCount={totalSpecies}
-            matchingCount={foundSpecies}
-            notInRangeCount={0}
+            matchingCount={numberOfObservedSpecies}
+            notInRangeCount={numberOfFoundSpecies}
           />
         </View>
       </View>
     );
   }
 }
+
+const getStatusText = (foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies) => {
+  const observedCountText = numberOfObservedSpecies > 0 ? numberOfObservedSpecies.toString() : 'Ingen';
+  if(foundSpecies === 0) {
+    return observedCountText + ' arter i nærheten, ' + totalSpecies + ' arter totalt';
+  }
+
+  return observedCountText + ' arter i nærheten av ' + foundSpecies + ' mulige - totalt ' + totalSpecies + ' arter.';
+};
 
 export default SpeciesPanel;
