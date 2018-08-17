@@ -17,7 +17,7 @@ type Props = {
   onInfo: Function,
 }
 
-class TraitValueButton extends React.Component {
+class TraitDialogButton extends React.Component {
 
   onInfoPress = () => {
     const { value, onInfo } = this.props;
@@ -25,8 +25,8 @@ class TraitValueButton extends React.Component {
   }
 
   onClick = () => {
-    const { value, isActive, onPress } = this.props;
-    isActive && onPress && onPress(value);
+    const { value, isActive, selected, onPress } = this.props;
+    (isActive || selected) && onPress && onPress(value);
   }
 
   render() {
@@ -66,4 +66,4 @@ class TraitValueButton extends React.Component {
 
 }
 
-export default TraitValueButton;
+export default TraitDialogButton;

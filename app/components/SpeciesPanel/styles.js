@@ -8,7 +8,7 @@ export default StyleSheet.create({
   },
   panelHeader: {
     paddingLeft: 10,
-    paddingTop: 10,
+    paddingTop: 0,
     paddingRight: 10,
     flexDirection: 'row',
     alignItems: 'center',

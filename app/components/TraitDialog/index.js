@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, FlatList } from 'react-native';
 
-import TraitValueButton from '../TraitValueButton';
+import TraitDialogButton from '../TraitDialogButton';
 
 import styles  from './styles.js';
 
@@ -46,7 +46,7 @@ class TraitDialog extends React.Component<Props> {
     const isActive = activeValues.length === 0 || activeValues.indexOf(item.value_id) > -1;
 
     return (
-      <TraitValueButton
+      <TraitDialogButton
         value={item}
         isActive={isActive}
         imagePath={imagePath}
