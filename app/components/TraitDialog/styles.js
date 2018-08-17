@@ -14,7 +14,7 @@ export default StyleSheet.create({
   dialogBorder: {
     backgroundColor: 'white',
     width: Dimensions.get('window').width * 0.8,
-    height: Dimensions.get('window').height * 0.5,
+    height: Dimensions.get('window').height * 0.6,
     borderColor: '#AAA',
     borderWidth: 1,
     borderRadius: 10,

@@ -17,18 +17,14 @@ class TraitListElement extends React.Component<Props> {
 
   componentDidMount() {
     const { index } = this.props;
-    if(Platform.OS === 'ios') {
-      Animated.timing(this._animation, {
-        toValue: 1.0,
-        duration: 350,
-        delay: index * 45,
-        easing: Easing.inOut(Easing.cubic),
-        useNativeDriver: true
-      }).start();
-    }
-    else {
-      _animation = new Animated.Value(1.0);
-    }
+
+    Animated.timing(this._animation, {
+      toValue: 1.0,
+      duration: 350,
+      delay: index * 45,
+      easing: Easing.inOut(Easing.cubic),
+      useNativeDriver: true
+    }).start();
   }
 
   render() {
@@ -39,8 +35,10 @@ class TraitListElement extends React.Component<Props> {
     if(included === 0) numberBadgeStyle = styles.numberBadgeEmpty;
     else if(included < total) numberBadgeStyle = styles.numberBadgeReduced;
 
+    const transformStyle = Platform.OS === 'ios' ? { transform: [{ scale: this._animation }]} : {};
+
     return (
-      <Animated.View style={[styles.container, { transform: [{ scale: this._animation }]}]}>
+      <Animated.View style={[styles.container, transformStyle]}>
         <View style={[styles.elementContainer, activeStyle]}>
           <Text
             style={styles.text}
