@@ -79,12 +79,14 @@ class Frontpage2 extends React.Component<Props, State> {
           />
           <View style={styles.container} >
             <Explanation
-              title={strings.frontpageTopTitle}
               description={strings.frontpageTopDescription}
             />
-            <KeyPanel keys={keys} strings={strings} onPress={this.handleOnPressKey} onDownload={this.handleOnDownloadKey} />
+            <KeyPanel
+              keys={keys}
+              strings={strings}
+              onPress={this.handleOnPressKey}
+              onDownload={this.handleOnDownloadKey} />
             <Explanation
-              title={strings.frontpageBottomTitle}
               description={strings.frontpageBottomDescription}
             />
           </View>

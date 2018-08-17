@@ -5,14 +5,8 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
   },
-  title: {
-    paddingBottom: 20,
-    textAlign: 'center',
-    fontWeight: '100',
-  },
   description: {
-    fontSize: 12,
+    fontSize: 11,
     textAlign: 'center',
-    fontWeight: '100',
   }
 });
