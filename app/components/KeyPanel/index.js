@@ -26,7 +26,7 @@ class KeyPanel extends React.Component<Props,State> {
 
   getElementSize = () => {
     const { width } = Dimensions.get('window');
-    return width - 60;
+    return Math.min(width - 60, 500);
   }
 
   handleIndexChanged = index => {
