@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, Platform } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 import HorizontalList from '../HorizontalList';
@@ -68,13 +68,20 @@ class KeyPanel extends React.Component<Props,State> {
     const { keys } = this.props;
     const size = this.getElementSize();
     const containerSize = { height: size + 40 };
+    const isAndroid = Platform.OS === 'android';
+    const dotStyle = isAndroid
+      ? styles.dotStyleAndroid
+      : styles.dotStyleIos;
+    const activeDotStyle = isAndroid
+      ? styles.activeDotStyleAndroid
+      : styles.activeDotStyleIos;
 
     return (
       <View style={[styles.container, containerSize]}>
         <Swiper
           style={styles.swiper}
-          dotStyle={styles.dotStyle}
-          activeDotStyle={styles.activeDot}
+          dotStyle={dotStyle}
+          activeDotStyle={activeDotStyle}
           onIndexChanged={this.handleIndexChanged}
           ref={(swiper) => {
             this._swiper = swiper;

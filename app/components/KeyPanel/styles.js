@@ -5,11 +5,16 @@ export default StyleSheet.create({
   },
   swiper: {
   },
-  dotStyle: {
-    transform: [{ translateY: 5}],
+  dotStyleIos: {
+    transform: [{ translateY: 20}],
   },
-  activeDot: {
+  dotStyleAndroid: {
+  },
+  activeDotStyleIos: {
     backgroundColor: '#000',
-    transform: [{ translateY: 5}],
+    transform: [{ translateY: 20}],
+  },
+  activeDotStyleAndroid: {
+    backgroundColor: '#000',
   }
 });
