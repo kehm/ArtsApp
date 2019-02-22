@@ -20,8 +20,8 @@ export default class LangStrings {
         seeAllSpecies: 'View all',
 
         frontpageTitle: 'Keys',
-        frontpageTopDescription: 'You can download keys to your device and then try out categorization and bla bla of different species.',
-        frontpageBottomDescription: 'Tap on keys in list above to read more about each key or to start categorization of species! (blah blah).',
+        frontpageTopDescription: 'You can download keys to your device and then try out categorization and of different species.',
+        frontpageBottomDescription: 'Tap on keys in list above to read more about each key or to start categorization of species!',
         beta: 'BETA',
         keys: 'Keys',
         exit: 'Press once more for exiting the app.',
@@ -117,8 +117,8 @@ export default class LangStrings {
         seeAllSpecies: 'Vis alle',
 
         frontpageTitle: 'Nøkler',
-        frontpageTopDescription: 'Du kan laste ned nøklene til telefonen din og forsøke deg på kategorisering og bla bla på forskjellige arter.',
-        frontpageBottomDescription: 'Klikk på nøklene i listen over for å lese mer om de enkelte nøklene eller for å begynne artsutvelgelse! (blah blah).',
+        frontpageTopDescription: 'Du kan laste ned nøklene til telefonen din og forsøke deg på kategorisering av forskjellige arter.',
+        frontpageBottomDescription: 'Klikk på nøklene i listen over for å lese mer om de enkelte nøklene eller for å begynne artsutvelgelse!',
         beta: 'BETA',
         keys: 'Nøkler',
         exit: 'Trykk en gang til for å gå ut av applikasjonen',
