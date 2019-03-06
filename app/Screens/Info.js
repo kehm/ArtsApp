@@ -63,16 +63,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Info extends Component {
+class Info extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       key: ""
     };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "Info";
   }
 
   componentWillMount() {
