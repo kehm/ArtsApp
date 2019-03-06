@@ -61,21 +61,47 @@ const scenes = Actions.create(
       hideNavBar
       type={ActionConst.RESET}
     />
-    <Scene key="Key" panHandlers={null} component={Key2} />
-    <Scene key="ValueInfo" panHandlers={null} component={ValueInfo} />
-    <Scene key="About" panHandlers={null} component={About} />
-    <Scene key="Info" panHandlers={null} component={Info} />
-    <Scene key="UpdateLocation" panHandlers={null} component={UpdateLocation} />
-    <Scene key="UpdateKeys" panHandlers={null} component={UpdateKeys} />
-    <Scene key="SpeciesLeft" panHandlers={null} component={SpeciesLeft} />
-    <Scene key="Species" component={Species} panHandlers={null} />
+    <Scene key="Key" hideNavBar panHandlers={null} component={Key2} />
+    <Scene
+      key="ValueInfo"
+      hideNavBar
+      panHandlers={null}
+      component={ValueInfo}
+    />
+    <Scene key="About" hideNavBar panHandlers={null} component={About} />
+    <Scene key="Info" hideNavBar panHandlers={null} component={Info} />
+    <Scene
+      key="UpdateLocation"
+      hideNavBar
+      panHandlers={null}
+      component={UpdateLocation}
+    />
+    <Scene
+      key="UpdateKeys"
+      hideNavBar
+      panHandlers={null}
+      component={UpdateKeys}
+    />
+    <Scene
+      key="SpeciesLeft"
+      hideNavBar
+      panHandlers={null}
+      component={SpeciesLeft}
+    />
+    <Scene key="Species" hideNavBar component={Species} panHandlers={null} />
     <Scene
       key="SpeciesImageViewer"
       component={SpeciesImageViewer}
       panHandlers={null}
+      hideNavBar
     />
-    <Scene key="Observation" component={Observation} panHandlers={null} />
-    <Scene key="Debug" component={Debug} panHandlers={null} />
+    <Scene
+      key="Observation"
+      hideNavBar
+      component={Observation}
+      panHandlers={null}
+    />
+    <Scene key="Debug" hideNavBar component={Debug} panHandlers={null} />
   </Scene>
 );
 
