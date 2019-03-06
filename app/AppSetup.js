@@ -4,7 +4,7 @@
  * Adding different startup settings to application. -language -network -position
  */
 import React, { Component } from "react";
-import { PermissionsAndroid, NetInfo } from "react-native";
+import { PermissionsAndroid, Platform, NetInfo } from "react-native";
 import ArtsApp from "./ArtsApp";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -49,6 +49,7 @@ class AppSetup extends Component {
   }
 
   async requestLocationPermission() {
+    if (Platform.OS !== "android") return Promise.resolve();
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
