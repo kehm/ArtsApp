@@ -15,7 +15,6 @@ import DB_helper from "../config/DB/DB_helper";
 export default class Debug extends Component {
   constructor(props) {
     super(props);
-    const dbHelper = new DB_helper();
     this.KeyDownload = new KeyDownload();
     this.state = {
       count: 0,
@@ -34,7 +33,7 @@ export default class Debug extends Component {
   onClick(a) {
     switch (a) {
       case 1:
-        dbHelper.deleteDatabase();
+        new DB_helper().deleteDatabase();
         break;
       case 2:
         break;
@@ -46,7 +45,7 @@ export default class Debug extends Component {
         this.poppulateKeys(a => {});
         break;
       case 6:
-        dbHelper
+        new DB_helper()
           .fethObservationNumbers(
             [{ keyWeb: "sneller", key_id: 1 }],
             60.380939,

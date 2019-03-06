@@ -9,8 +9,6 @@ import DB_helper from "../DB/DB_helper";
 import ImageConfig from "./ImageConfig";
 import * as URLs from "./URLs";
 
-const dbHelper = new DB_helper();
-
 export default class KeyDownload {
   constructor() {
     this.ImageConfig = new ImageConfig();
@@ -28,7 +26,7 @@ export default class KeyDownload {
           let ret = this.keysJSONParser(retJSON);
           let promises = [];
           for (let i = 0; i < ret.length; i++) {
-            promises.push(DB_helper.insertKeysSheel(ret[i], false));
+            promises.push(new DB_helper().insertKeysSheel(ret[i], false));
             promises.push(this.ImageConfig.saveKeyImages(ret[i]));
           }
           Promise.all(promises)
@@ -67,15 +65,15 @@ export default class KeyDownload {
           for (let i = 0; i < ret.length; i++) {
             let o = oldKeys[_.findIndex(oldKeys, { keyWeb: ret[i].keyWeb })];
             if (typeof o === "undefined") {
-              promises.push(DB_helper.insertKeysSheel(ret[i], false));
+              promises.push(new DB_helper().insertKeysSheel(ret[i], false));
               promises.push(this.ImageConfig.saveKeyImages(ret[i]));
             } else {
               if (ret[i].version > o.version) {
                 if (o.keyDownloaded === 1) {
-                  dbHelper.setUpdateTrigger(o.key_id);
+                  new DB_helper().setUpdateTrigger(o.key_id);
                   someUpdate = true;
                 } else {
-                  promises.push(DB_helper.updateKey(ret[i], false));
+                  promises.push(new DB_helper().updateKey(ret[i], false));
                   promises.push(this.ImageConfig.saveKeyImages(ret[i]));
                 }
               }
@@ -84,7 +82,7 @@ export default class KeyDownload {
           for (let i = 0; i < oldKeys.length; i++) {
             let old = oldKeys[_.findIndex(ret, { keyWeb: oldKeys[i].keyWeb })];
             if (typeof old === "undefined" && oldKeys[i].keyDownloaded === 0) {
-              dbHelper.deleteKey(oldKeys[i].key_id);
+              new DB_helper().deleteKey(oldKeys[i].key_id);
               this.ImageConfig.deleteImagesToKey(oldKeys[i].key_id);
             }
           }
@@ -105,7 +103,7 @@ export default class KeyDownload {
   /**
    * Downloads key data and images for selected key.
    * @param {String} webname name of the key to be downloaded
-   * @seedbHelper.insertKey
+   * @seenew DB_helper().insertKey
    * @see ImageConfig .saveContaintInmages .saveKeyImages
    * @return {Promise}
    */
@@ -116,7 +114,7 @@ export default class KeyDownload {
         .then(retJSON => {
           this.keyJSONParser(retJSON).then(value => {
             Promise.all([
-              dbHelper.insertKey(value),
+              new DB_helper().insertKey(value),
               this.ImageConfig.saveContaintInmages(value.content.image),
               this.ImageConfig.saveKeyImages(value)
             ])
@@ -151,7 +149,7 @@ export default class KeyDownload {
               .insertKeysSheel(value, true)
               .then(() => {
                 Promise.all([
-                  dbHelper.insertKey(value),
+                  new DB_helper().insertKey(value),
                   this.ImageConfig.saveKeyImages(value),
                   this.ImageConfig.saveContaintInmages(value.content.image)
                 ])
@@ -176,7 +174,7 @@ export default class KeyDownload {
   /**
    * update one key at a time deletes old data and then update
    * @see this.downloadKeyUpdate
-   * @seedbHelper.deleteKey
+   * @seenew DB_helper().deleteKey
    * @see ImageConfig.deleteImagesToKey
    * @param {array} keys list of keys to update
    * @return {Promise}
@@ -191,9 +189,11 @@ export default class KeyDownload {
           .then(value => {
             this.ImageConfig.deleteImagesToKey(k.key_id)
               .then(value => {
-                Promise.all([this.downloadKeyUpdate(k.keyWeb)]).then(value => {
-                  resolve();
-                });
+                Promise.all([new DB_helper().downloadKeyUpdate(k.keyWeb)]).then(
+                  value => {
+                    resolve();
+                  }
+                );
               })
               .catch(err => {
                 reject(err);

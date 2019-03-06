@@ -3,8 +3,6 @@ import DB_helper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
 import { setSpNerby } from "./ObservationAction";
 
-const dbHelper = new DB_helper();
-
 export function setTest() {
   return {
     type: actionTypes.TEST_ACTION_TYPE_ONE
@@ -47,7 +45,7 @@ export function setAllSpToKEy(keyId) {
   return {
     type: actionTypes.ACTION_FULL_SPECIES,
     payload: {
-      promise: dbHelper.getSpeciesFromDb(keyId)
+      promise: new DB_helper().getSpeciesFromDb(keyId)
     }
   };
 }
@@ -57,7 +55,7 @@ export function setSpeciesLeft(chosenValues, keyId) {
     // dette må være med
     type: actionTypes.ACTION_SP_LEFT,
     payload: {
-      promise: dbHelper.getSpeciesWithvalue(chosenValues, keyId)
+      promise: new DB_helper().getSpeciesWithvalue(chosenValues, keyId)
     }
   };
 }
@@ -73,7 +71,7 @@ export function setAllKeys() {
   return {
     type: actionTypes.ACTION_ALL_KEYS,
     payload: {
-      promise: dbHelper.getKeys()
+      promise: new DB_helper().getKeys()
     }
   };
 }
@@ -88,7 +86,7 @@ export function setTraitValuecombo(keyId) {
   return {
     type: actionTypes.TRAIT_VALUE_COMBO,
     payload: {
-      promise: dbHelper.getTraitValuecombo(keyId)
+      promise: new DB_helper().getTraitValuecombo(keyId)
     }
   };
 }
@@ -97,7 +95,7 @@ export function getKey(keyId) {
   return {
     type: actionTypes.KEY_DETAILS,
     payload: {
-      promise: dbHelper.getKeyDetails(keyId)
+      promise: new DB_helper().getKeyDetails(keyId)
     }
   };
 }
@@ -106,7 +104,7 @@ export function getValueImages(keyId) {
   return {
     type: actionTypes.VALUE_IMAGES,
     payload: {
-      promise: dbHelper.getValueImagestoKey(keyId)
+      promise: new DB_helper().getValueImagestoKey(keyId)
     }
   };
 }
@@ -115,7 +113,7 @@ export function getAllSpImages(keyId) {
   return {
     type: actionTypes.ALL_SPECIES_IMAGES,
     payload: {
-      promise: dbHelper.getAllSpImagestoKey(keyId)
+      promise: new DB_helper().getAllSpImagestoKey(keyId)
     }
   };
 }

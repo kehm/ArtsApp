@@ -6,8 +6,6 @@ import DB_helper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
 import ImageConfig from "../config/network/ImageConfig";
 
-const dbHelper = new DB_helper();
-
 export function setLanguage(lang) {
   this.AsyncStore = new AsyncStore();
   return {
@@ -74,7 +72,7 @@ export function setUpDataBase() {
   return {
     type: actionTypes.SETUP_DB,
     payload: {
-      promise: dbHelper.testDatabase()
+      promise: new DB_helper().testDatabase()
     }
   };
 }
@@ -119,7 +117,7 @@ export function deletedata(key_id) {
     type: actionTypes.DELETE_KEY_DATA,
     payload: {
       promise: Promise.all([
-        dbHelper.deleteKeyData(key_id),
+        new DB_helper().deleteKeyData(key_id),
         this.ImageConfig.deleteImagesToKeyData(key_id)
       ])
     }
@@ -130,7 +128,7 @@ export function setUpdateList() {
   return {
     type: actionTypes.SET_UPDATELIST,
     payload: {
-      promise: dbHelper.getDownloadedKeys()
+      promise: new DB_helper().getDownloadedKeys()
     }
   };
 }
