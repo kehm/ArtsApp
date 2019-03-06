@@ -4,7 +4,7 @@
  * Adding different startup settings to application. -language -network -position
  */
 import React, { Component } from "react";
-import { NetInfo } from "react-native";
+import { PermissionsAndroid, NetInfo } from "react-native";
 import ArtsApp from "./ArtsApp";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -48,27 +48,56 @@ class AppSetup extends Component {
     });
   }
 
+  async requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "Example App",
+          message: "Example App access to your location "
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        console.log("location permission denied");
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  }
+
   /**
    * Added EventListeners to network and to position
    * @return {void} stores new network status and position to reduxStore
    */
-  componentDidMount() {
+  async componentDidMount() {
     NetInfo.isConnected.addEventListener("connectionChange", net => {
       this.props.actions.isOnline(net);
     });
 
-    this.watchID = navigator.geolocation.watchPosition(position => {
-      this.props.actions.setLocation(
-        position.coords.latitude,
-        position.coords.longitude
-      );
-    });
+    const useLocation = await this.requestLocationPermission();
+
+    if (useLocation) {
+      this.watchID = navigator.geolocation.watchPosition(position => {
+        this.props.actions.setLocation(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+      });
+    } else {
+      this.watchID = -1;
+    }
   }
   /**
    * Removes listeners when component is killed.
    */
   componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
+    if (this.watchID !== -1) {
+      navigator.geolocation.clearWatch(this.watchID);
+    }
     NetInfo.isConnected.removeEventListener("connectionChange");
   }
 
