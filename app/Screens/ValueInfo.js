@@ -59,7 +59,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class ValueInfo extends Component {
+class ValueInfo extends React.PureComponent {
   /**
    * @return {void} sets all images to state
    * @see GroupChild.longclick for navigationState.images
@@ -75,10 +75,6 @@ class ValueInfo extends Component {
         return { url: "file://" + item };
       })
     };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "ValueInfo";
   }
 
   componentWillMount() {}

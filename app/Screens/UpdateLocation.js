@@ -54,6 +54,7 @@ import * as ObservationAction from "../actions/ObservationAction";
 import getTheme from "../native-base-theme/components";
 import common from "../native-base-theme/variables/commonColor";
 import androidTablet from "../native-base-theme/variables/androidTablet";
+import { findIndex } from "lodash";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -68,7 +69,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class UpdateLocation extends Component {
+class UpdateLocation extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -91,10 +92,6 @@ class UpdateLocation extends Component {
       }
       return false;
     });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "UpdateLocation";
   }
 
   /**
@@ -182,7 +179,7 @@ class UpdateLocation extends Component {
       ret = [];
       for (let i = 0; i < this.state.chosenKeys.length; i++) {
         keys = this.props.keys;
-        k = keys[_.findIndex(keys, { key_id: this.state.chosenKeys[i] })];
+        k = keys[findIndex(keys, { key_id: this.state.chosenKeys[i] })];
         if (k.keyWeb !== null) {
           ret.push(k);
         }
@@ -226,8 +223,7 @@ class UpdateLocation extends Component {
     keys = this.props.keys;
     for (let i = 0; i < this.state.chosenKeys.length; i++) {
       ret.push(
-        keys[_.findIndex(keys, { key_id: this.state.chosenKeys[i] })].title +
-          ", "
+        keys[findIndex(keys, { key_id: this.state.chosenKeys[i] })].title + ", "
       );
     }
     if (ret.length === 0) {

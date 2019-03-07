@@ -44,17 +44,13 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Observation extends Component {
+class Observation extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
       deleteobsNr: -1
     };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "Observation";
   }
 
   componentDidMount() {

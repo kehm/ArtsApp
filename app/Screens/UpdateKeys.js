@@ -37,6 +37,7 @@ import Modal from "react-native-simple-modal";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
 import KeyDownload from "../config/network/KeyDownload";
+import { findIndex } from "lodash";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -61,7 +62,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class UpdateKeys extends Component {
+class UpdateKeys extends React.PureComponent {
   constructor(props) {
     super(props);
     this.KeyDownload = new KeyDownload();
@@ -83,10 +84,6 @@ class UpdateKeys extends Component {
       }
       return false;
     });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "UpdateKeys";
   }
 
   componentWillUnmount() {
@@ -198,7 +195,7 @@ class UpdateKeys extends Component {
       ret = [];
       keys = this.props.updateList;
       for (let i = 0; i < this.state.chosenKeys.length; i++) {
-        k = keys[_.findIndex(keys, { key_id: this.state.chosenKeys[i] })];
+        k = keys[findIndex(keys, { key_id: this.state.chosenKeys[i] })];
         if (typeof k !== "undefined") {
           ret.push(k);
         }

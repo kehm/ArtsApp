@@ -68,7 +68,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Species extends Component {
+class Species extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -89,10 +89,6 @@ class Species extends Component {
       obsDateTime:
         date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
     });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "Species";
   }
 
   componentDidMount() {

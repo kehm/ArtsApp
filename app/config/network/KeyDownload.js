@@ -8,6 +8,7 @@
 import DB_helper from "../DB/DB_helper";
 import ImageConfig from "./ImageConfig";
 import * as URLs from "./URLs";
+import { findIndex } from "lodash";
 
 export default class KeyDownload {
   constructor() {
@@ -63,7 +64,7 @@ export default class KeyDownload {
           newKeylist = ret;
           let promises = [];
           for (let i = 0; i < ret.length; i++) {
-            let o = oldKeys[_.findIndex(oldKeys, { keyWeb: ret[i].keyWeb })];
+            let o = oldKeys[findIndex(oldKeys, { keyWeb: ret[i].keyWeb })];
             if (typeof o === "undefined") {
               promises.push(new DB_helper().insertKeysSheel(ret[i], false));
               promises.push(this.ImageConfig.saveKeyImages(ret[i]));
@@ -80,7 +81,7 @@ export default class KeyDownload {
             }
           }
           for (let i = 0; i < oldKeys.length; i++) {
-            let old = oldKeys[_.findIndex(ret, { keyWeb: oldKeys[i].keyWeb })];
+            let old = oldKeys[findIndex(ret, { keyWeb: oldKeys[i].keyWeb })];
             if (typeof old === "undefined" && oldKeys[i].keyDownloaded === 0) {
               new DB_helper().deleteKey(oldKeys[i].key_id);
               this.ImageConfig.deleteImagesToKey(oldKeys[i].key_id);

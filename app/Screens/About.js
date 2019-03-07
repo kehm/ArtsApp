@@ -35,16 +35,12 @@ const mapStateToProps = state => ({
   ...state.nav
 });
 
-class About extends Component {
+class About extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       debugcount: 0
     };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "About";
   }
 
   onClickBack = () => {

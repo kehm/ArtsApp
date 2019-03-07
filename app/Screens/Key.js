@@ -27,6 +27,7 @@ import {
   Right
 } from "native-base";
 import TraitWrapper from "../components/exList/TraitWrapper";
+import { findIndex } from "lodash";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -53,7 +54,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Key extends Component {
+class Key extends React.PureComponent {
   /**
    * Sets state to component
    * - nerbyLeft: number of species left with observations nearby (length of leftNerbyList)
@@ -136,7 +137,7 @@ class Key extends Component {
     l = [];
     if (this.props.nerbyList.length !== 0) {
       for (let i = 0; i < this.props.nerbyList.length; i++) {
-        k = _.findIndex(spList, {
+        k = findIndex(spList, {
           species_id: this.props.nerbyList[i].species_id
         });
         if (k !== -1) {
@@ -145,10 +146,6 @@ class Key extends Component {
       }
     }
     return l;
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "Key";
   }
 
   /**
@@ -366,7 +363,7 @@ class Key extends Component {
    */
   renderData = ({ item }) => {
     let noView = false;
-    k = _.findIndex(this.props.irelevant, { trait_id: item.trait_id });
+    k = findIndex(this.props.irelevant, { trait_id: item.trait_id });
     if (k !== -1) {
       noView = true;
     }

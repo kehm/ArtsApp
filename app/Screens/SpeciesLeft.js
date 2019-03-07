@@ -26,6 +26,7 @@ import {
 import SpeciesElement from "../components/SpeciesElement";
 import Modal from "react-native-simple-modal";
 import Toast, { DURATION } from "react-native-easy-toast";
+import { findIndex } from "lodash";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -56,7 +57,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class SpeciesLeft extends Component {
+class SpeciesLeft extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -85,14 +86,6 @@ class SpeciesLeft extends Component {
     BackHandler.removeEventListener("hardwareBackModal");
   }
 
-  componentWillMount() {}
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "SpeciesLeft";
-  }
-
-  componentDidUpdate(prevProps, prevState) {}
-
   /**
    * componentWillReceiveProps monitors the nextProps and nextState for updates.
    * Handles updates of the nearby observed list, and sorts species thereafter. Also handles update errors.
@@ -109,7 +102,7 @@ class SpeciesLeft extends Component {
       if (nextProps.nerbyList.length !== 0) {
         if (nextProps.speciesLeft.length !== 0) {
           for (let i = 0; i < nextProps.nerbyList.length; i++) {
-            k = _.findIndex(nextProps.speciesLeft, {
+            k = findIndex(nextProps.speciesLeft, {
               species_id: nextProps.nerbyList[i].species_id
             });
             if (k !== -1) {
@@ -118,7 +111,7 @@ class SpeciesLeft extends Component {
           }
         } else if (nextProps.chosenValues.length === 0) {
           for (let i = 0; i < nextProps.nerbyList.length; i++) {
-            k = _.findIndex(nextProps.fullSpList, {
+            k = findIndex(nextProps.fullSpList, {
               species_id: nextProps.nerbyList[i].species_id
             });
             if (k !== -1) {
@@ -174,7 +167,7 @@ class SpeciesLeft extends Component {
         : this.props.speciesLeft;
     l = [];
     for (let i = 0; i < spList.length; i++) {
-      k = _.findIndex(nerbyList, { species_id: spList[i].species_id });
+      k = findIndex(nerbyList, { species_id: spList[i].species_id });
       if (k === -1) {
         l.push(spList[i]);
       }
@@ -191,8 +184,7 @@ class SpeciesLeft extends Component {
       return [];
     }
     return this.props.fullSpList.filter(
-      x =>
-        _.findIndex(this.props.speciesLeft, { species_id: x.species_id }) == -1
+      x => findIndex(this.props.speciesLeft, { species_id: x.species_id }) == -1
     );
   }
 
@@ -204,7 +196,7 @@ class SpeciesLeft extends Component {
     if (this.props.isConnected) {
       if (this.props.latitude !== "undefined") {
         k = this.props.keys[
-          _.findIndex(this.props.keys, { key_id: this.props.chosenKey })
+          findIndex(this.props.keys, { key_id: this.props.chosenKey })
         ];
         this.props.actions.updateNerbyList(
           [k],
@@ -327,7 +319,7 @@ class SpeciesLeft extends Component {
    */
   renderItem = ({ item }) => {
     let t = this.props.nerbyList[
-      _.findIndex(this.props.nerbyList, { species_id: item.species_id })
+      findIndex(this.props.nerbyList, { species_id: item.species_id })
     ];
     if (this.props.nerbyList.length !== 0 && typeof t !== "undefined") {
       return (

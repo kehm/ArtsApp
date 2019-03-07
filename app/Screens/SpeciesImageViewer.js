@@ -47,16 +47,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class SpeciesImageViewer extends Component {
+class SpeciesImageViewer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       images: []
     };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "SpeciesImageViewer";
   }
 
   /**

@@ -55,7 +55,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class Frontpage extends Component {
+class Frontpage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,10 +73,6 @@ class Frontpage extends Component {
       }
       return false;
     });
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.scene.name === "Frontpage";
   }
 
   componentWillMount() {
