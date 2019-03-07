@@ -1,42 +1,40 @@
-import React from 'react';
-import { View, LayoutAnimation, Alert } from 'react-native';
-import { Container, StyleProvider } from 'native-base';
-import { Actions } from 'react-native-router-flux';
+import React from "react";
+import { View, LayoutAnimation, Alert } from "react-native";
+import { Container, StyleProvider } from "native-base";
+import { Actions } from "react-native-router-flux";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
 // theme
-import getTheme from '../../native-base-theme/components';
-import common from '../../native-base-theme/variables/commonColor';
-import androidTablet from '../../native-base-theme/variables/androidTablet';
+import getTheme from "../../native-base-theme/components";
+import common from "../../native-base-theme/variables/commonColor";
+import androidTablet from "../../native-base-theme/variables/androidTablet";
 
-import styles  from './styles.js';
+import styles from "./styles.js";
 
-import * as KeyAction from '../../actions/KeyAction';
-import * as MenuAction from '../../actions/MenuAction';
-import * as ObservationAction from '../../actions/ObservationAction';
-import * as SettingsAction from '../../actions/SettingsAction';
+import * as KeyAction from "../../actions/KeyAction";
+import * as MenuAction from "../../actions/MenuAction";
+import * as ObservationAction from "../../actions/ObservationAction";
+import * as SettingsAction from "../../actions/SettingsAction";
 
-import FrontpageHeader from '../../components/FrontpageHeader';
-import Explanation from '../../components/Explanation';
-import KeyPanel from '../../components/KeyPanel';
+import FrontpageHeader from "../../components/FrontpageHeader";
+import Explanation from "../../components/Explanation";
+import KeyPanel from "../../components/KeyPanel";
 
-import { sortKeys } from '../../utilities/keys';
+import { sortKeys } from "../../utilities/keys";
 
 type Props = {
   deviceTypeAndroidTablet: Boolean,
-  strings: Object,
-}
+  strings: Object
+};
 
-type State = {
-}
+type State = {};
 
-class Frontpage2 extends React.Component<Props, State> {
+class Frontpage2 extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -45,54 +43,54 @@ class Frontpage2 extends React.Component<Props, State> {
 
   handleOnMenuPress = () => {
     this.props.openMenu();
-  }
+  };
 
-  handleOnPressKey = (key) => {
+  handleOnPressKey = key => {
     this.props.setKey(key.key_id, key.title);
     if (key.keyDownloaded) {
       Actions.Key();
+    } else {
+      Actions.Info({ showDownload: true });
     }
-    else {
-      Actions.Info({showDownload: true});
-    }
-  }
+  };
 
-  handleOnDownloadKey = (key) => {
+  handleOnDownloadKey = key => {
     if (!this.props.isConnected) {
-      new Alert.alert(this.props.strings.noNetwork,
-        '',
-        [
-          {text: this.props.strings.ok, onPress: () => {}},
-        ],
+      new Alert.alert(
+        this.props.strings.noNetwork,
+        "",
+        [{ text: this.props.strings.ok, onPress: () => {} }],
         { cancelable: false }
       );
-    }
-    else {
+    } else {
       this.props.downloadKey(key.keyWeb);
     }
-  }
+  };
 
   render() {
     const { keys, strings } = this.props;
     return (
-      <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
+      <StyleProvider
+        style={
+          this.props.deviceTypeAndroidTablet
+            ? getTheme(androidTablet)
+            : getTheme(common)
+        }
+      >
         <Container>
           <FrontpageHeader
-              title={strings.frontpageTitle}
-              onMenu={this.handleOnMenuPress}
+            title={strings.frontpageTitle}
+            onMenu={this.handleOnMenuPress}
           />
-          <View style={styles.container} >
-            <Explanation
-              description={strings.frontpageTopDescription}
-            />
+          <View style={styles.container}>
+            <Explanation description={strings.frontpageTopDescription} />
             <KeyPanel
               keys={keys}
               strings={strings}
               onPress={this.handleOnPressKey}
-              onDownload={this.handleOnDownloadKey} />
-            <Explanation
-              description={strings.frontpageBottomDescription}
+              onDownload={this.handleOnDownloadKey}
             />
+            <Explanation description={strings.frontpageBottomDescription} />
           </View>
         </Container>
       </StyleProvider>
@@ -106,17 +104,20 @@ function mapStateToProps({ key, settings }) {
     keys: sortKeys(key.keys),
     deviceTypeAndroidTablet,
     isConnected,
-    strings,
+    strings
   };
-};
+}
 
 function mapDispatchToProps(dispatch) {
-  const { setAllKeys, openMenu, setKey, downloadKey } = bindActionCreators({
-    ...KeyAction,
-    ...MenuAction,
-    ...ObservationAction,
-    ...SettingsAction
-  }, dispatch);
+  const { setAllKeys, openMenu, setKey, downloadKey } = bindActionCreators(
+    {
+      ...KeyAction,
+      ...MenuAction,
+      ...ObservationAction,
+      ...SettingsAction
+    },
+    dispatch
+  );
 
   return {
     loadAllKeys: setAllKeys,
@@ -124,6 +125,9 @@ function mapDispatchToProps(dispatch) {
     downloadKey,
     openMenu
   };
-};
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Frontpage2);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Frontpage2);
