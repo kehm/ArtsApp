@@ -407,11 +407,12 @@ class UpdateLocation extends React.PureComponent {
                   {this.props.strings.selectedKeys + " "}
                 </Text>
                 <Text
-                  style={
+                  style={[
                     this.props.deviceTypeAndroidTablet
                       ? AndroidTabletStyles.keyText
-                      : styles.keyText
-                  }
+                      : styles.keyText,
+                    { textAlign: "center" }
+                  ]}
                 >
                   {this.makeKeyString()}
                 </Text>
