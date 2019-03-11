@@ -28,7 +28,8 @@
     "redux-promise": "^0.6.0",
     "redux-promise-middleware": "^6.1.0",
     "redux-thunk": "^2.3.0",
-    "rn-fetch-blob": "^0.10.15"
+    "rn-fetch-blob": "^0.10.15",
+    "jsc-android": "241213.x.x"
   },
   "devDependencies": {
     "@babel/preset-flow": "^7.0.0",

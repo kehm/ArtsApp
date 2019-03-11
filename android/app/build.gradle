@@ -94,6 +94,10 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+    packagingOptions {
+               pickFirst '**/libjsc.so'
+         }
+
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
@@ -132,6 +136,12 @@ android {
         }
     }
 }
+
+configurations.all {
+        resolutionStrategy {
+            force 'org.webkit:android-jsc:r241213'
+        }
+    }
 
 dependencies {
     implementation project(':rn-fetch-blob')
