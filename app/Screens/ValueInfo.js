@@ -68,7 +68,7 @@ class ValueInfo extends React.PureComponent {
     super(props);
     this.state = {
       activeImage: 0,
-      images: this.props.navigationState.images.map((item, i) => {
+      images: this.props.navigation.getParam("images", []).map((item, i) => {
         if (this.props.platform === "ios") {
           return { url: item };
         }
@@ -95,14 +95,16 @@ class ValueInfo extends React.PureComponent {
    * Cleans HTML removing <br>
    */
   removeHtmlBr = () => {
-    if (this.props.navigationState.valueInfo === null) {
+    if (this.props.navigation.getParam("valueInfo") === null) {
       return this.props.strings.noText;
     }
-    return this.props.navigationState.valueInfo.replace(/(\n|<br>)/gm, "");
+    return this.props.navigation
+      .getParam("valueInfo")
+      .replace(/(\n|<br>)/gm, "");
   };
 
   resnderImagesRow() {
-    return this.props.navigationState.images.map((item, i) => {
+    return this.props.navigation.getParam("images", []).map((item, i) => {
       return (
         <TouchableHighlight
           key={i}
@@ -150,7 +152,7 @@ class ValueInfo extends React.PureComponent {
           <Content>
             <View style={styles.container}>
               <View style={styles.container2}>
-                {this.props.navigationState.images.length > 0 && (
+                {this.props.navigation.getParam("images", []).length > 0 && (
                   <View
                     style={{
                       marginTop: this.props.deviceTypeAndroidTablet ? 10 : 10
@@ -175,14 +177,15 @@ class ValueInfo extends React.PureComponent {
                         source={
                           this.props.platform === "ios"
                             ? {
-                                uri: this.props.navigationState.images[
-                                  this.state.activeImage
-                                ]
+                                uri: this.props.navigation.getParam(
+                                  "images",
+                                  []
+                                )[this.state.activeImage]
                               }
                             : {
                                 uri:
                                   "file://" +
-                                  this.props.navigationState.images[
+                                  this.props.navigation.getParam("images", [])[
                                     this.state.activeImage
                                   ]
                               }
@@ -212,7 +215,7 @@ class ValueInfo extends React.PureComponent {
                       : styles.text
                   }
                 >
-                  {this.props.navigationState.title}
+                  {this.props.navigation.getParam("title", "")}
                 </Text>
                 <HTMLView
                   value={this.removeHtmlBr()}

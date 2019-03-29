@@ -81,7 +81,7 @@ class Key extends React.PureComponent {
    * @return {void}
    */
   componentWillMount() {
-    if (!this.props.navigationState.sameKey) {
+    if (!this.props.navigation.getParam("sameKey")) {
       this.props.actions.resetKey(this.props.chosenKey);
     }
     this.props.actions.resettingReset();

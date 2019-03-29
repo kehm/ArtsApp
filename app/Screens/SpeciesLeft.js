@@ -66,9 +66,7 @@ class SpeciesLeft extends React.PureComponent {
       count: 0,
       loading: false,
       spElim: this.setElimList(),
-      leftNerbyList: props.navigationState.leftNerbyList
-        ? props.navigationState.leftNerbyList
-        : [],
+      leftNerbyList: props.navigation.getParam("leftNerbyList", []),
       leftNotGeo: this.setNotNerby(props.nerbyList)
     };
   }
