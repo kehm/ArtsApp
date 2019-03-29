@@ -1,23 +1,23 @@
-import React from 'react';
-import { View, Text, Dimensions, Platform } from 'react-native';
-import Swiper from 'react-native-swiper';
+import React from "react";
+import { View, Text, Dimensions, Platform } from "react-native";
+import Swiper from "react-native-swiper";
 
-import HorizontalList from '../HorizontalList';
-import KeyPanelElement from '../KeyPanelElement';
+import HorizontalList from "../HorizontalList";
+import KeyPanelElement from "../KeyPanelElement";
 
-import styles  from './styles.js';
+import styles from "./styles.js";
 
 type Props = {
   keys: Array,
   strings: Object,
-  onPress: Function,
-}
+  onPress: Function
+};
 
 type State = {
-  currentKeyId: Number,
-}
+  currentKeyId: Number
+};
 
-class KeyPanel extends React.Component<Props,State> {
+class KeyPanel extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
   }
@@ -25,16 +25,16 @@ class KeyPanel extends React.Component<Props,State> {
   _currentKeyId: null;
 
   getElementSize = () => {
-    const { width } = Dimensions.get('window');
+    const { width } = Dimensions.get("window");
     return Math.min(width - 60, 500);
-  }
+  };
 
   handleIndexChanged = index => {
     const keyId = this.props.keys[index].key_id;
     if (keyId !== this._currentKeyId) {
       this._currentKeyId = keyId;
     }
-  }
+  };
 
   renderItem = (item, size) => {
     const { strings, onPress } = this.props;
@@ -48,12 +48,16 @@ class KeyPanel extends React.Component<Props,State> {
         onPress={onPress}
       />
     );
-  }
+  };
 
   componentWillReceiveProps(nextProps) {
     if (this._currentKeyId !== null && this._swiper) {
-      const oldIndex = this.props.keys.findIndex(k => k.key_id === this._currentKeyId);
-      const newIndex = nextProps.keys.findIndex(k => k.key_id === this._currentKeyId);
+      const oldIndex = this.props.keys.findIndex(
+        k => k.key_id === this._currentKeyId
+      );
+      const newIndex = nextProps.keys.findIndex(
+        k => k.key_id === this._currentKeyId
+      );
 
       if (newIndex !== oldIndex) {
         const offset = newIndex - oldIndex;
@@ -68,10 +72,8 @@ class KeyPanel extends React.Component<Props,State> {
     const { keys } = this.props;
     const size = this.getElementSize();
     const containerSize = { height: size + 40 };
-    const isAndroid = Platform.OS === 'android';
-    const dotStyle = isAndroid
-      ? styles.dotStyleAndroid
-      : styles.dotStyleIos;
+    const isAndroid = Platform.OS === "android";
+    const dotStyle = isAndroid ? styles.dotStyleAndroid : styles.dotStyleIos;
     const activeDotStyle = isAndroid
       ? styles.activeDotStyleAndroid
       : styles.activeDotStyleIos;
@@ -83,7 +85,7 @@ class KeyPanel extends React.Component<Props,State> {
           dotStyle={dotStyle}
           activeDotStyle={activeDotStyle}
           onIndexChanged={this.handleIndexChanged}
-          ref={(swiper) => {
+          ref={swiper => {
             this._swiper = swiper;
           }}
         >

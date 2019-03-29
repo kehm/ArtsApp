@@ -6,46 +6,55 @@
  * Ads and removes choses no longer viable.
  */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { Text, View, FlatList, SectionList, Alert } from "react-native";
+import { Actions } from "react-native-router-flux";
 import {
-  Text,
-  View,
-  FlatList,
-  SectionList,
-  Alert,
-} from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import { Container, StyleProvider, Header, Footer, Subtitle, FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem, Left, Body, Right} from 'native-base';
-import TraitWrapper from '../components/exList/TraitWrapper';
-
+  Container,
+  StyleProvider,
+  Header,
+  Footer,
+  Subtitle,
+  FooterTab,
+  Thumbnail,
+  Title,
+  Content,
+  Button,
+  Icon,
+  ListItem,
+  Left,
+  Body,
+  Right
+} from "native-base";
+import TraitWrapper from "../components/exList/TraitWrapper";
+import { findIndex } from "lodash";
 
 // theme
-import getTheme from '../native-base-theme/components';
-import common from '../native-base-theme/variables/commonColor';
-import androidTablet from '../native-base-theme/variables/androidTablet';
+import getTheme from "../native-base-theme/components";
+import common from "../native-base-theme/variables/commonColor";
+import androidTablet from "../native-base-theme/variables/androidTablet";
 
 // redux
-import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as KeyAction from '../actions/KeyAction';
-import * as MenuAction from '../actions/MenuAction';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as KeyAction from "../actions/KeyAction";
+import * as MenuAction from "../actions/MenuAction";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   ...state.key,
   ...state.nav,
   ...state.menu,
   ...state.observations,
-  ...state.settings,
+  ...state.settings
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-	  actions: bindActionCreators({ ...KeyAction, ...MenuAction}, dispatch)
+    actions: bindActionCreators({ ...KeyAction, ...MenuAction }, dispatch)
   };
 }
 
-class Key extends Component {
-
+class Key extends React.PureComponent {
   /**
    * Sets state to component
    * - nerbyLeft: number of species left with observations nearby (length of leftNerbyList)
@@ -63,9 +72,9 @@ class Key extends Component {
       nerbyLeft: list.length,
       leftNerbyList: list,
       relevant: this.props.traitValueCombo,
-      irelevant: [],
+      irelevant: []
     };
-  };
+  }
 
   /**
    * resets the key logic if it is not the second time in a row the user access the key.
@@ -78,8 +87,7 @@ class Key extends Component {
     this.props.actions.resettingReset();
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   /**
    * compares to arrays to see if they are identical.
@@ -94,7 +102,7 @@ class Key extends Component {
       if (a[i] !== b[i]) return false;
     }
     return true;
-  };
+  }
 
   /**
    * sets new values to nerbyLeft and leftNerbyList if there is any changes in the species left lists. Uses full list if no traitvalues are chosen.
@@ -104,14 +112,21 @@ class Key extends Component {
    * @return {void} sets state to nearby left
    */
   componentWillReceiveProps(nextProps) {
-    if (!this.arraysIdentical(this.props.speciesLeft, nextProps.speciesLeft) || nextProps.speciesLeft.length === 0) {
-      ret = this.numberNerby(nextProps.chosenValues.length !== 0 ? nextProps.speciesLeft : nextProps.fullSpList);
+    if (
+      !this.arraysIdentical(this.props.speciesLeft, nextProps.speciesLeft) ||
+      nextProps.speciesLeft.length === 0
+    ) {
+      ret = this.numberNerby(
+        nextProps.chosenValues.length !== 0
+          ? nextProps.speciesLeft
+          : nextProps.fullSpList
+      );
       this.setState({
         nerbyLeft: ret.length,
-        leftNerbyList: ret,
+        leftNerbyList: ret
       });
     }
-  };
+  }
 
   /**
    * makes a list of species left with some observations locally.
@@ -122,7 +137,9 @@ class Key extends Component {
     l = [];
     if (this.props.nerbyList.length !== 0) {
       for (let i = 0; i < this.props.nerbyList.length; i++) {
-        k = _.findIndex(spList, {species_id: this.props.nerbyList[i].species_id});
+        k = findIndex(spList, {
+          species_id: this.props.nerbyList[i].species_id
+        });
         if (k !== -1) {
           l.push(spList[k]);
         }
@@ -131,10 +148,6 @@ class Key extends Component {
     return l;
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return  nextProps.scene.name === 'Key';
-  };
-
   /**
    * componentDidUpdate monitors the updates of the props, to see if there is 1 or 0 species left in the selection.
    * It shows Alert to the user, were the user can be sent to SpeciesLeft.js.
@@ -142,37 +155,47 @@ class Key extends Component {
    * @return {void}
    */
   componentDidUpdate() {
-    if (this.props.speciesLeft.length === 1 && !this.state.alertShown && this.props.chosenValues.length !== 0) {
+    if (
+      this.props.speciesLeft.length === 1 &&
+      !this.state.alertShown &&
+      this.props.chosenValues.length !== 0
+    ) {
       this.setState({
-        alertShown: true,
+        alertShown: true
       });
       Alert.alert(
         this.props.strings.onSpLesft,
-        '',
+        "",
         [
-          {text: 'OK', onPress: () => {}},
-          {text: this.props.strings.goToSp, onPress: () => {
-            this.onClickSpLeft();
-          }},
+          { text: "OK", onPress: () => {} },
+          {
+            text: this.props.strings.goToSp,
+            onPress: () => {
+              this.onClickSpLeft();
+            }
+          }
         ],
         { cancelable: false }
       );
     }
     if (this.props.speciesLeft.length > 1 && this.state.alertShown) {
       this.setState({
-        alertShown: false,
+        alertShown: false
       });
     }
-    if (this.props.speciesLeft.length === 0 && !this.state.alertShown && this.props.chosenValues.length !== 0 && !this.props.speciesLeftLoading) {
+    if (
+      this.props.speciesLeft.length === 0 &&
+      !this.state.alertShown &&
+      this.props.chosenValues.length !== 0 &&
+      !this.props.speciesLeftLoading
+    ) {
       this.setState({
-        alertShown: true,
+        alertShown: true
       });
       Alert.alert(
         this.props.strings.zeroSpLeft,
-        '',
-        [
-          {text: 'OK', onPress: () => {}}
-        ],
+        "",
+        [{ text: "OK", onPress: () => {} }],
         { cancelable: false }
       );
     }
@@ -181,22 +204,22 @@ class Key extends Component {
       this.props.actions.resettingReset();
       this.setState({
         nerbyLeft: list.length,
-        leftNerbyList: list,
+        leftNerbyList: list
       });
     }
   }
 
   onClickMenu = () => {
     this.props.actions.openMenu();
-  }
+  };
 
   onClickHome = () => {
     Actions.pop();
-  }
+  };
 
   onClickSpLeft = () => {
-    Actions.SpeciesLeft({leftNerbyList: this.state.leftNerbyList});
-  }
+    Actions.SpeciesLeft({ leftNerbyList: this.state.leftNerbyList });
+  };
 
   /**
    * resets the keyExtractor
@@ -204,10 +227,10 @@ class Key extends Component {
    */
   resetKey = () => {
     this.setState({
-      alertShown: false,
+      alertShown: false
     });
-    this.props.actions.resetKey(this.props.chosenKey);  // changeValues([],[]); // kan byttes
-  }
+    this.props.actions.resetKey(this.props.chosenKey); // changeValues([],[]); // kan byttes
+  };
 
   /**
    * Function that manage the user change of values.
@@ -225,25 +248,35 @@ class Key extends Component {
     if (trigger === 0) {
       tempValuelist.push(newValue);
       tempTraitList.push(trait);
-      this.props.actions.changeValues(tempValuelist, tempTraitList, this.props.chosenKey);
-      this.props.actions.setSpeciesLeft(tempValuelist,this.props.chosenKey);
-    }
-    else if (trigger === 1) {
+      this.props.actions.changeValues(
+        tempValuelist,
+        tempTraitList,
+        this.props.chosenKey
+      );
+      this.props.actions.setSpeciesLeft(tempValuelist, this.props.chosenKey);
+    } else if (trigger === 1) {
       tempValuelist.push(newValue);
       let i = tempValuelist.indexOf(oldValue);
       tempValuelist.splice(i, 1);
-      this.props.actions.changeValues(tempValuelist, tempTraitList, this.props.chosenKey);
-      this.props.actions.setSpeciesLeft(tempValuelist,this.props.chosenKey);
-    }
-    else if (trigger === -1 ) {
+      this.props.actions.changeValues(
+        tempValuelist,
+        tempTraitList,
+        this.props.chosenKey
+      );
+      this.props.actions.setSpeciesLeft(tempValuelist, this.props.chosenKey);
+    } else if (trigger === -1) {
       let i = tempValuelist.indexOf(oldValue);
       tempValuelist.splice(i, 1);
       let j = tempTraitList.indexOf(oldValue);
       tempTraitList.splice(j, 1);
-      this.props.actions.changeValues(tempValuelist, tempTraitList, this.props.chosenKey);
-      this.props.actions.setSpeciesLeft(tempValuelist,this.props.chosenKey);
+      this.props.actions.changeValues(
+        tempValuelist,
+        tempTraitList,
+        this.props.chosenKey
+      );
+      this.props.actions.setSpeciesLeft(tempValuelist, this.props.chosenKey);
     }
-  }
+  };
 
   /**
    * Sets selection for the Trait list, sort the traits into irrelevant and relevant, and all Traits if no values are chosen.
@@ -252,38 +285,60 @@ class Key extends Component {
   getSections() {
     let ret = [];
     if (this.props.relevant.length !== 0) {
-      ret.push({data: this.props.relevant, key: 'relevant'});
+      ret.push({ data: this.props.relevant, key: "relevant" });
     }
-    if (this.props.irelevant.length !== 0 ) {
-      ret.push({data: this.props.irelevant, key: 'irelevant'});
+    if (this.props.irelevant.length !== 0) {
+      ret.push({ data: this.props.irelevant, key: "irelevant" });
     }
     if (this.props.relevant.length === 0 && this.props.irelevant.length === 0) {
-      ret.push({data: this.props.traitValueCombo, key: 'relevant'});
+      ret.push({ data: this.props.traitValueCombo, key: "relevant" });
     }
     return ret;
   }
 
-  renderSectionHeader = ({section}) => {
+  renderSectionHeader = ({ section }) => {
     switch (section.key) {
-    case 'relevant':
-      return (
-        <View >
-      </View>);
-      break;
-    case 'irelevant':
-      return (
-        <View style = {{padding: (this.props.deviceTypeAndroidTablet ? 10 : 5 ), marginTop: -1, backgroundColor: '#c9c9c9'}}>
-        <Text style = {{ fontSize: (this.props.deviceTypeAndroidTablet ? 26 : 13 )}}>{this.props.strings.irelevant}</Text>
-      </View>);
-      break;
-    default:
-      return (
-        <View>
-        <Title style = {{padding: (this.props.deviceTypeAndroidTablet ? 20 : 10) }}>{section.key}</Title>
-        <ListItem itemDivider style = {{ marginTop: -1 }}><Text style = {{fontSize: (this.props.deviceTypeAndroidTablet ? 30 : 15 )}}>{section.key}</Text></ListItem>
-      </View>);
+      case "relevant":
+        return <View />;
+        break;
+      case "irelevant":
+        return (
+          <View
+            style={{
+              padding: this.props.deviceTypeAndroidTablet ? 10 : 5,
+              marginTop: -1,
+              backgroundColor: "#c9c9c9"
+            }}
+          >
+            <Text
+              style={{ fontSize: this.props.deviceTypeAndroidTablet ? 26 : 13 }}
+            >
+              {this.props.strings.irelevant}
+            </Text>
+          </View>
+        );
+        break;
+      default:
+        return (
+          <View>
+            <Title
+              style={{ padding: this.props.deviceTypeAndroidTablet ? 20 : 10 }}
+            >
+              {section.key}
+            </Title>
+            <ListItem itemDivider style={{ marginTop: -1 }}>
+              <Text
+                style={{
+                  fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
+                }}
+              >
+                {section.key}
+              </Text>
+            </ListItem>
+          </View>
+        );
     }
-  }
+  };
 
   /**
    * Test if trait have any species associated with it.
@@ -306,9 +361,9 @@ class Key extends Component {
    * @see testTrait
    * @return {View} List item to display in the Trait list.
    */
-  renderData = ({item}) => {
+  renderData = ({ item }) => {
     let noView = false;
-    k = _.findIndex(this.props.irelevant, {trait_id: item.trait_id});
+    k = findIndex(this.props.irelevant, { trait_id: item.trait_id });
     if (k !== -1) {
       noView = true;
     }
@@ -316,84 +371,124 @@ class Key extends Component {
       if (this.props.speciesLeft.length === 0) {
         return false;
       }
-      if (!this.testTrait(item.speciesToTrait) ) {
+      if (!this.testTrait(item.speciesToTrait)) {
         return false;
       }
     }
 
     return (
-        <ListItem key= {item.trait_id} style = {noView ? { opacity: 0.5,} : {}}>
-          <TraitWrapper
-            key= {item.trait_id}
-            trait= {item}
-            onChildClick = {this.onValueChange}
-            traitTitle = {item.traitText}
-            traitID = {item.trait_id}
-            elimlist = {item.eliminate}
-            noView = {noView}
-            children={ item.values }/>
-        </ListItem>
+      <ListItem key={item.trait_id} style={noView ? { opacity: 0.5 } : {}}>
+        <TraitWrapper
+          key={item.trait_id}
+          trait={item}
+          onChildClick={this.onValueChange}
+          traitTitle={item.traitText}
+          traitID={item.trait_id}
+          elimlist={item.eliminate}
+          noView={noView}
+          children={item.values}
+        />
+      </ListItem>
     );
-  }
+  };
 
   render() {
-    return(
-      <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
+    return (
+      <StyleProvider
+        style={
+          this.props.deviceTypeAndroidTablet
+            ? getTheme(androidTablet)
+            : getTheme(common)
+        }
+      >
         <Container>
           <Header>
             <Left>
-            <Button transparent onPress={this.onClickMenu}>
-                <Icon name='ios-menu' />
-            </Button>
+              <Button transparent onPress={this.onClickMenu}>
+                <Icon name="ios-menu" />
+              </Button>
             </Left>
-            <Body style={{flex: 3}}>
+            <Body style={{ flex: 3 }}>
               <Title>{this.props.chosenKeyTitle}</Title>
             </Body>
-            <Right style={{marginRight: 5}}>
+            <Right style={{ marginRight: 5 }}>
               <Button transparent onPress={this.resetKey}>
-                  <Icon name='md-refresh' style={this.props.deviceTypeAndroidTablet ? {fontSize: 40} : {fontSize: 20}} />
-                <Text style={this.props.deviceTypeAndroidTablet && {fontSize: 30}}>{this.props.strings.reset}</Text>
-                </Button>
+                <Icon
+                  name="md-refresh"
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? { fontSize: 40 }
+                      : { fontSize: 20 }
+                  }
+                />
+                <Text
+                  style={this.props.deviceTypeAndroidTablet && { fontSize: 30 }}
+                >
+                  {this.props.strings.reset}
+                </Text>
+              </Button>
             </Right>
           </Header>
-          <Content >
-            <Subtitle style= {{alignSelf: 'center', padding: 5, fontSize: (this.props.deviceTypeAndroidTablet ? 20 : 10)}}>{this.props.strings.longclick}</Subtitle>
+          <Content>
+            <Subtitle
+              style={{
+                alignSelf: "center",
+                padding: 5,
+                fontSize: this.props.deviceTypeAndroidTablet ? 20 : 10
+              }}
+            >
+              {this.props.strings.longclick}
+            </Subtitle>
             <SectionList
-                renderItem={this.renderData}
-                initialNumToRender = {11}
-                keyExtractor={(item, index) => item.trait_id}
-                renderSectionHeader={ this.renderSectionHeader}
-                sections={this.getSections()}
-                extraData = {this.props.resetting}
-              />
+              renderItem={this.renderData}
+              initialNumToRender={11}
+              keyExtractor={(item, index) => item.trait_id.toString()}
+              renderSectionHeader={this.renderSectionHeader}
+              sections={this.getSections()}
+              extraData={this.props.resetting}
+            />
           </Content>
           <Footer>
-          <FooterTab>
+            <FooterTab>
               <Button transparent onPress={this.onClickHome}>
-                  <Icon name='md-home'/>
+                <Icon name="md-home" />
               </Button>
-              {this.props.nerbyList.length !== 0 &&
+              {this.props.nerbyList.length !== 0 && (
                 <Button transparent onPress={this.onClickSpLeft}>
-                    <Text style={this.props.deviceTypeAndroidTablet && {fontSize: 30}}>{this.state.nerbyLeft}</Text>
-                    <Icon name='md-globe'/>
+                  <Text
+                    style={
+                      this.props.deviceTypeAndroidTablet && { fontSize: 30 }
+                    }
+                  >
+                    {this.state.nerbyLeft}
+                  </Text>
+                  <Icon name="md-globe" />
                 </Button>
-              }
-              <Button  transparent onPress={this.onClickSpLeft}>
-                <Text style={this.props.deviceTypeAndroidTablet && {fontSize: 30}}>{this.props.chosenValues.length === 0 ? this.props.fullSpList.length : this.props.speciesLeft.length }</Text>
-                <Icon name='ios-bug'/>
+              )}
+              <Button transparent onPress={this.onClickSpLeft}>
+                <Text
+                  style={this.props.deviceTypeAndroidTablet && { fontSize: 30 }}
+                >
+                  {this.props.chosenValues.length === 0
+                    ? this.props.fullSpList.length
+                    : this.props.speciesLeft.length}
+                </Text>
+                <Icon name="ios-bug" />
               </Button>
-          </FooterTab>
-        </Footer>
-      </Container>
+            </FooterTab>
+          </Footer>
+        </Container>
       </StyleProvider>
     );
-  };
+  }
 }
 
 Key.defaultProps = {
-  title: '',
-  spLeft: 12,
+  title: "",
+  spLeft: 12
 };
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Key);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Key);
