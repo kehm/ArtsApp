@@ -75,11 +75,14 @@ class TraitPanel extends React.Component<Props> {
       trait: t
     }));
 
-    mappedElements.push({
-      type: "button",
-      title: resetTitle,
-      icon: "refresh"
-    });
+    const elementsWithButton = [
+      {
+        type: "button",
+        title: resetTitle,
+        icon: "refresh"
+      },
+      ...mappedElements.slice().reverse()
+    ];
 
     return (
       <View style={styles.container}>
@@ -96,12 +99,12 @@ class TraitPanel extends React.Component<Props> {
         )}
         {traits.length > 0 && (
           <HorizontalList
-            data={mappedElements}
+            data={elementsWithButton}
             keyExtractor={item =>
               item.trait ? item.trait.trait_id.toString() : item.title
             }
             renderItem={({ item, index }) =>
-              this.renderItem(item, index !== mappedElements.length - 1)
+              this.renderItem(item, index !== elementsWithButton.length - 1)
             }
           />
         )}
