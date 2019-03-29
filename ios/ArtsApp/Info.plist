@@ -21,7 +21,9 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>5</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,8 +39,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Finne arter i nærheten</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Finne arter i nærheten</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Finne arter i nærheten</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Finne arter i nærheten</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
