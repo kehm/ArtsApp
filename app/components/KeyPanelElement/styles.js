@@ -22,10 +22,10 @@ export default StyleSheet.create({
   beta: {
     backgroundColor: '#B8E986',
     position: 'absolute',
-    top: 15,
-    right: -78,
+    top: 25,
+    right: -68,
     transform: [{ rotate: '45deg'}],
-    width: 200,
+    width: 200,    
     textAlign: 'center',
     alignSelf: 'flex-end',
     fontWeight: '100',
