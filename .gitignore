@@ -53,3 +53,9 @@ fastlane/Preview.html
 fastlane/screenshots
 
 package-lock.json
+
+# VSCODE/React
+.vscode/.react/
+
+# EXPO
+.expo/

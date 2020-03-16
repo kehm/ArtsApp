@@ -5,55 +5,49 @@
  * a content render for the drawer menu.
  */
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { Image, Platform, Dimensions, Alert } from "react-native";
 import {
-  Image,
-  Platform,
-  Dimensions,
-  Alert,
-} from 'react-native';
-import { StyleProvider, Text, List, ListItem, View, Container, Button } from 'native-base';
-import { Actions } from 'react-native-router-flux';
-import Toast, {DURATION} from 'react-native-easy-toast';
+  StyleProvider,
+  Text,
+  List,
+  ListItem,
+  View,
+  Container,
+  Button
+} from "native-base";
+import { Actions } from "react-native-router-flux";
+import Toast, { DURATION } from "react-native-easy-toast";
 
 // theme
-import getTheme from '../native-base-theme/components';
-import common from '../native-base-theme/variables/commonColor';
-import androidTablet from '../native-base-theme/variables/androidTablet';
+import getTheme from "../native-base-theme/components";
+import common from "../native-base-theme/variables/commonColor";
+import androidTablet from "../native-base-theme/variables/androidTablet";
 
 // redux
-import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as MenuAction from '../actions/MenuAction';
-import * as SettingsAction from '../actions/SettingsAction';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as MenuAction from "../actions/MenuAction";
+import * as SettingsAction from "../actions/SettingsAction";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   ...state.settings,
   ...state.menu,
-  ...state.nav,
+  ...state.nav
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-	  actions: bindActionCreators({ ...MenuAction, ...SettingsAction}, dispatch)
+    actions: bindActionCreators({ ...MenuAction, ...SettingsAction }, dispatch)
   };
 }
-const drawerImage = require('../images/AA_logo.png');
+const drawerImage = require("../images/AA_logo.png");
 
-class MenuContent extends Component {
-
+class MenuContent extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
-
-  componentDidMount() {
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return  nextProps.menuOpen;
-  };
 
   /**
    * handles on language click, changes language to selected language
@@ -61,10 +55,20 @@ class MenuContent extends Component {
    * @return {void}
    */
   onClick(a) {
-    switch(a) {
-    case 7: this.props.actions.closeMenu(); this.props.actions.setLanguage('en'); this.props.actions.setContentStrings('en'); break;
-    case 8: this.props.actions.closeMenu(); this.props.actions.setLanguage('no'); this.props.actions.setContentStrings('no'); break;
-    case 9: this.props.actions.closeMenu(); break;
+    switch (a) {
+      case 7:
+        this.props.actions.closeMenu();
+        this.props.actions.setLanguage("en");
+        this.props.actions.setContentStrings("en");
+        break;
+      case 8:
+        this.props.actions.closeMenu();
+        this.props.actions.setLanguage("no");
+        this.props.actions.setContentStrings("no");
+        break;
+      case 9:
+        this.props.actions.closeMenu();
+        break;
     }
   }
 
@@ -76,7 +80,7 @@ class MenuContent extends Component {
   onClickObs = () => {
     this.props.actions.closeMenu();
     Actions.Observation();
-  }
+  };
 
   /**
    * closes menu and
@@ -86,7 +90,7 @@ class MenuContent extends Component {
   onClickLocation = () => {
     this.props.actions.closeMenu();
     Actions.UpdateLocation();
-  }
+  };
 
   /**
    * closes menu and
@@ -94,11 +98,11 @@ class MenuContent extends Component {
    * @return {void} [description]
    */
   onClickInfo = () => {
-    if (this.props.scene.name !== 'Frontpage') {
+    if (this.props.scene.name !== "Frontpage") {
       this.props.actions.closeMenu();
       Actions.Info();
     }
-  }
+  };
 
   /**
    * closes menu and
@@ -108,17 +112,17 @@ class MenuContent extends Component {
   onClickAbout = () => {
     this.props.actions.closeMenu();
     Actions.About();
-  }
+  };
 
   /**
    * closes menu and
    * opens the admin key page(UpdateKeys.js)
    * @return {void} [description]
    */
-  onClickUpdateKeys= () => {
+  onClickUpdateKeys = () => {
     this.props.actions.closeMenu();
     Actions.UpdateKeys();
-  }
+  };
 
   /**
    * handles alert for language changes.
@@ -127,169 +131,240 @@ class MenuContent extends Component {
   onClickLang = () => {
     Alert.alert(
       this.props.strings.langChoise,
-      this.props.strings.langText + ' ',
+      this.props.strings.langText + " ",
       [
-      {text: this.props.strings.en, onPress: () => this.onClick(7)},
-      {text: this.props.strings.no, onPress: () => this.onClick(8)},
-      {text: this.props.strings.cancel, onPress: () => this.onClick(9)},
-      ],{ cancelable: false }
+        { text: this.props.strings.en, onPress: () => this.onClick(7) },
+        { text: this.props.strings.no, onPress: () => this.onClick(8) },
+        { text: this.props.strings.cancel, onPress: () => this.onClick(9) }
+      ],
+      { cancelable: false }
     );
-  }
+  };
 
   renderList() {
     return (
-      <List keyi = {this.props.debugMode} >
-      <ListItem button noBorder onPress={this.onClickObs}>
-        <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.text : styles.text}>{this.props.strings.myObs}</Text>
-      </ListItem>
-      <ListItem button noBorder onPress={this.onClickLocation}>
-        <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.text : styles.text}>{this.props.strings.updateLocation}</Text>
-      </ListItem>
-      <ListItem button noBorder onPress={this.onClickInfo}>
-        <Text style={(this.props.scene.name === 'Frontpage') ? (this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.textKeyInfo : styles.textKeyInfo) : (this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.text : styles.text)}>{this.props.strings.keyInfo}</Text>
-      </ListItem>
-      <ListItem  button noBorder onPress={this.onClickLang}>
-        <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.text : styles.text}>{this.props.strings.language}</Text>
-      </ListItem>
-      <ListItem button noBorder onPress={this.onClickUpdateKeys}>
-        <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.text : styles.text}>{this.props.strings.manageKeys}</Text>
-      </ListItem>
-    </List>
+      <List keyi={this.props.debugMode}>
+        <ListItem button noBorder onPress={this.onClickObs}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.myObs}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickLocation}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.updateLocation}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickInfo}>
+          <Text
+            style={
+              this.props.scene.name === "Frontpage"
+                ? this.props.deviceTypeAndroidTablet
+                  ? stylesAndroidTablet.textKeyInfo
+                  : styles.textKeyInfo
+                : this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.keyInfo}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickLang}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.language}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickUpdateKeys}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.manageKeys}
+          </Text>
+        </ListItem>
+      </List>
     );
   }
 
   render() {
     return (
-      <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
-      <Container>
-         <View
-           style={styles.menu}
-         >
-           <Image
-             square
-             style={styles.drawerCover}
-             source={drawerImage}
-           />
-           {this.renderList()}
-           <Button style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.about : styles.about} block transparent onPress={this.onClickAbout}>
-             <Image style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.logoImg : styles.logoImg} source={require('../images/AA_icon.png')} />
-             <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.textAbout : styles.textAbout}>{this.props.strings.about}</Text>
-           </Button>
-         </View>
-         <Toast ref="toast"/>
-       </Container>
-     </StyleProvider>
+      <StyleProvider
+        style={
+          this.props.deviceTypeAndroidTablet
+            ? getTheme(androidTablet)
+            : getTheme(common)
+        }
+      >
+        <Container>
+          <View style={styles.menu}>
+            <Image square style={styles.drawerCover} source={drawerImage} />
+            {this.renderList()}
+            <Button
+              style={
+                this.props.deviceTypeAndroidTablet
+                  ? stylesAndroidTablet.about
+                  : styles.about
+              }
+              block
+              transparent
+              onPress={this.onClickAbout}
+            >
+              <Image
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? stylesAndroidTablet.logoImg
+                    : styles.logoImg
+                }
+                source={require("../images/AA_icon.png")}
+              />
+              <Text
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? stylesAndroidTablet.textAbout
+                    : styles.textAbout
+                }
+              >
+                {this.props.strings.about}
+              </Text>
+            </Button>
+          </View>
+          <Toast ref="toast" />
+        </Container>
+      </StyleProvider>
     );
   }
 }
 
 MenuContent.defaultProps = {
   strings: {
-    about: '',
-    language: '',
-    keyInfo: '',
-    updateLocation: '',
-    myObs: '',
+    about: "",
+    language: "",
+    keyInfo: "",
+    updateLocation: "",
+    myObs: ""
   }
 };
 
-const deviceHeight = Dimensions.get('window').height;
-const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get("window").height;
+const deviceWidth = Dimensions.get("window").width;
 
 const styles = {
   menu: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: "#F8F8F8",
     borderRadius: 1,
     borderWidth: 1,
     borderLeftWidth: 0,
-    borderColor: '#553917',
+    borderColor: "#553917"
   },
   logoImg: {
-    resizeMode: 'contain',
+    resizeMode: "contain",
     width: 37,
-    height: 37,
+    height: 37
   },
   drawerCover: {
-    backgroundColor: '#553917',
-    resizeMode: 'contain',
+    backgroundColor: "#553917",
+    resizeMode: "contain",
     height: deviceHeight / 3.5,
     width: null,
-    position: 'relative',
-    marginBottom: 10,
+    position: "relative",
+    marginBottom: 10
   },
   about: {
-    position: 'absolute',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    bottom: 20,
+    position: "absolute",
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    bottom: 20
   },
   text: {
-    fontWeight: (Platform.OS === 'ios') ? '500' : '400',
+    fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 16,
-    marginLeft: 20,
+    marginLeft: 20
   },
   textAbout: {
-    fontWeight: (Platform.OS === 'ios') ? '500' : '400',
+    fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 20,
     marginLeft: 20,
-    paddingBottom: 20 - (20 * 0.75),
+    paddingBottom: 20 - 20 * 0.75
   },
   textKeyInfo: {
-    fontWeight: (Platform.OS === 'ios') ? '500' : '400',
+    fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 16,
     marginLeft: 20,
-    color: '#ababab',
-  },
+    color: "#ababab"
+  }
 };
 
 const stylesAndroidTablet = {
   menu: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: "#F8F8F8",
     borderRadius: 1,
     borderWidth: 1,
     borderLeftWidth: 0,
-    borderColor: '#553917',
+    borderColor: "#553917"
   },
   logoImg: {
-    resizeMode: 'contain',
+    resizeMode: "contain",
     width: 76,
-    height: 76,
+    height: 76
   },
   drawerCover: {
-    backgroundColor: '#553917',
-    resizeMode: 'contain',
+    backgroundColor: "#553917",
+    resizeMode: "contain",
     height: deviceHeight / 3.5,
     width: null,
-    position: 'relative',
-    marginBottom: 10,
+    position: "relative",
+    marginBottom: 10
   },
   about: {
     height: 80,
-    position: 'absolute',
-    backgroundColor: 'transparent',
-    justifyContent: 'flex-start',
-    bottom: 20,
+    position: "absolute",
+    backgroundColor: "transparent",
+    justifyContent: "flex-start",
+    bottom: 20
   },
   text: {
-    fontWeight: (Platform.OS === 'ios') ? '500' : '400',
+    fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 32,
-    marginLeft: 20,
+    marginLeft: 20
   },
   textAbout: {
-    fontWeight: (Platform.OS === 'ios') ? '500' : '400',
+    fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 40,
     marginLeft: 20,
-    paddingBottom: 40 - (40 * 0.75),
+    paddingBottom: 40 - 40 * 0.75
   },
   textKeyInfo: {
-    fontWeight: (Platform.OS === 'ios') ? '500' : '400',
+    fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 32,
     marginLeft: 20,
-    color: '#ababab',
-  },
+    color: "#ababab"
+  }
 };
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(MenuContent);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MenuContent);

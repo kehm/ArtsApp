@@ -13,6 +13,16 @@ export default class LangStrings {
     this.language = 'no';
     this.strings = {
       en:{
+        chosenTraitsHeader: 'Key properties',
+        noTraitsSelected: 'No properties chosen',
+        chosenTraits: 'Chosen properties:',
+        noSpeciesLeft: 'No species found.',
+        seeAllSpecies: 'View all',
+
+        frontpageTitle: 'Keys',
+        frontpageTopDescription: 'You can download keys to your device and then try out categorization and of different species.',
+        frontpageBottomDescription: 'Tap on keys in list above to read more about each key or to start categorization of species!',
+        beta: 'Sneak Peek',
         keys: 'Keys',
         exit: 'Press once more for exiting the app.',
         noText: 'text is missing',
@@ -100,6 +110,16 @@ export default class LangStrings {
         noKeysDownloaded: 'There is no Keys downloaded. '
       },
       no: {
+        chosenTraitsHeader: 'Egenskaper ved nøkkel',
+        noTraitsSelected: 'Du har ikke valgt noen egenskaper',
+        chosenTraits: 'Valgte egenskaper:',
+        noSpeciesLeft: 'Ingen arter funnet med valgte egenskaper',
+        seeAllSpecies: 'Vis alle',
+
+        frontpageTitle: 'Nøkler',
+        frontpageTopDescription: 'Du kan laste ned nøklene til telefonen din og forsøke deg på kategorisering av forskjellige arter.',
+        frontpageBottomDescription: 'Klikk på nøklene i listen over for å lese mer om de enkelte nøklene eller for å begynne artsutvelgelse!',
+        beta: 'Sneak peek',
         keys: 'Nøkler',
         exit: 'Trykk en gang til for å gå ut av applikasjonen',
         noText: 'manglende tekst',

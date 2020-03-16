@@ -4,37 +4,30 @@
  *
  * Wraps a set of value views in a wrapper that controls click and value states.
  */
-import React, { Component } from 'react';
-import {
-  Text,
-  Platform,
-  View,
-  StyleSheet
-} from 'react-native';
-import Collapsible from 'react-native-collapsible';
-import {Button,Icon} from 'native-base';
-import GroupChild from './GroupChild';
+import React, { Component } from "react";
+import { Text, Platform, View, StyleSheet } from "react-native";
+import Collapsible from "react-native-collapsible";
+import { Button, Icon } from "native-base";
+import GroupChild from "./GroupChild";
 
 // redux
-import {connect} from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as KeyAction from '../../actions/KeyAction';
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as KeyAction from "../../actions/KeyAction";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   ...state.key,
   ...state.settings,
-  ...state.nav,
+  ...state.nav
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-	  actions: bindActionCreators({ ...KeyAction }, dispatch)
+    actions: bindActionCreators({ ...KeyAction }, dispatch)
   };
 }
 
-
-class TraitWrapper extends Component {
-
+class TraitWrapper extends React.PureComponent {
   /**
    * state:
    * selected = selected value, no value selected = -1
@@ -46,14 +39,9 @@ class TraitWrapper extends Component {
       selected: -1,
       collapsedHeight: 0,
       collapsed: true,
-      groupId: props.traitID,
-
+      groupId: props.traitID
     };
   }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return  nextProps.scene.name === 'Key';
-  };
 
   /**
    * monitors props for changes if trait is disabled or key is reset
@@ -61,14 +49,13 @@ class TraitWrapper extends Component {
    * @return {void}
    */
   componentWillReceiveProps(nextProps) {
-    if(this.props.elimlist.length !== 0) {
+    if (this.props.elimlist.length !== 0) {
       this.setState({ disable: this.disableTrait() });
     }
     if (nextProps.resetting) {
-      this.setState({collapsed: true, selected: -1,});
+      this.setState({ collapsed: true, selected: -1 });
     }
   }
-
 
   /**
    * sets selected to selected value id
@@ -77,13 +64,13 @@ class TraitWrapper extends Component {
   componentDidMount() {
     if (this.props.chosenValues.length > 0) {
       for (let i = 0; i < this.props.children.length; i++) {
-        if(this.props.chosenValues.includes(this.props.children[i].value_id)) {
+        if (this.props.chosenValues.includes(this.props.children[i].value_id)) {
           this.setState({
-            selected : this.props.children[i].value_id,
-            collapsed: false,
+            selected: this.props.children[i].value_id,
+            collapsed: false
           });
         }
-      };
+      }
     }
   }
 
@@ -92,9 +79,9 @@ class TraitWrapper extends Component {
    */
   toggle = () => {
     this.setState({
-      collapsed : !this.state.collapsed
+      collapsed: !this.state.collapsed
     });
-  }
+  };
 
   /**
    * manage the user change of values within the trait wrapper
@@ -105,113 +92,145 @@ class TraitWrapper extends Component {
    * @param {Integer} id [description]
    * @return {void} run parent onChildClick, sends id of value, trigger, trait id
    */
-  onChildClick = (id) => {
+  onChildClick = id => {
     trigger = 0;
 
     if (this.state.selected === id) {
-      this.setState({selected: -1});
+      this.setState({ selected: -1 });
       trigger = -1;
-    }
-    else if (this.state.selected === -1) {
+    } else if (this.state.selected === -1) {
       trigger = 0;
-      this.setState({selected: id});
-    }
-    else {
+      this.setState({ selected: id });
+    } else {
       trigger = 1;
-      this.setState({selected: id});
+      this.setState({ selected: id });
     }
-    this.props.onChildClick(id, this.state.selected, trigger, this.props.traitID);
-  }
+    this.props.onChildClick(
+      id,
+      this.state.selected,
+      trigger,
+      this.props.traitID
+    );
+  };
   /**
    * in use but has no meaning to the app, to be removed
    * @return {bool} true = disable false = not disable
    */
   disableTrait() {
-    return this.props.elimlist.some( v => {
+    return this.props.elimlist.some(v => {
       return this.props.chosenValues.indexOf(v) >= 0;
     });
   }
-
 
   renderWrapper() {
     const wrapp = [];
     const childList = this.props.children;
     for (let j = 0; j < childList.length; j++) {
       wrapp.push(
-          <GroupChild
-            isSelected= {childList[j].value_id === this.state.selected}
-            selected = {this.state.selected !== -1}
-            disabled = {this.state.disable}
-            onClick={this.onChildClick}
-            key={childList[j].value_id}
-            id={childList[j].value_id}
-            valueInfo= {childList[j].valueInfo}
-            text={childList[j].valueText}/>
+        <GroupChild
+          isSelected={childList[j].value_id === this.state.selected}
+          selected={this.state.selected !== -1}
+          disabled={this.state.disable}
+          onClick={this.onChildClick}
+          key={childList[j].value_id}
+          id={childList[j].value_id}
+          valueInfo={childList[j].valueInfo}
+          text={childList[j].valueText}
+        />
       );
     }
-    if (Platform.OS === 'ios') {
-      return (<Collapsible collapsed = {this.state.collapsed} align="center" style={styles.body}>
-        {wrapp}
-      </Collapsible>);
-
+    if (Platform.OS === "ios") {
+      return (
+        <Collapsible
+          collapsed={this.state.collapsed}
+          align="center"
+          style={styles.body}
+        >
+          {wrapp}
+        </Collapsible>
+      );
     }
-    return (<View style = {{height: this.state.collapsed ? 0 : null}}>{wrapp}</View>);
+    return (
+      <View style={{ height: this.state.collapsed ? 0 : null }}>{wrapp}</View>
+    );
   }
 
   render() {
     return (
-      <View style= {styles.container}>
-      <Button iconRight block transparent full
-        disabled = {this.state.disable}
-        textStyle = {this.state.disable ? {color: '#a4a4a4'} : null}
-        key={this.props.traitID} id= {this.props.traitID} title= {this.props.traitTitle} onPress={this.toggle}>
-        <Text style = {{fontSize:(this.props.deviceTypeAndroidTablet ? 30 : 15)}}>{this.props.traitTitle}</Text>
-      {this.props.noView && <Icon style={{backgroundColor: 'rgba(255, 255, 255, 0)', fontSize: 20, color: 'red', margin: -10, justifyContent: 'flex-end'}} name='md-close-circle'/>}
-      </Button>
-      {!this.state.collapsed && this.renderWrapper()}
+      <View style={styles.container}>
+        <Button
+          iconRight
+          block
+          transparent
+          full
+          disabled={this.state.disable}
+          textStyle={this.state.disable ? { color: "#a4a4a4" } : null}
+          key={this.props.traitID}
+          id={this.props.traitID}
+          title={this.props.traitTitle}
+          onPress={this.toggle}
+        >
+          <Text
+            style={{ fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15 }}
+          >
+            {this.props.traitTitle}
+          </Text>
+          {this.props.noView && (
+            <Icon
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0)",
+                fontSize: 20,
+                color: "red",
+                margin: -10,
+                justifyContent: "flex-end"
+              }}
+              name="md-close-circle"
+            />
+          )}
+        </Button>
+        {!this.state.collapsed && this.renderWrapper()}
       </View>
     );
   }
 }
 
-
 const styles = StyleSheet.create({
   selected: {
-    backgroundColor: '#21c9e0',
+    backgroundColor: "#21c9e0"
   },
   unSelected: {
-    backgroundColor: '#bee6f7',
+    backgroundColor: "#bee6f7"
   },
-  container   : {
-    backgroundColor: '#fff',
-    margin:0,
-    flex: 1,
+  container: {
+    backgroundColor: "#fff",
+    margin: 0,
+    flex: 1
   },
-  titleContainer : {
-    flexDirection: 'row'
+  titleContainer: {
+    flexDirection: "row"
   },
   inActiv: {
     flex: 1,
     opacity: 0.5,
     marginTop: 0,
-    backgroundColor: 'rgba(139, 139, 139, 0.23)',
+    backgroundColor: "rgba(139, 139, 139, 0.23)"
   },
-  title       : {
-    padding : 10,
-    color   :'#2a2f43',
-    fontWeight:'bold'
+  title: {
+    padding: 10,
+    color: "#2a2f43",
+    fontWeight: "bold"
   },
-  button      : {
-
+  button: {},
+  buttonImage: {
+    width: 30,
+    height: 25
   },
-  buttonImage : {
-    width   : 30,
-    height  : 25
-  },
-  body        : {
-
-    padding     : 10,
-    paddingTop  : 0
+  body: {
+    padding: 10,
+    paddingTop: 0
   }
 });
-export default connect(mapStateToProps, mapDispatchToProps)(TraitWrapper);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TraitWrapper);
