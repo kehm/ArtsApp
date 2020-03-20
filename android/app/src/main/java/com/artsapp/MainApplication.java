@@ -4,8 +4,11 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.RNFetchBlob.RNFetchBlobPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
+import com.swmansion.reanimated.ReanimatedPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -26,11 +29,15 @@ public class MainApplication extends Application implements ReactApplication {
 
     @Override
     protected List<ReactPackage> getPackages() {
+      // Packages that cannot be autolinked
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new RNFetchBlobPackage(),
-            new VectorIconsPackage(),
+            new ReanimatedPackage(),
+            new RNGestureHandlerPackage(),
             new RNDeviceInfo(),
+            new NetInfoPackage(),
+            new VectorIconsPackage(),
             new SQLitePluginPackage()
       );
     }

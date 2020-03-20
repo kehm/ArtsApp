@@ -1,7 +1,7 @@
 import * as actionTypes from "./actionTypes";
 import AsyncStore from "../config/AsyncStore";
 import LangStrings from "../config/LangStrings";
-import { NetInfo } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import DB_helper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
 import ImageConfig from "../config/network/ImageConfig";

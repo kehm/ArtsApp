@@ -4,7 +4,8 @@
  * Adding different startup settings to application. -language -network -position
  */
 import React, { Component } from "react";
-import { PermissionsAndroid, Platform, NetInfo } from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import ArtsApp from "./ArtsApp";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
