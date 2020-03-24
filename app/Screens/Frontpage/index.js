@@ -31,7 +31,7 @@ type Props = {
 
 type State = {};
 
-class Frontpage2 extends React.PureComponent<Props, State> {
+class Frontpage extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -130,4 +130,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Frontpage2);
+)(Frontpage);

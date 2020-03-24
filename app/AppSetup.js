@@ -73,19 +73,14 @@ class AppSetup extends Component {
   }
 
   /**
-   * Added EventListeners to network and to position
+   * Add event listeners for network connectivity and geolocation
+   * 
    * @return {void} stores new network status and position to reduxStore
    */
   async componentDidMount() {
-    // Fetch initial connectivity status
-    NetInfo.fetch().then(conn => {
-      this.props.actions.isOnline(conn.isConnected);
-    })
-    // Add listener for future connectivity changes
-    NetInfo.addEventListener(conn => { this.props.actions.isOnline(conn.isConnected); })
-
-    // Request position
-    const useLocation = await this.requestLocationPermission();
+    NetInfo.fetch().then(conn => { this.props.actions.isOnline(conn.isConnected); }); // Fetch initial connectivity status
+    NetInfo.addEventListener(conn => { this.props.actions.isOnline(conn.isConnected); }); // Add listener for future connectivity changes
+    const useLocation = await this.requestLocationPermission(); // Request position
     if (useLocation) {
       this.watchID = Geolocation.watchPosition(position => {
         this.props.actions.setLocation(
@@ -97,15 +92,16 @@ class AppSetup extends Component {
       this.watchID = -1;
     }
   }
+
   /**
    * Removes listeners when component is killed.
    */
   componentWillUnmount() {
     // TODO: Unsubscribe NetInfo listener
     if (this.watchID !== -1) {
-      Geolocation.stopObserving();
       Geolocation.clearWatch(this.watchID);
     }
+    Geolocation.stopObserving();
   }
 
   render() {

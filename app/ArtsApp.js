@@ -12,7 +12,6 @@ import { bindActionCreators } from "redux";
 import * as MenuAction from "./actions/MenuAction";
 import MenuContent from "./components/MenuContent";
 import Frontpage from "./Screens/Frontpage";
-import Frontpage2 from "./Screens/Frontpage2";
 import Key from "./Screens/Key";
 import Key2 from "./Screens/Key2";
 import Observation from "./Screens/Observation";
@@ -56,7 +55,7 @@ const scenes = Actions.create(
     />
     <Scene
       key="Frontpage"
-      component={Frontpage2}
+      component={Frontpage}
       panHandlers={null}
       hideNavBar
       type={ActionConst.RESET}
@@ -119,27 +118,28 @@ class ArtsApp extends Component {
   }
 
   componentDidMount() {
-    console.log("Mounted");
+    BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
   }
 
-  componentWillMount = () => {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      try {
-        Actions.pop();
-        return true;
-      } catch (err) {
-        ToastAndroid.show(this.props.strings.exit, ToastAndroid.SHORT);
-        if (this.state.exit === 1) {
-          BackHandler.exitApp();
-        }
-        this.setState({ exit: 1 });
-        return true;
-      }
-    });
-  };
-
   componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress");
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackPress);
+  }
+
+  /**
+   * Handle back button press
+   */
+  handleBackPress = () => {
+    try {
+      Actions.pop();
+      return true;
+    } catch (err) {
+      ToastAndroid.show(this.props.strings.exit, ToastAndroid.SHORT);
+      if (this.state.exit === 1) {
+        BackHandler.exitApp();
+      }
+      this.setState({ exit: 1 });
+      return true;
+    }
   }
 
   /**
