@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as SettingsAction from "./actions/SettingsAction";
 import AsyncStore from "./config/AsyncStore";
+import Geolocation from '@react-native-community/geolocation';
 
 const mapStateToProps = state => ({
   ...state.settings
@@ -83,10 +84,10 @@ class AppSetup extends Component {
     // Add listener for future connectivity changes
     NetInfo.addEventListener(conn => { this.props.actions.isOnline(conn.isConnected); })
 
+    // Request position
     const useLocation = await this.requestLocationPermission();
-
     if (useLocation) {
-      this.watchID = navigator.geolocation.watchPosition(position => {
+      this.watchID = Geolocation.watchPosition(position => {
         this.props.actions.setLocation(
           position.coords.latitude,
           position.coords.longitude
@@ -100,8 +101,10 @@ class AppSetup extends Component {
    * Removes listeners when component is killed.
    */
   componentWillUnmount() {
+    // TODO: Unsubscribe NetInfo listener
     if (this.watchID !== -1) {
-      navigator.geolocation.clearWatch(this.watchID);
+      Geolocation.stopObserving();
+      Geolocation.clearWatch(this.watchID);
     }
   }
 

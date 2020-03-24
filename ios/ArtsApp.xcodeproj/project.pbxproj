@@ -49,6 +49,7 @@
 		959F1CF9F306445B8E725EB6 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 572FA3333DB242F2A0D52F3C /* libRNGestureHandler.a */; };
 		0136DE5BD8974413A5995CC5 /* libRNReanimated.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5E36223A2714ECB84423E38 /* libRNReanimated.a */; };
 		1EED6A6DB9CA4A61862892B2 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F82DC2F48F11404095DDD898 /* libRNFetchBlob.a */; };
+		2A6454DF402B4D70B235549A /* libRNCGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C73AFB15948919C2D4FDF /* libRNCGeolocation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -408,6 +409,8 @@
 		E5E36223A2714ECB84423E38 /* libRNReanimated.a */ = {isa = PBXFileReference; name = "libRNReanimated.a"; path = "libRNReanimated.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		F8A93928C61644198B6C65DC /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../node_modules/rn-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		F82DC2F48F11404095DDD898 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		ED200DFA427D4B68919CB653 /* RNCGeolocation.xcodeproj */ = {isa = PBXFileReference; name = "RNCGeolocation.xcodeproj"; path = "../node_modules/@react-native-community/geolocation/ios/RNCGeolocation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D81C73AFB15948919C2D4FDF /* libRNCGeolocation.a */ = {isa = PBXFileReference; name = "libRNCGeolocation.a"; path = "libRNCGeolocation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -435,6 +438,7 @@
 				959F1CF9F306445B8E725EB6 /* libRNGestureHandler.a in Frameworks */,
 				0136DE5BD8974413A5995CC5 /* libRNReanimated.a in Frameworks */,
 				1EED6A6DB9CA4A61862892B2 /* libRNFetchBlob.a in Frameworks */,
+				2A6454DF402B4D70B235549A /* libRNCGeolocation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -647,6 +651,7 @@
 				19ED07188B0D43D7B394AA26 /* RNGestureHandler.xcodeproj */,
 				24C12A6F961045FE9F2B291F /* RNReanimated.xcodeproj */,
 				F8A93928C61644198B6C65DC /* RNFetchBlob.xcodeproj */,
+				ED200DFA427D4B68919CB653 /* RNCGeolocation.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1212,6 +1217,7 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/geolocation/ios",
 				);
 				INFOPLIST_FILE = ArtsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1226,6 +1232,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/ArtsApp\"",
 					"\"$(SRCROOT)/ArtsApp\"",
 				);
 			};
@@ -1246,6 +1253,7 @@
 					"$(SRCROOT)/../node_modules/react-native-gesture-handler/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/geolocation/ios",
 				);
 				INFOPLIST_FILE = ArtsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1260,6 +1268,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/ArtsApp\"",
 					"\"$(SRCROOT)/ArtsApp\"",
 				);
 			};
