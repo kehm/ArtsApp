@@ -18,8 +18,8 @@ import DeviceInfo from "react-native-device-info";
  * -lastDownloadDate = timestamp for last download date
  * -keysUpdated = keysUpdated success flag
  * -keysUpdated_loading = key update loading flag
- * -keysformApi_loading = retrive keys from web api loading flag
- * -keysformApi_succsess = retrive keys from web api success flag
+ * -keysFromApi_loading = retrive keys from web api loading flag
+ * -keysFromApi_success = retrive keys from web api success flag
  * -deleted = key success deleted flag
  * -latitude = cur latitude
  * -longitude = cur longitude
@@ -37,8 +37,8 @@ const DEFAULT_STATE = {
   keysUpdated: false,
   keyListUpdated: false,
   keysUpdated_loading: false,
-  keysformApi_loading: false,
-  keysformApi_succsess: false,
+  keysFromApi_loading: false,
+  keysFromApi_success: false,
   deleted: false,
   latitude: "undefined",
   longitude: "undefined",
@@ -98,21 +98,21 @@ export default function(state = DEFAULT_STATE, actions) {
     case `${actionTypes.KEYS_FROM_API}_LOADING`:
       return {
         ...state,
-        keysformApi_succsess: false,
-        keysformApi_loading: true
+        keysFromApi_success: false,
+        keysFromApi_loading: true
       };
     case `${actionTypes.KEYS_FROM_API}_SUCCESS`:
       return {
         ...state,
-        keysformApi_succsess: true,
-        keysformApi_loading: false
+        keysFromApi_success: true,
+        keysFromApi_loading: false
       };
     case `${actionTypes.KEYS_FROM_API}_ERROR`:
       return {
         ...state,
-        keysformApi_error: actions.payload,
-        keysformApi_succsess: false,
-        keysformApi_loading: false
+        keysFromApi_error: actions.payload,
+        keysFromApi_success: false,
+        keysFromApi_loading: false
       };
     case actionTypes.SET_LOCATION:
       return {

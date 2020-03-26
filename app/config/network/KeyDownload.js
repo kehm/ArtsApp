@@ -1,10 +1,7 @@
 /**
- * @file KeyDownload.js
+ * @file Class for downloading/updating keys
  * @author Kjetil Fossheim
- *
- * KeyDownload it main purpose it to downloads keys but it also look for updates and updates keys.
  */
-
 import DB_helper from "../DB/DB_helper";
 import ImageConfig from "./ImageConfig";
 import * as URLs from "./URLs";
@@ -267,18 +264,18 @@ export default class KeyDownload {
           spHasValue: keyJsonString.spHasValue,
           image:
             typeof keyJsonString.image === "undefined" ||
-            keyJsonString.image === null
+              keyJsonString.image === null
               ? []
               : keyJsonString.image.map((ele, index) => {
-                  return {
-                    image: ele.image.split("/").pop(),
-                    imageWeb: ele.image,
-                    imageId: ele.imageId,
-                    keyId: ele.keyId,
-                    type: ele.type,
-                    typeId: ele.typeId
-                  };
-                }),
+                return {
+                  image: ele.image.split("/").pop(),
+                  imageWeb: ele.image,
+                  imageId: ele.imageId,
+                  keyId: ele.keyId,
+                  type: ele.type,
+                  typeId: ele.typeId
+                };
+              }),
           traitEliminate:
             typeof keyJsonString.traitEliminate === "undefined"
               ? []

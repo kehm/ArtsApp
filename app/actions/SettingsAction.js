@@ -81,7 +81,7 @@ export function updateKeys(keys) {
   };
 }
 
-export function getkeysFromApi() {
+export function getKeysFromAPI() {
   return {
     type: actionTypes.KEYS_FROM_API,
     payload: {

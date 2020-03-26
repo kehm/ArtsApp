@@ -1,10 +1,11 @@
+/**
+ * Front page key panel
+ */
 import React from "react";
 import { View, Text, Dimensions, Platform } from "react-native";
 import Swiper from "react-native-swiper";
-
 import HorizontalList from "../HorizontalList";
 import KeyPanelElement from "../KeyPanelElement";
-
 import styles from "./styles.js";
 
 type Props = {
@@ -38,7 +39,6 @@ class KeyPanel extends React.PureComponent<Props, State> {
 
   renderItem = (item, size) => {
     const { strings, onPress } = this.props;
-
     return (
       <KeyPanelElement
         key={item.key_id}
@@ -50,12 +50,12 @@ class KeyPanel extends React.PureComponent<Props, State> {
     );
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(nextProps) {
     if (this._currentKeyId !== null && this._swiper) {
       const oldIndex = this.props.keys.findIndex(
         k => k.key_id === this._currentKeyId
       );
-      const newIndex = nextProps.keys.findIndex(
+      const newIndex = this.props.keys.findIndex(
         k => k.key_id === this._currentKeyId
       );
 
@@ -74,10 +74,7 @@ class KeyPanel extends React.PureComponent<Props, State> {
     const containerSize = { height: size + 40 };
     const isAndroid = Platform.OS === "android";
     const dotStyle = isAndroid ? styles.dotStyleAndroid : styles.dotStyleIos;
-    const activeDotStyle = isAndroid
-      ? styles.activeDotStyleAndroid
-      : styles.activeDotStyleIos;
-
+    const activeDotStyle = isAndroid ? styles.activeDotStyleAndroid : styles.activeDotStyleIos;
     return (
       <View style={[styles.container, containerSize]}>
         <Swiper

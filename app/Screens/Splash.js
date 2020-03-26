@@ -1,18 +1,13 @@
 /**
- * @file Splash.js
+ * @file Show loading screen on startup while loading data and setting up the app
  * @author Kjetil Fossheim
- *
- * First screen the user sees. It is a screen to cover loading of data and setups of the app. Setup and download for first time use of the app.
  */
-
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Image, Alert } from "react-native";
 import { Spinner } from "native-base";
 import { Actions } from "react-native-router-flux";
 import DbHelper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
-
-// redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as SettingsAction from "../actions/SettingsAction";
@@ -28,7 +23,6 @@ function mapDispatchToProps(dispatch) {
 }
 /**
  * Strings of welcome text
- * @type {Object}
  */
 const introstrings = {
   a1: "Gjør ArtsApp klar",
@@ -54,31 +48,14 @@ class Splash extends React.PureComponent {
     };
   }
 
-  componentWillReceiveProps(newprops) {
-    if (newprops.keysformApi_succsess) {
-      let date = new Date();
-      this.props.actions.setLastDownload(
-        date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
-      );
-      Actions.Frontpage();
-    }
-  }
-
-  componentDidMount() {
-    this.startApp();
-  }
-
   /**
-   * Test if the app has been used before, if not, downloads the list of available keys.
-   * Asks for network if not available.
-   * @return {void} starts the app when ready
-   * @see SettingsAction
+   * Download list of available keys if app is started for the first time. Requires network.
    */
-  startApp() {
+  componentDidMount() {
     this.DbHelper.testDatabase().then(() => {
       if (this.props.lastDownloadDate === -1) {
         if (this.props.isConnected) {
-          this.props.actions.getkeysFromApi();
+          this.props.actions.getKeysFromAPI();
         } else {
           Alert.alert(
             this.props.strings.noNetWorkTitle,
@@ -93,7 +70,22 @@ class Splash extends React.PureComponent {
   }
 
   /**
-   * @return {Integer} random number between 1 - 10
+   * Update last download timestamp if getKeysFromAPI is successful
+   */
+  componentDidUpdate() {
+    if (this.props.keysFromApi_success) {
+      let date = new Date();
+      this.props.actions.setLastDownload(
+        date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
+      );
+      Actions.Frontpage();
+    }
+  }
+
+  /**
+   * Get random integer between 1 and 10
+   * 
+   * @return {Integer} Random integer between 1 and 10
    */
   getRandomInt() {
     min = Math.ceil(1);
