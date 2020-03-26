@@ -53,13 +53,7 @@ class SpeciesImageViewer extends React.PureComponent {
     this.state = {
       images: []
     };
-  }
-
-  /**
-   * sets the url for the images in the right format.
-   * @return {void}
-   */
-  componentWillMount() {
+    // Set image url format
     this.setState({
       images: this.props.spImage.map((item, i) => {
         if (this.props.platform === "ios") {
@@ -69,10 +63,6 @@ class SpeciesImageViewer extends React.PureComponent {
       })
     });
   }
-
-  componentDidMount() {}
-
-  componentDidUpdate(prevProps, prevState) {}
 
   onClickBack = () => {
     Actions.pop();

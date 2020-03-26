@@ -15,7 +15,7 @@ import DeviceInfo from "react-native-device-info";
  * -platform = mobile platform (IOS or Android)
  * -isConnected = network available
  * -debugMode = debugMode flag
- * -lastDownloaddate = timestamp for last download date
+ * -lastDownloadDate = timestamp for last download date
  * -keysUpdated = keysUpdated success flag
  * -keysUpdated_loading = key update loading flag
  * -keysformApi_loading = retrive keys from web api loading flag
@@ -23,7 +23,7 @@ import DeviceInfo from "react-native-device-info";
  * -deleted = key success deleted flag
  * -latitude = cur latitude
  * -longitude = cur longitude
- * -getlastDownloadDate = getlastDownloadDate flag
+ * -getLastDownloadDate = getLastDownloadDate flag
  * -updateList = updated keys
  * -deviceTypeAndroidTablet = TRUE if device is android and a tablet(more than 7')
  * @type {Object}
@@ -33,7 +33,7 @@ const DEFAULT_STATE = {
   platform: Platform.OS,
   isConnected: false,
   debugMode: false,
-  lastDownloaddate: -1,
+  lastDownloadDate: -1,
   keysUpdated: false,
   keyListUpdated: false,
   keysUpdated_loading: false,
@@ -42,7 +42,7 @@ const DEFAULT_STATE = {
   deleted: false,
   latitude: "undefined",
   longitude: "undefined",
-  getlastDownloadDate: false,
+  getLastDownloadDate: false,
   updateList: [],
   deviceTypeAndroidTablet:
     Platform.OS === "android" && DeviceInfo.isTablet() ? true : false
@@ -67,18 +67,18 @@ export default function(state = DEFAULT_STATE, actions) {
     case `${actionTypes.SET_LAST_DOWNLOAD}_LOADING`:
       return { ...state };
     case `${actionTypes.SET_LAST_DOWNLOAD}_SUCCESS`:
-      return { ...state, lastDownloaddate: actions.payload };
+      return { ...state, lastDownloadDate: actions.payload };
     case `${actionTypes.SET_LAST_DOWNLOAD}_ERROR`:
-      return { ...state, lastDownloaddate_error: actions.payload };
+      return { ...state, lastDownloadDate_error: actions.payload };
     case `${actionTypes.GET_LAST_DOWNLOAD}_LOADING`:
       return { ...state };
     case `${actionTypes.GET_LAST_DOWNLOAD}_SUCCESS`:
       if (typeof actions.payload === "undefined") {
-        return { ...state, lastDownloaddate: -1, getlastDownloadDate: true };
+        return { ...state, lastDownloadDate: -1, getLastDownloadDate: true };
       }
-      return { ...state, lastDownloaddate: actions.payload };
+      return { ...state, lastDownloadDate: actions.payload };
     case `${actionTypes.GET_LAST_DOWNLOAD}_ERROR`:
-      return { ...state, lastDownloaddate_error: actions.payload };
+      return { ...state, lastDownloadDate_error: actions.payload };
     case actionTypes.GET_LANG_STRINGS:
       return { ...state, strings: actions.strings };
     case actionTypes.UPDATE_CONNECTIVITY:

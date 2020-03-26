@@ -50,6 +50,7 @@
 		0136DE5BD8974413A5995CC5 /* libRNReanimated.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5E36223A2714ECB84423E38 /* libRNReanimated.a */; };
 		1EED6A6DB9CA4A61862892B2 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F82DC2F48F11404095DDD898 /* libRNFetchBlob.a */; };
 		2A6454DF402B4D70B235549A /* libRNCGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D81C73AFB15948919C2D4FDF /* libRNCGeolocation.a */; };
+		FF312BB6D6784B54A8B59B57 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B562D9EE14A04535B97890A6 /* libRNCAsyncStorage.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -411,6 +412,8 @@
 		F82DC2F48F11404095DDD898 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		ED200DFA427D4B68919CB653 /* RNCGeolocation.xcodeproj */ = {isa = PBXFileReference; name = "RNCGeolocation.xcodeproj"; path = "../node_modules/@react-native-community/geolocation/ios/RNCGeolocation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		D81C73AFB15948919C2D4FDF /* libRNCGeolocation.a */ = {isa = PBXFileReference; name = "libRNCGeolocation.a"; path = "libRNCGeolocation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		6AD110CE3234459394E6E84E /* RNCAsyncStorage.xcodeproj */ = {isa = PBXFileReference; name = "RNCAsyncStorage.xcodeproj"; path = "../node_modules/@react-native-community/async-storage/ios/RNCAsyncStorage.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B562D9EE14A04535B97890A6 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; name = "libRNCAsyncStorage.a"; path = "libRNCAsyncStorage.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,6 +442,7 @@
 				0136DE5BD8974413A5995CC5 /* libRNReanimated.a in Frameworks */,
 				1EED6A6DB9CA4A61862892B2 /* libRNFetchBlob.a in Frameworks */,
 				2A6454DF402B4D70B235549A /* libRNCGeolocation.a in Frameworks */,
+				FF312BB6D6784B54A8B59B57 /* libRNCAsyncStorage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +656,7 @@
 				24C12A6F961045FE9F2B291F /* RNReanimated.xcodeproj */,
 				F8A93928C61644198B6C65DC /* RNFetchBlob.xcodeproj */,
 				ED200DFA427D4B68919CB653 /* RNCGeolocation.xcodeproj */,
+				6AD110CE3234459394E6E84E /* RNCAsyncStorage.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1218,6 +1223,7 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/geolocation/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
 				INFOPLIST_FILE = ArtsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1232,6 +1238,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/ArtsApp\"",
 					"\"$(SRCROOT)/ArtsApp\"",
 					"\"$(SRCROOT)/ArtsApp\"",
 				);
@@ -1254,6 +1261,7 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/rn-fetch-blob/ios/**",
 					"$(SRCROOT)/../node_modules/@react-native-community/geolocation/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/async-storage/ios",
 				);
 				INFOPLIST_FILE = ArtsApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1268,6 +1276,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/ArtsApp\"",
 					"\"$(SRCROOT)/ArtsApp\"",
 					"\"$(SRCROOT)/ArtsApp\"",
 				);

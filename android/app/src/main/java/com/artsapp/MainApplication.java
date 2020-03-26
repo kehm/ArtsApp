@@ -3,6 +3,7 @@ package com.artsapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
       // Packages that cannot be autolinked
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AsyncStoragePackage(),
             new GeolocationPackage(),
             new RNFetchBlobPackage(),
             new ReanimatedPackage(),

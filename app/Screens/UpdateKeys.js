@@ -75,6 +75,7 @@ class UpdateKeys extends React.PureComponent {
       lUpdate: false,
       listLength: updatelist
     };
+    this.props.actions.setUpdateList();
   }
 
   componentDidMount() {
@@ -88,10 +89,6 @@ class UpdateKeys extends React.PureComponent {
 
   componentWillUnmount() {
     BackHandler.removeEventListener("hardwareBackModal");
-  }
-
-  componentWillMount() {
-    this.props.actions.setUpdateList();
   }
 
   /**
@@ -121,8 +118,6 @@ class UpdateKeys extends React.PureComponent {
       this.props.actions.resetUpdateKey();
     }
   }
-
-  componentDidUpdate(prevProps, prevState) {}
 
   /**
    * init list of keys that are downloaded.

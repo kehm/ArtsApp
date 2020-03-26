@@ -1,18 +1,13 @@
 /**
- *  @file AsyncStore.js
+* Store of all strings used in the app.
  *  @author Kjetil Fossheim
- *  @type {String}
- * Store of all strings used in the app.
  */
 // ES6 module syntax
-import AsyncStorage from 'react-native';
-
 export default class LangStrings {
-
   constructor() {
     this.language = 'no';
     this.strings = {
-      en:{
+      en: {
         chosenTraitsHeader: 'Key properties',
         noTraitsSelected: 'No properties chosen',
         chosenTraits: 'Chosen properties:',
@@ -217,9 +212,9 @@ export default class LangStrings {
   getString(stringName) {
     lang = 'en';
     if (typeof this.strings[this.language] !== 'undefined') {
-      return  this.strings[this.language][stringName];
+      return this.strings[this.language][stringName];
     }
-    return  this.strings.en[stringName];
+    return this.strings.en[stringName];
   }
 
   /**
@@ -229,9 +224,9 @@ export default class LangStrings {
    */
   getComboString(stringName, newLine) {
     if (typeof newLine !== 'undefined') {
-      return  this.strings.en[stringName] + ' / \n ' + this.strings.no[stringName];
+      return this.strings.en[stringName] + ' / \n ' + this.strings.no[stringName];
     }
-    return  this.strings.en[stringName] + ' / ' + this.strings.no[stringName];
+    return this.strings.en[stringName] + ' / ' + this.strings.no[stringName];
   }
 
   /**

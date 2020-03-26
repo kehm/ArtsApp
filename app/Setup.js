@@ -27,11 +27,9 @@ function Setup():React.Component {
           <Provider store={this.state.store}>
             <AppSetup/>
           </Provider>
-
       );
     }
   }
-
   return Root;
 }
 

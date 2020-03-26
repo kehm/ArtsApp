@@ -87,7 +87,7 @@ class Key extends React.PureComponent {
     this.props.actions.resettingReset();
   }
 
-  componentDidMount() {}
+  componentDidMount() {console.log("MOUNT KEY")}
 
   /**
    * compares to arrays to see if they are identical.

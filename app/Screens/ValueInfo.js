@@ -77,12 +77,6 @@ class ValueInfo extends React.PureComponent {
     };
   }
 
-  componentWillMount() {}
-
-  componentDidMount() {}
-
-  componentWillUnmount() {}
-
   onclickBack = () => {
     Actions.pop();
   };

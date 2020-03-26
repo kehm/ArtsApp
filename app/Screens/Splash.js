@@ -54,22 +54,13 @@ class Splash extends React.PureComponent {
     };
   }
 
-  /**
-   * @return {Integer} random number between 1 - 10
-   */
-  getRandomInt() {
-    min = Math.ceil(1);
-    max = Math.floor(11);
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
   componentWillReceiveProps(newprops) {
     if (newprops.keysformApi_succsess) {
-      let d = new Date();
-      this.props.actions.setlastDownloaddate(
-        d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
+      let date = new Date();
+      this.props.actions.setLastDownload(
+        date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
       );
-      this.startUp();
+      Actions.Frontpage();
     }
   }
 
@@ -77,9 +68,6 @@ class Splash extends React.PureComponent {
     this.startApp();
   }
 
-  startUp() {
-    Actions.Frontpage();
-  }
   /**
    * Test if the app has been used before, if not, downloads the list of available keys.
    * Asks for network if not available.
@@ -88,7 +76,7 @@ class Splash extends React.PureComponent {
    */
   startApp() {
     this.DbHelper.testDatabase().then(() => {
-      if (this.props.lastDownloaddate === -1) {
+      if (this.props.lastDownloadDate === -1) {
         if (this.props.isConnected) {
           this.props.actions.getkeysFromApi();
         } else {
@@ -99,9 +87,18 @@ class Splash extends React.PureComponent {
           );
         }
       } else {
-        this.startUp();
+        Actions.Frontpage();
       }
     });
+  }
+
+  /**
+   * @return {Integer} random number between 1 - 10
+   */
+  getRandomInt() {
+    min = Math.ceil(1);
+    max = Math.floor(11);
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   render() {
@@ -124,7 +121,7 @@ class Splash extends React.PureComponent {
         >
           {this.props.strings.introText}
         </Text>
-        {this.props.lastDownloaddate === -1 && (
+        {this.props.lastDownloadDate === -1 && (
           <View>
             <Spinner color="green" />
             <Text
