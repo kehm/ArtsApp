@@ -40,7 +40,6 @@ class SpeciesPanel extends React.Component<Props, State> {
       foundSpecies,
       observationsNearby
     } = this.props;
-
     if (item.type === "button") {
       return (
         <TouchableOpacity
@@ -57,18 +56,14 @@ class SpeciesPanel extends React.Component<Props, State> {
         </TouchableOpacity>
       );
     }
-
     const species = item.species;
-
     const imagePaths = speciesImages.get(species.species_id);
     let imagePath = null;
     if (imagePaths) imagePath = imagePaths[0];
-
     let state = "match";
     if (observationsNearby.find(obs => obs.species_id === species.species_id)) {
       state = "nearby";
     }
-
     return (
       <SpeciesPanelElement
         species={species}

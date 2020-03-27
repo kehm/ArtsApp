@@ -1,7 +1,6 @@
 import React from 'react';
 import { LayoutAnimation, View } from 'react-native';
-
-import styles  from './styles.js';
+import styles from './styles.js';
 
 type Props = {
   totalCount: Number,
@@ -10,7 +9,6 @@ type Props = {
 };
 
 class SelectionProgressBar extends React.Component<Props> {
-
   constructor(props) {
     super(props);
     const { totalCount, matchingCount, notInRangeCount } = props;
@@ -19,12 +17,25 @@ class SelectionProgressBar extends React.Component<Props> {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     const { totalCount, matchingCount, notInRangeCount } = nextProps;
-    this.setStateAnimated((prevState) => ({
-      ...prevState,
-      totalCount, matchingCount, notInRangeCount
-    }));
+    if (totalCount !== prevState.totalCount && matchingCount !== prevState.matchingCount && notInRangeCount !== prevState.notInRangeCount) {
+      return {
+        totalCount: totalCount,
+        matchingCount: matchingCount,
+        notInRangeCount: notInRangeCount
+      }
+    } else return null;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { totalCount, matchingCount, notInRangeCount } = prevState;
+    if (totalCount !== this.state.totalCount && matchingCount !== this.state.matchingCount && notInRangeCount !== this.state.notInRangeCount) {
+      this.setStateAnimated((prevState) => ({
+        ...prevState,
+        totalCount, matchingCount, notInRangeCount
+      }));
+    }
   }
 
   setStateAnimated(callback: (state: State) => void) {
@@ -46,7 +57,6 @@ class SelectionProgressBar extends React.Component<Props> {
       </View>
     );
   }
-
 }
 
 export default SelectionProgressBar;

@@ -52,7 +52,6 @@ export function setAllSpToKEy(keyId) {
 
 export function setSpeciesLeft(chosenValues, keyId) {
   return {
-    // dette må være med
     type: actionTypes.ACTION_SP_LEFT,
     payload: {
       promise: new DB_helper().getSpeciesWithvalue(chosenValues, keyId)

@@ -1,3 +1,6 @@
+/**
+ * @file Select traits page
+ */
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
 import { Container, StyleProvider, Header, Footer, Subtitle,
@@ -84,12 +87,8 @@ class Key extends React.Component<Props, State> {
 
   onValueSelected = (value) => {
     const { actions, keyId } = this.props;
-
-    // Update state
-    actions.selectTraitValue(keyId, value);
-
-    // Hide dialog (not in state)
-    this.onTraitSelected(undefined);
+    actions.selectTraitValue(keyId, value); // Update state
+    this.onTraitSelected(undefined); // Hide dialog (not in state)
   }
 
   onValueInfo = (value) => {
@@ -116,7 +115,6 @@ class Key extends React.Component<Props, State> {
     const { title, traits, species, speciesImages, valueImages,
       chosenValues, totalSpecies, foundSpecies, chosenTraits, isFiltered,
       activeTraits, activeValues, observationsNearby, strings } = this.props;
-
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
     // Find selected value in selected trait (if dialog is visible)
