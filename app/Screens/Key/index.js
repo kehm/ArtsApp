@@ -32,7 +32,7 @@ type State = {
   selectedTrait: Object,
 }
 
-class Key2 extends React.Component<Props, State> {
+class Key extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -221,4 +221,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Key2);
+export default connect(mapStateToProps, mapDispatchToProps)(Key);

@@ -1,11 +1,7 @@
 /**
- * @file Info.js
+ * @file Show information about the key selected key
  * @author Kjetil Fossheim
- *
- * An screen showing information about the Key the user is currently are using.
- * It is also used in as a screen showing the same information before the key is downloaded, then with a download button.
  */
-
 import React, { Component } from "react";
 import {
   View,
@@ -71,11 +67,8 @@ class Info extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
-    this.getSelectedKey();
-  }
-
   componentDidMount() {
+    this.getSelectedKey();
     BackHandler.addEventListener("hardwareBackModal", () => {
       if (this.props.keyDownloaded_LOADING) {
         return true;
@@ -89,35 +82,16 @@ class Info extends React.PureComponent {
   }
 
   /**
-   * Retrives the information about the selected key.
-   * @return {void} sets key to state
+   * Get information about the selected key
    */
   getSelectedKey() {
     for (let i = 0; i < this.props.keys.length; i++) {
       if (this.props.keys[i].key_id === this.props.chosenKey) {
-        return this.setState({ key: this.props.keys[i] });
+        this.setState({ key: this.props.keys[i] });
       }
     }
-    // default
-    return this.setState({
-      key: {
-        keyDownloaded: 0,
-        keyImage: "",
-        keyInfo:
-          "NANANANAANANANANANNANANANANANANANANANANANANANANA___NA___NANANANANANANANANANANANANA",
-        keyWeb: "NA",
-        key_id: 999999,
-        title: "Ikke noe navn",
-        updateTrigger: 0,
-        version: 0,
-        level: "low"
-      }
-    });
   }
 
-  /**
-   * [onClickBack description]
-   */
   onClickBack = () => {
     Actions.pop();
   };
@@ -146,7 +120,7 @@ class Info extends React.PureComponent {
       new Alert.alert(
         this.props.strings.noNetwork,
         "",
-        [{ text: this.props.strings.ok, onPress: () => {} }],
+        [{ text: this.props.strings.ok, onPress: () => { } }],
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
@@ -158,8 +132,8 @@ class Info extends React.PureComponent {
    * Cleans HTML removing <br>
    */
   removeHtmlBr() {
-    if (this.state.key.keyInfo === null) {
-      return this.props.strings.noText;
+    if (this.state.key.keyInfo === undefined || this.state.key.keyInfo === null) {
+      return this.props.strings.noKeySelected;
     }
     return this.state.key.keyInfo.replace(/(\n|<br>)/gm, "");
   }
@@ -239,13 +213,13 @@ class Info extends React.PureComponent {
                       source={
                         this.props.platform === "ios"
                           ? {
-                              uri: ImageConfig.getInfoImg(this.props.chosenKey)
-                            }
+                            uri: ImageConfig.getInfoImg(this.props.chosenKey)
+                          }
                           : {
-                              uri:
-                                "file://" +
-                                ImageConfig.getInfoImg(this.props.chosenKey)
-                            }
+                            uri:
+                              "file://" +
+                              ImageConfig.getInfoImg(this.props.chosenKey)
+                          }
                       }
                     />
                   </ImageZoom>
@@ -281,7 +255,7 @@ class Info extends React.PureComponent {
             animationTension={40}
             closeOnTouchOutside={false}
             open={this.props.keyDownloaded_LOADING}
-            modalDidOpen={() => {}}
+            modalDidOpen={() => { }}
             modalDidClose={this.modalClose}
           >
             <Text

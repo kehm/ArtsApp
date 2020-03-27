@@ -42,8 +42,6 @@ class TabDistribution extends React.PureComponent {
     }
   }
 
-  componentWillUnmount() {}
-
   render() {
     return (
       <Card>
