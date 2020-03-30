@@ -1,5 +1,5 @@
 /**
- * @file Show information about the key selected key
+ * @file Show information about the selected key
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
@@ -10,7 +10,8 @@ import {
   Text,
   BackHandler,
   Dimensions,
-  Alert
+  Alert,
+  Modal
 } from "react-native";
 import {
   Container,
@@ -31,7 +32,6 @@ import {
   Col
 } from "native-base";
 import { Actions } from "react-native-router-flux";
-import Modal from "react-native-simple-modal";
 import Toast, { DURATION } from "react-native-easy-toast";
 import HTMLView from "react-native-htmlview";
 import ImageZoom from "react-native-image-pan-zoom";
@@ -250,23 +250,15 @@ class Info extends React.PureComponent {
           </Content>
           {this.props.showDownload ? this.showDownload() : null}
           <Modal
-            offset={0}
-            animationDuration={200}
-            animationTension={40}
-            closeOnTouchOutside={false}
-            open={this.props.keyDownloaded_LOADING}
-            modalDidOpen={() => { }}
-            modalDidClose={this.modalClose}
+            animationType="fade"
+            transparent={true}
+            visible={this.props.keyDownloaded_LOADING}
           >
-            <Text
-              style={{
-                fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                textAlign: "center"
-              }}
-            >
-              {this.props.strings.downloading}
-            </Text>
-            <Spinner color="green" />
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
+              </View>
+            </View>
           </Modal>
           <Toast ref="toast" />
         </Container>
@@ -307,6 +299,38 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#000000"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
   }
 });
 

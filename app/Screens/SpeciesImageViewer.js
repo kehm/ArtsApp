@@ -1,10 +1,7 @@
 /**
- * @file SpeciesImageViewer.js
+ * @file Species image gallery
  * @author Kjetil Fossheim
- *
- * ImageViewer for species images.
  */
-
 import React, { Component } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import {
@@ -50,18 +47,15 @@ function mapDispatchToProps(dispatch) {
 class SpeciesImageViewer extends React.PureComponent {
   constructor(props) {
     super(props);
+    // Set image URL
     this.state = {
-      images: []
-    };
-    // Set image url format
-    this.setState({
       images: this.props.spImage.map((item, i) => {
         if (this.props.platform === "ios") {
           return { url: item };
         }
         return { url: "file://" + item };
       })
-    });
+    };
   }
 
   onClickBack = () => {

@@ -180,7 +180,7 @@ export default class LangStrings {
         debugModeOn: 'DebugMode aktivert',
         enableDebug: 'DebugMode slåes på ved å trykke ',
         enableDebug2: ' ganger til.',
-        downloading: 'Laster ned, dette kan ta litt tid.',
+        downloading: 'Laster ned nøkkelen. Dette kan ta litt tid...',
         downloaded: 'Nedlasting fullført',
         betaKeys: 'Beta nøkler',
         firstNoNett: 'You are not connected to a network. \n In order to use ArtsApp, you will have to be online the first time using the application. / \n\n Du er ikke tilkoblet noe nettverk. \n For å bruke ArtsApp, må du være online første gang du bruker applikasjonen.',

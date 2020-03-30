@@ -17,6 +17,9 @@ class SelectionProgressBar extends React.Component<Props> {
     };
   }
 
+  /**
+   * If new props, trigger state update
+   */
   static getDerivedStateFromProps(nextProps, prevState) {
     const { totalCount, matchingCount, notInRangeCount } = nextProps;
     if (totalCount !== prevState.totalCount && matchingCount !== prevState.matchingCount && notInRangeCount !== prevState.notInRangeCount) {
@@ -28,6 +31,9 @@ class SelectionProgressBar extends React.Component<Props> {
     } else return null;
   }
 
+  /**
+   * Set new state
+   */
   componentDidUpdate(prevProps, prevState) {
     const { totalCount, matchingCount, notInRangeCount } = prevState;
     if (totalCount !== this.state.totalCount && matchingCount !== this.state.matchingCount && notInRangeCount !== this.state.notInRangeCount) {

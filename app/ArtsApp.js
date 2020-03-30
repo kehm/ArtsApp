@@ -18,7 +18,6 @@ import Species from "./Screens/Species";
 import Splash from "./Screens/Splash";
 import ValueInfo from "./Screens/ValueInfo";
 import Debug from "./Screens/Debug";
-import SpeciesLeft from "./Screens/SpeciesLeft";
 import About from "./Screens/About";
 import Info from "./Screens/Info";
 import UpdateLocation from "./Screens/UpdateLocation";
@@ -79,12 +78,6 @@ const scenes = Actions.create(
       hideNavBar
       panHandlers={null}
       component={UpdateKeys}
-    />
-    <Scene
-      key="SpeciesLeft"
-      hideNavBar
-      panHandlers={null}
-      component={SpeciesLeft}
     />
     <Scene key="Species" hideNavBar component={Species} panHandlers={null} />
     <Scene
