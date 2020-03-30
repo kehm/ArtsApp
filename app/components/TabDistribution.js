@@ -1,8 +1,6 @@
 /**
- * @file TabDistribution.js
+ * @file Tab in Species.js for showing distribution map of the selected species if available
  * @author Kjetil Fossheim
- *
- * TAB for the Species.js page, displaying distribution maps of the selected species if available.
  */
 import React, { Component } from "react";
 import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
@@ -33,7 +31,7 @@ class TabDistribution extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (
       this.props.distributionLocal === null ||
       typeof this.props.distributionLocal === "undefined"
@@ -105,22 +103,22 @@ class TabDistribution extends React.PureComponent {
                 />
               </View>
             ) : (
-              <Text
-                style={
-                  this.props.deviceTypeAndroidTablet
-                    ? AndroidTabletStyles.text
-                    : styles.text
-                }
-              >
-                {this.props.strings.noDistrubution}
-              </Text>
-            )}
+                <Text
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.text
+                      : styles.text
+                  }
+                >
+                  {this.props.strings.noDistrubution}
+                </Text>
+              )}
           </ScrollView>
         ) : (
-          <Text style={{ margin: 10, textAlign: "center" }}>
-            {this.props.strings.disNoNetwork}
-          </Text>
-        )}
+            <Text style={{ margin: 10, textAlign: "center" }}>
+              {this.props.strings.disNoNetwork}
+            </Text>
+          )}
       </Card>
     );
   }

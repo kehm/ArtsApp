@@ -1,11 +1,7 @@
 /**
- * @file Species.js
+ * @file Show information about the selected species and prompt the user to save the observation
  * @author Kjetil Fossheim
- *
- * Screen for showcase the selected species and information about it. Information contains: -images -description -distribution -local regestraited observations.
- * In addition the user has a possibility to store its own observations.
  */
-
 import React, { Component } from "react";
 import {
   StyleProvider,
@@ -83,15 +79,12 @@ class Species extends React.PureComponent {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     date = new Date();
     this.setState({
       obsDateTime:
         date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
     });
-  }
-
-  componentDidMount() {
     if (
       typeof this.props.spesiecImageList.get(
         this.props.selectedSpecies.species_id
@@ -104,8 +97,6 @@ class Species extends React.PureComponent {
       });
     }
   }
-
-  componentWillUnmount() {}
 
   onClickBack = () => {
     Actions.pop();
@@ -196,11 +187,11 @@ class Species extends React.PureComponent {
           style={
             this.props.deviceTypeAndroidTablet
               ? {
-                  fontSize: 29,
-                  marginLeft: 10,
-                  marginBottom: 5,
-                  marginTop: -10
-                }
+                fontSize: 29,
+                marginLeft: 10,
+                marginBottom: 5,
+                marginTop: -10
+              }
               : {}
           }
         >
@@ -321,9 +312,9 @@ class Species extends React.PureComponent {
                         this.props.platform === "ios"
                           ? { uri: this.state.selectedSpeciesImages[0] }
                           : {
-                              uri:
-                                "file://" + this.state.selectedSpeciesImages[0]
-                            }
+                            uri:
+                              "file://" + this.state.selectedSpeciesImages[0]
+                          }
                       }
                     />
                   </TouchableHighlight>
@@ -536,8 +527,8 @@ class Species extends React.PureComponent {
                 <Button
                   disabled={
                     this.state.county === "" ||
-                    this.state.place === "" ||
-                    this.state.latitude === ""
+                      this.state.place === "" ||
+                      this.state.latitude === ""
                       ? true
                       : false
                   }
