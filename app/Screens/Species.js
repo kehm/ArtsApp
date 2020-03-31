@@ -29,11 +29,11 @@ import {
   View,
   TextInput,
   TouchableHighlight,
-  Image
+  Image,
+  Modal
 } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
-import Modal from "react-native-simple-modal";
 import TabInfo from "../components/TabInfo";
 import TabDistribution from "../components/TabDistribution";
 
@@ -80,7 +80,7 @@ class Species extends React.PureComponent {
   }
 
   componentDidMount() {
-    date = new Date();
+    let date = new Date();
     this.setState({
       obsDateTime:
         date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
@@ -378,176 +378,178 @@ class Species extends React.PureComponent {
             </Tabs>
           </Content>
           <Modal
-            offset={0}
-            animationDuration={200}
-            animationTension={40}
-            closeOnTouchOutside={false}
-            open={this.state.open}
-            modalDidClose={() => this.setState({ open: false })}
+            animationType="fade"
+            transparent={true}
+            visible={this.state.open}
+            onRequestClose={() => this.setState({ open: false })}
           >
-            <View>
-              <Text
-                style={{
-                  fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
-                  marginBottom: 10,
-                  textAlign: "center"
-                }}
-              >
-                {this.props.strings.newObs}
-              </Text>
-              <View
-                key="divider"
-                style={{ height: 2, backgroundColor: "#dadada" }}
-              />
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.species + ":   "}
-                </Text>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.selectedSpecies.latinName +
-                    " / " +
-                    this.props.selectedSpecies.localName}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.date + ":   "}
-                </Text>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.state.obsDateTime}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.coordinate + ":   "}
-                </Text>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.state.latitude + ", " + this.state.longitude}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "column" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.location + ":   "}
-                </Text>
-                <TextInput
-                  placeholder={this.props.strings.place}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 60 : 35,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    margin: 5,
-                    marginBottom: 1
-                  }}
-                  onChangeText={place => this.setState({ place })}
-                  value={this.state.place}
-                />
-                <View style={{ height: 10 }} />
-                <TextInput
-                  placeholder={this.props.strings.county}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 60 : 35,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    margin: 5,
-                    marginTop: 1
-                  }}
-                  onChangeText={county => this.setState({ county })}
-                  value={this.state.county}
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  padding: 10
-                }}
-              >
-                <Button
-                  iconLeft
-                  style={{ padding: 10 }}
-                  transparent
-                  bordered
-                  onPress={() => this.setState({ open: false })}
-                >
-                  <Icon name="ios-close-circle" />
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View>
                   <Text
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.text3
-                        : styles.text3
-                    }
+                    style={{
+                      fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
+                      marginBottom: 10,
+                      textAlign: "center"
+                    }}
                   >
-                    {this.props.strings.cancel}
+                    {this.props.strings.newObs}
                   </Text>
-                </Button>
-                <Button
-                  disabled={
-                    this.state.county === "" ||
-                      this.state.place === "" ||
-                      this.state.latitude === ""
-                      ? true
-                      : false
-                  }
-                  transparent
-                  iconLeft
-                  bordered
-                  onPress={this.onClickNewObs}
-                >
-                  <Icon name="ios-folder-open" />
-                  <Text
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.text3
-                        : styles.text3
-                    }
+                  <View
+                    key="divider"
+                    style={{ height: 2, backgroundColor: "#dadada" }}
+                  />
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.strings.species + ":   "}
+                    </Text>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.selectedSpecies.latinName +
+                        " / " +
+                        this.props.selectedSpecies.localName}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.strings.date + ":   "}
+                    </Text>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.state.obsDateTime}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.strings.coordinate + ":   "}
+                    </Text>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.state.latitude + ", " + this.state.longitude}
+                    </Text>
+                  </View>
+                  <View style={{ flexDirection: "column" }}>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.strings.location + ":   "}
+                    </Text>
+                    <TextInput
+                      placeholder={this.props.strings.place}
+                      style={{
+                        height: this.props.deviceTypeAndroidTablet ? 60 : 35,
+                        fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
+                        borderColor: "gray",
+                        borderWidth: 1,
+                        margin: 5,
+                        marginBottom: 1
+                      }}
+                      onChangeText={place => this.setState({ place })}
+                      value={this.state.place}
+                    />
+                    <View style={{ height: 10 }} />
+                    <TextInput
+                      placeholder={this.props.strings.county}
+                      style={{
+                        height: this.props.deviceTypeAndroidTablet ? 60 : 35,
+                        fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
+                        borderColor: "gray",
+                        borderWidth: 1,
+                        margin: 5,
+                        marginTop: 1
+                      }}
+                      onChangeText={county => this.setState({ county })}
+                      value={this.state.county}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      padding: 10
+                    }}
                   >
-                    {this.props.strings.save}
-                  </Text>
-                </Button>
+                    <Button
+                      iconLeft
+                      style={{ padding: 10 }}
+                      transparent
+                      bordered
+                      onPress={() => this.setState({ open: false })}
+                    >
+                      <Icon name="ios-close-circle" />
+                      <Text
+                        style={
+                          this.props.deviceTypeAndroidTablet
+                            ? AndroidTabletStyles.text3
+                            : styles.text3
+                        }
+                      >
+                        {this.props.strings.cancel}
+                      </Text>
+                    </Button>
+                    <Button
+                      disabled={
+                        this.state.county === "" ||
+                          this.state.place === "" ||
+                          this.state.latitude === ""
+                          ? true
+                          : false
+                      }
+                      transparent
+                      iconLeft
+                      bordered
+                      onPress={this.onClickNewObs}
+                    >
+                      <Icon name="ios-folder-open" />
+                      <Text
+                        style={
+                          this.props.deviceTypeAndroidTablet
+                            ? AndroidTabletStyles.text3
+                            : styles.text3
+                        }
+                      >
+                        {this.props.strings.save}
+                      </Text>
+                    </Button>
+                  </View>
+                </View>
               </View>
             </View>
           </Modal>
@@ -580,6 +582,27 @@ const styles = StyleSheet.create({
     height: 150,
     margin: 20,
     padding: 20
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   }
 });
 

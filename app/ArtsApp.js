@@ -1,7 +1,6 @@
 /**
- * @file ArtsApp.js
+ * @file Application entry point. Wrap Redux wrapper and menu drawer to undelying scenes.
  * @author Kjetil Fossheim
- * Entry point for the app. Wraps the application in a wrapper of redux and wrap the Menu Drawer to underlying scenes.
  */
 import React, { Component } from "react";
 import { BackHandler, ToastAndroid, Platform, UIManager } from "react-native";

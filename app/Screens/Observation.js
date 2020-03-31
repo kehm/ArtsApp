@@ -72,7 +72,7 @@ class Observation extends React.PureComponent {
       [
         { text: this.props.strings.cancel, onPress: () => {}, style: "cancel" },
         {
-          text: this.props.strings.acsept,
+          text: this.props.strings.accept,
           onPress: () => this.props.actions.deleteObservation(i)
         }
       ],

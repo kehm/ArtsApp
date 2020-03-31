@@ -174,22 +174,11 @@ class MenuContent extends React.PureComponent {
                   ? stylesAndroidTablet.textKeyInfo
                   : styles.textKeyInfo
                 : this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
+                  ? stylesAndroidTablet.text
+                  : styles.text
             }
           >
             {this.props.strings.keyInfo}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickLang}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.language}
           </Text>
         </ListItem>
         <ListItem button noBorder onPress={this.onClickUpdateKeys}>
@@ -201,6 +190,17 @@ class MenuContent extends React.PureComponent {
             }
           >
             {this.props.strings.manageKeys}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickLang}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.language}
           </Text>
         </ListItem>
       </List>

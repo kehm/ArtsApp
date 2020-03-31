@@ -1,10 +1,7 @@
 /**
- * @file UpdateLocation.js
+ * @file Screen for updating location information about species.
  * @author Kejtil Fossheim
- *
- * Screen for updating location information about species.
  */
-
 import React, { Component } from "react";
 import {
   View,
@@ -13,7 +10,8 @@ import {
   BackHandler,
   TextInput,
   Dimensions,
-  Text
+  Text,
+  Modal
 } from "react-native";
 import {
   StyleProvider,
@@ -41,7 +39,6 @@ import {
   Col,
   Row
 } from "native-base";
-import Modal from "react-native-simple-modal";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
 
@@ -374,163 +371,163 @@ class UpdateLocation extends React.PureComponent {
           </Footer>
           <Toast ref="uptoast" />
           <Modal
-            offset={0}
-            animationDuration={200}
-            animationTension={40}
-            closeOnTouchOutside={false}
-            open={this.props.modalOpen}
-            modalDidOpen={() => {}}
-            modalDidClose={() => {}}
+            animationType="fade"
+            transparent={true}
+            visible={this.props.modalOpen}
           >
-            <View>
-              <Text
-                style={{
-                  fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
-                  marginBottom: 10,
-                  textAlign: "center"
-                }}
-              >
-                {this.props.strings.updateLocation}
-              </Text>
-              <View
-                key="divider"
-                style={{ height: 2, backgroundColor: "#dadada" }}
-              />
-              <View style={{ flexDirection: "column" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.selectedKeys + " "}
-                </Text>
-                <Text
-                  style={[
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.keyText
-                      : styles.keyText,
-                    { textAlign: "center" }
-                  ]}
-                >
-                  {this.makeKeyString()}
-                </Text>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.withCoor + " "}
-                </Text>
-                <TextInput
-                  disabled={
-                    this.props.keysUpdated_loading || this.state.disableAll
-                  }
-                  placeholder={this.props.strings.latitude}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 70 : 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    margin: 5,
-                    marginBottom: 1,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
-                  }}
-                  onChangeText={latitude => this.setState({ latitude })}
-                  value={this.state.latitude}
-                  autoCorrect={false}
-                  keyboardType="numeric"
-                />
-                <TextInput
-                  disabled={
-                    this.props.keysUpdated_loading || this.state.disableAll
-                  }
-                  placeholder={this.props.strings.longitude}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 70 : 40,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    margin: 5,
-                    marginTop: 1,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
-                  }}
-                  onChangeText={longitude => this.setState({ longitude })}
-                  value={this.state.longitude}
-                  autoCorrect={false}
-                  keyboardType="numeric"
-                />
-                <Button
-                  primary
-                  rounded
-                  bordered
-                  disabled={this.props.nerby_updated_loading ? true : false}
-                  onPress={this.getCoordinate}
-                  style={{ alignSelf: "center", marginBottom: 10 }}
-                >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <View>
                   <Text
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.text1
-                        : styles.text1
-                    }
+                    style={{
+                      fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
+                      marginBottom: 10,
+                      textAlign: "center"
+                    }}
                   >
-                    {this.props.strings.curCoor}
+                    {this.props.strings.updateLocation}
                   </Text>
-                </Button>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between"
-                }}
-              >
-                <Button
-                  rounded
-                  bordered
-                  disabled={this.props.nerby_updated_loading ? true : false}
-                  onPress={() => this.props.actions.changeModal()}
-                >
-                  <Icon name="md-close" />
-                  <Text
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.text1
-                        : styles.text1
-                    }
+                  <View
+                    key="divider"
+                    style={{ height: 2, backgroundColor: "#dadada" }}
+                  />
+                  <View style={{ flexDirection: "column" }}>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.strings.selectedKeys + " "}
+                    </Text>
+                    <Text
+                      style={[
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.keyText
+                          : styles.keyText,
+                        { textAlign: "center" }
+                      ]}
+                    >
+                      {this.makeKeyString()}
+                    </Text>
+                    <Text
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.text3
+                          : styles.text3
+                      }
+                    >
+                      {this.props.strings.withCoor + " "}
+                    </Text>
+                    <TextInput
+                      disabled={
+                        this.props.keysUpdated_loading || this.state.disableAll
+                      }
+                      placeholder={this.props.strings.latitude}
+                      style={{
+                        height: this.props.deviceTypeAndroidTablet ? 70 : 40,
+                        borderColor: "gray",
+                        borderWidth: 1,
+                        margin: 5,
+                        marginBottom: 1,
+                        fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
+                      }}
+                      onChangeText={latitude => this.setState({ latitude })}
+                      value={this.state.latitude}
+                      autoCorrect={false}
+                      keyboardType="numeric"
+                    />
+                    <TextInput
+                      disabled={
+                        this.props.keysUpdated_loading || this.state.disableAll
+                      }
+                      placeholder={this.props.strings.longitude}
+                      style={{
+                        height: this.props.deviceTypeAndroidTablet ? 70 : 40,
+                        borderColor: "gray",
+                        borderWidth: 1,
+                        margin: 5,
+                        marginTop: 1,
+                        fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
+                      }}
+                      onChangeText={longitude => this.setState({ longitude })}
+                      value={this.state.longitude}
+                      autoCorrect={false}
+                      keyboardType="numeric"
+                    />
+                    <Button
+                      primary
+                      rounded
+                      bordered
+                      disabled={this.props.nerby_updated_loading ? true : false}
+                      onPress={this.getCoordinate}
+                      style={{ alignSelf: "center", marginBottom: 10 }}
+                    >
+                      <Text
+                        style={
+                          this.props.deviceTypeAndroidTablet
+                            ? AndroidTabletStyles.text1
+                            : styles.text1
+                        }
+                      >
+                        {this.props.strings.curCoor}
+                      </Text>
+                    </Button>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
                   >
-                    {this.props.strings.cancel}
-                  </Text>
-                </Button>
-                {this.props.nerby_updated_loading ? (
-                  <Spinner color="green" />
-                ) : null}
-                <Button
-                  rounded
-                  bordered
-                  disabled={
-                    this.state.chosenKeys.length === 0 ||
-                    this.state.latitude === "" ||
-                    this.props.nerby_updated_loading
-                      ? true
-                      : false
-                  }
-                  onPress={this.updateObsetvations}
-                >
-                  <Text
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.text1
-                        : styles.text1
-                    }
-                  >
-                    {this.props.strings.update}
-                  </Text>
-                </Button>
+                    <Button
+                      rounded
+                      bordered
+                      disabled={this.props.nerby_updated_loading ? true : false}
+                      onPress={() => this.props.actions.changeModal()}
+                    >
+                      <Icon name="md-close" />
+                      <Text
+                        style={
+                          this.props.deviceTypeAndroidTablet
+                            ? AndroidTabletStyles.text1
+                            : styles.text1
+                        }
+                      >
+                        {this.props.strings.cancel}
+                      </Text>
+                    </Button>
+                    {this.props.nerby_updated_loading ? (
+                      <Spinner color="green" />
+                    ) : null}
+                    <Button
+                      rounded
+                      bordered
+                      disabled={
+                        this.state.chosenKeys.length === 0 ||
+                          this.state.latitude === "" ||
+                          this.props.nerby_updated_loading
+                          ? true
+                          : false
+                      }
+                      onPress={this.updateObsetvations}
+                    >
+                      <Text
+                        style={
+                          this.props.deviceTypeAndroidTablet
+                            ? AndroidTabletStyles.text1
+                            : styles.text1
+                        }
+                      >
+                        {this.props.strings.update}
+                      </Text>
+                    </Button>
+                  </View>
+                </View>
+                <Toast ref="toast" />
               </View>
             </View>
-            <Toast ref="toast" />
           </Modal>
         </Container>
       </StyleProvider>
@@ -587,6 +584,32 @@ const styles = StyleSheet.create({
     marginRight: 10,
     backgroundColor: "rgba(0,0,0,0.2)",
     width: Dimensions.get("window").width - 50
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
   }
 });
 

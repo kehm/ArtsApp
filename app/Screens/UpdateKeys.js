@@ -1,8 +1,6 @@
 /**
- * @file UpdateKeys.js
+ * @file Scene for administrating downloaded keys
  * @author Kjetil Fossheim
- *
- * Screen for administrating keys.
  */
 import React, { Component } from "react";
 import {
@@ -11,7 +9,8 @@ import {
   StyleSheet,
   BackHandler,
   FlatList,
-  Text
+  Text,
+  Modal
 } from "react-native";
 import {
   StyleProvider,
@@ -33,7 +32,6 @@ import {
   Button,
   Icon
 } from "native-base";
-import Modal from "react-native-simple-modal";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
 import KeyDownload from "../config/network/KeyDownload";
@@ -92,12 +90,10 @@ class UpdateKeys extends React.PureComponent {
   }
 
   /**
-   * monitors new props to see if the user is updating keys, or if the update is finished, or if a key is deleted.
-   * @param {Object} newProps received props
-   * @return {void} if keys is updated sends user to frontpage, else updates keylist if deleted.
+   * Update key list if deleted or send user to frontpage if keys are updated
    */
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.keysUpdated_loading === true) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.keysUpdated_loading) {
       this.setState({ disableAll: true });
       setTimeout(() => {
         this.setState({ disableAll: false });
@@ -108,12 +104,12 @@ class UpdateKeys extends React.PureComponent {
         }
       }, 1000);
     }
-    if (nextProps.keysUpdated) {
+    if (prevProps.keysUpdated) {
       this.props.actions.setAllKeys();
       this.props.actions.resetUpdateKey();
       Actions.popTo("Frontpage");
     }
-    if (nextProps.deleted) {
+    if (prevProps.deleted) {
       this.props.actions.setUpdateList();
       this.props.actions.resetUpdateKey();
     }
@@ -162,7 +158,7 @@ class UpdateKeys extends React.PureComponent {
       Alert.alert(
         this.props.strings.noNetwork,
         this.props.strings.disNoNetwork,
-        [{ text: this.props.strings.ok, onPress: () => {}, style: "cancel" }],
+        [{ text: this.props.strings.ok, onPress: () => { }, style: "cancel" }],
         { cancelable: true }
       );
     }
@@ -178,7 +174,7 @@ class UpdateKeys extends React.PureComponent {
     Actions.popTo("Frontpage");
   };
 
-  onClickLookUpdate = () => {};
+  onClickLookUpdate = () => { };
 
   /**
    * function that updates selected keys. shows no network toast if no internet.
@@ -231,9 +227,9 @@ class UpdateKeys extends React.PureComponent {
       this.props.strings.deleteKeyHeader,
       this.props.strings.deleteKey + " ",
       [
-        { text: this.props.strings.cancel, onPress: () => {}, style: "cancel" },
+        { text: this.props.strings.cancel, onPress: () => { }, style: "cancel" },
         {
-          text: this.props.strings.acsept,
+          text: this.props.strings.accept,
           onPress: () => {
             this.props.actions.deletedata(i);
           }
@@ -364,43 +360,41 @@ class UpdateKeys extends React.PureComponent {
                   {this.props.strings.updateKeyText}{" "}
                 </Text>
               ) : (
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text1
-                      : styles.text1
-                  }
-                >
-                  {" "}
-                  {this.props.strings.noKeys}{" "}
-                </Text>
-              )}
+                  <Text
+                    style={
+                      this.props.deviceTypeAndroidTablet
+                        ? AndroidTabletStyles.text1
+                        : styles.text1
+                    }
+                  >
+                    {" "}
+                    {this.props.strings.noKeys}{" "}
+                  </Text>
+                )}
               <View
                 key="divider"
                 style={{ height: 2, backgroundColor: "#dadada" }}
               />
             </View>
-            <Content>
-              {this.props.updateList.length === 0 && (
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text1
-                      : styles.text1
-                  }
-                >
-                  {" "}
-                  {this.props.strings.noKeysDownloaded}
-                </Text>
-              )}
-              <FlatList
-                extraData={this.state.chosenKeys.length}
-                data={this.props.updateList}
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderItem}
-                ref="list"
-              />
-            </Content>
+            {this.props.updateList.length === 0 && (
+              <Text
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.text1
+                    : styles.text1
+                }
+              >
+                {" "}
+                {this.props.strings.noKeysDownloaded}
+              </Text>
+            )}
+            <FlatList
+              extraData={this.state.chosenKeys.length}
+              data={this.props.updateList}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              ref="list"
+            />
             <Toast ref="toast" />
           </View>
           {this.state.listLength > 0 || this.state.showUP ? (
@@ -426,23 +420,16 @@ class UpdateKeys extends React.PureComponent {
               </Button>
             </Footer>
           ) : null}
-
           <Modal
-            offset={0}
-            animationDuration={200}
-            animationTension={40}
-            closeOnTouchOutside={false}
-            open={this.props.keysUpdated_loading || this.state.disableAll}
-            modalDidOpen={() => {}}
-            modalDidClose={() => {}}
+            animationType="fade"
+            transparent={true}
+            visible={this.props.keysUpdated_loading || this.state.disableAll}
           >
-            <View>
-              {!this.state.lUpdate && (
-                <Text style={styles.text1}>
-                  {this.props.strings.downloading}
-                </Text>
-              )}
-              <Spinner color="green" />
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
+                <Spinner color="green" />
+              </View>
             </View>
           </Modal>
         </Container>
@@ -480,6 +467,32 @@ const styles = StyleSheet.create({
     margin: -7,
     textAlign: "center",
     color: "#000000"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
   }
 });
 

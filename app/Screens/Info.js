@@ -257,6 +257,7 @@ class Info extends React.PureComponent {
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
+                <Spinner color="green" />
               </View>
             </View>
           </Modal>
@@ -320,12 +321,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
-  },
-  openButton: {
-    backgroundColor: "#F194FF",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
   },
   modalText: {
     marginBottom: 15,
