@@ -197,7 +197,7 @@ function mapStateToProps({ key, settings, observations }) {
     foundSpecies: key.speciesLeft.length,
     title: key.chosenKeyTitle,
     traits: key.traitValueCombo,
-    speciesImages: key.spesiecImageList,
+    speciesImages: key.speciesImageList,
     valueImages: key.valueImages,
     chosenValues: key.chosenValues,
     chosenTraits: key.chosenTraits,

@@ -29,7 +29,7 @@ import * as actionTypes from "../actions/actionTypes";
  * -keys = list of all keys availablein the app
  * -key = object of one selected key
  * -valueImages = array of all value images in the key
- * -spesiecImageList = array of all species images in the key
+ * -speciesImageList = array of all species images in the key
  * -spTraits = list of all trait possible used by the reminding species
  * -spValues =list of all values possible used by the reminding species
  * -resetting = resetting flag, default false
@@ -53,7 +53,7 @@ const DEFAULT_STATE = {
   keys: [],
   key: "",
   valueImages: new Map(),
-  spesiecImageList: new Map(),
+  speciesImageList: new Map(),
   spTraits: [],
   spValues: [],
   resetting: false
@@ -164,7 +164,7 @@ export default function(state = DEFAULT_STATE, action) {
     case `${actionTypes.VALUE_IMAGES}_ERROR`:
       return { ...state, valueImageError: action.payload };
     case `${actionTypes.ALL_SPECIES_IMAGES}_SUCCESS`:
-      return { ...state, spesiecImageList: action.payload };
+      return { ...state, speciesImageList: action.payload };
     case `${actionTypes.ALL_SPECIES_IMAGES}_LOADING`:
     case `${actionTypes.ALL_SPECIES_IMAGES}_ERROR`:
       return { ...state, speciesImageError: action.payload };

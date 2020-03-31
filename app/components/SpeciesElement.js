@@ -40,11 +40,11 @@ class SpeciesElement extends React.PureComponent {
 
   componentDidMount() {
     if (
-      typeof this.props.spesiecImageList.get(this.props.species_id) !==
+      typeof this.props.speciesImageList.get(this.props.species_id) !==
       "undefined"
     ) {
       this.setState({
-        images: this.props.spesiecImageList.get(this.props.species_id)
+        images: this.props.speciesImageList.get(this.props.species_id)
       });
     }
   }

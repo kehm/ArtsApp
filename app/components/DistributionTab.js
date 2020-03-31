@@ -4,7 +4,6 @@
  */
 import React, { Component } from "react";
 import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
-import { Card } from "native-base";
 
 // redux
 import { connect } from "react-redux";
@@ -21,31 +20,28 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-class TabDistribution extends React.PureComponent {
+class DistributionTab extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       latitude: "",
       longitude: "",
-      noDistrubution: false
+      noDistribution: false
     };
   }
 
   componentDidMount() {
-    if (
-      this.props.distributionLocal === null ||
-      typeof this.props.distributionLocal === "undefined"
-    ) {
-      this.setState({ noDistrubution: true });
+    if (this.props.distributionLocal === "undefined" || this.props.longitude === "undefined" || this.props.latitude === "undefined") {
+      this.setState({ noDistribution: true });
     }
   }
 
   render() {
     return (
-      <Card>
+      <View>
         {this.props.isConnected ? (
           <ScrollView>
-            {!this.state.noDistrubution ? (
+            {!this.state.noDistribution ? (
               <View>
                 <Image
                   source={{
@@ -66,7 +62,7 @@ class TabDistribution extends React.PureComponent {
                   style={
                     this.props.deviceTypeAndroidTablet
                       ? AndroidTabletStyles.text
-                      : styles.text
+                      : null
                   }
                 >
                   {this.props.strings.nationalDistrubution +
@@ -91,7 +87,7 @@ class TabDistribution extends React.PureComponent {
                   style={
                     this.props.deviceTypeAndroidTablet
                       ? AndroidTabletStyles.text
-                      : styles.text
+                      : null
                   }
                 >
                   {this.props.strings.regonalDistrubution}
@@ -107,10 +103,10 @@ class TabDistribution extends React.PureComponent {
                   style={
                     this.props.deviceTypeAndroidTablet
                       ? AndroidTabletStyles.text
-                      : styles.text
+                      : null
                   }
                 >
-                  {this.props.strings.noDistrubution}
+                  {this.props.strings.noDistribution}
                 </Text>
               )}
           </ScrollView>
@@ -119,7 +115,7 @@ class TabDistribution extends React.PureComponent {
               {this.props.strings.disNoNetwork}
             </Text>
           )}
-      </Card>
+      </View>
     );
   }
 }
@@ -138,15 +134,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 0,
     resizeMode: "stretch",
-    alignSelf: "center"
-  },
-  text: {
-    borderWidth: 1,
-    borderColor: "black",
-    width: 340,
-    marginTop: 0,
-    marginBottom: 20,
-    padding: 5,
     alignSelf: "center"
   }
 });
@@ -182,4 +169,4 @@ const AndroidTabletStyles = StyleSheet.create({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TabDistribution);
+)(DistributionTab);

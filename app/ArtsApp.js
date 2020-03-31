@@ -21,7 +21,6 @@ import About from "./Screens/About";
 import Info from "./Screens/Info";
 import UpdateLocation from "./Screens/UpdateLocation";
 import UpdateKeys from "./Screens/UpdateKeys";
-import SpeciesImageViewer from "./Screens/SpeciesImageViewer";
 
 const mapStateToProps = state => ({
   ...state.nav,
@@ -79,12 +78,6 @@ const scenes = Actions.create(
       component={UpdateKeys}
     />
     <Scene key="Species" hideNavBar component={Species} panHandlers={null} />
-    <Scene
-      key="SpeciesImageViewer"
-      component={SpeciesImageViewer}
-      panHandlers={null}
-      hideNavBar
-    />
     <Scene
       key="Observation"
       hideNavBar

@@ -16,6 +16,7 @@ import {
   Icon,
   Tabs,
   Tab,
+  TabHeading,
   Grid,
   Row,
   Col,
@@ -34,8 +35,9 @@ import {
 } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
-import TabInfo from "../components/TabInfo";
-import TabDistribution from "../components/TabDistribution";
+import ImageView from "react-native-image-viewing";
+import InfoTab from "../components/InfoTab";
+import DistributionTab from "../components/DistributionTab";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -75,7 +77,8 @@ class Species extends React.PureComponent {
       county: "",
       images: [],
       selectedSpeciesImages: [],
-      nerby: props.nerby
+      nerby: props.nerby,
+      openImages: false
     };
   }
 
@@ -85,17 +88,23 @@ class Species extends React.PureComponent {
       obsDateTime:
         date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
     });
-    if (
-      typeof this.props.spesiecImageList.get(
-        this.props.selectedSpecies.species_id
-      ) !== "undefined"
-    ) {
+    let imageList = this.props.speciesImageList.get(this.props.selectedSpecies.species_id);
+    if (imageList !== undefined) {
       this.setState({
-        selectedSpeciesImages: this.props.spesiecImageList.get(
-          this.props.selectedSpecies.species_id
-        )
+        selectedSpeciesImages: imageList.map(image => {
+          if (this.props.platform === "ios") {
+            return { uri: image };
+          } else {
+            return { uri: "file://" + image };
+          }
+        })
       });
     }
+  }
+
+  componentDidUpdate() {
+    console.log(this.state.selectedSpeciesImages)
+    console.log(this.state.selectedSpeciesImages[0])
   }
 
   onClickBack = () => {
@@ -107,9 +116,13 @@ class Species extends React.PureComponent {
     this.saveNewObs();
   };
 
-  onClickSPImage = () => {
+  /**
+   * Open image gallery on image click
+   */
+  onClickImage = () => {
+    console.log(this.state.selectedSpeciesImages)
     if (this.state.selectedSpeciesImages.length !== 0) {
-      Actions.SpeciesImageViewer({ spImage: this.state.selectedSpeciesImages });
+      this.setState({ openImages: true });
     }
   };
 
@@ -246,6 +259,12 @@ class Species extends React.PureComponent {
         }
       >
         <Container>
+          <ImageView
+            images={this.state.selectedSpeciesImages}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+          />
           <Header hasTabs>
             <Left>
               <Button transparent onPress={this.onClickBack}>
@@ -271,7 +290,7 @@ class Species extends React.PureComponent {
                     block
                     style={{ flexDirection: "column", height: 100 }}
                     title={this.props.strings.image}
-                    onPress={this.onClickSPImage}
+                    onPress={this.onClickImage}
                     disabled={
                       this.state.selectedSpeciesImages.length === 0
                         ? true
@@ -300,7 +319,7 @@ class Species extends React.PureComponent {
                 <Col style={{ flex: 2 }}>
                   <TouchableHighlight
                     underlayColor={"rgba(223, 223, 223, 0.14)"}
-                    onPress={this.onClickSPImage}
+                    onPress={this.onClickImage}
                   >
                     <Image
                       style={
@@ -308,14 +327,7 @@ class Species extends React.PureComponent {
                           ? AndroidTabletStyles.image
                           : styles.image
                       }
-                      source={
-                        this.props.platform === "ios"
-                          ? { uri: this.state.selectedSpeciesImages[0] }
-                          : {
-                            uri:
-                              "file://" + this.state.selectedSpeciesImages[0]
-                          }
-                      }
+                      source={this.state.selectedSpeciesImages.length !== 0 ? this.state.selectedSpeciesImages[0] : undefined}
                     />
                   </TouchableHighlight>
                 </Col>
@@ -343,29 +355,29 @@ class Species extends React.PureComponent {
               </Row>
               {this.renderNerby()}
             </Grid>
-            <Tabs style={{ flex: 1 }}>
-              <Tab heading={this.props.strings.spInfo}>
+            <Tabs>
+              <Tab heading={<TabHeading><Text>{this.props.strings.spInfo}</Text></TabHeading>}>
                 <View
                   style={{
                     height: this.props.deviceTypeAndroidTablet ? 670 : 335,
                     margin: this.props.deviceTypeAndroidTablet ? 20 : 5
                   }}
                 >
-                  <TabInfo
+                  <InfoTab
                     tablet={this.props.deviceTypeAndroidTablet}
                     style={styles.container}
                     info={this.props.selectedSpecies.speciesText}
                   />
                 </View>
               </Tab>
-              <Tab heading={this.props.strings.distribution}>
+              <Tab heading={<TabHeading><Text>{this.props.strings.distribution}</Text></TabHeading>}>
                 <View
                   style={{
                     height: this.props.deviceTypeAndroidTablet ? 670 : 335,
                     margin: this.props.deviceTypeAndroidTablet ? 20 : 5
                   }}
                 >
-                  <TabDistribution
+                  <DistributionTab
                     distributionLocal={
                       this.props.selectedSpecies.distributionLocal
                     }
