@@ -47,11 +47,11 @@ class Frontpage extends React.PureComponent<Props, State> {
 
   handleOnPressKey = key => {
     this.props.setKey(key.key_id, key.title);
-    if (key.keyDownloaded) {
+    /*if (key.keyDownloaded) {
       Actions.Key();
-    } else {
-      Actions.Info({ showDownload: true });
-    }
+    }*/
+    Actions.Info({ selectedKey: key });
+
   };
 
   handleOnDownloadKey = key => {
@@ -59,7 +59,7 @@ class Frontpage extends React.PureComponent<Props, State> {
       new Alert.alert(
         this.props.strings.noNetwork,
         "",
-        [{ text: this.props.strings.ok, onPress: () => {} }],
+        [{ text: this.props.strings.ok, onPress: () => { } }],
         { cancelable: false }
       );
     } else {

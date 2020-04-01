@@ -62,13 +62,17 @@ function mapDispatchToProps(dispatch) {
 class Info extends React.PureComponent {
   constructor(props) {
     super(props);
+    let isDownloaded = false;
+    if (this.props.selectedKey.keyDownloaded > 0) {
+      isDownloaded = true;
+    }
     this.state = {
-      key: ""
-    };
+      isDownloaded: isDownloaded,
+      isDownloading: false
+    }
   }
 
   componentDidMount() {
-    this.getSelectedKey();
     BackHandler.addEventListener("hardwareBackModal", () => {
       if (this.props.keyDownloaded_LOADING) {
         return true;
@@ -81,41 +85,54 @@ class Info extends React.PureComponent {
     BackHandler.removeEventListener("hardwareBackModal");
   }
 
-  /**
-   * Get information about the selected key
-   */
-  getSelectedKey() {
-    for (let i = 0; i < this.props.keys.length; i++) {
-      if (this.props.keys[i].key_id === this.props.chosenKey) {
-        this.setState({ key: this.props.keys[i] });
-      }
-    }
-  }
-
   onClickBack = () => {
     Actions.pop();
   };
 
   /**
-   * function for after download modal is closed
-   * @return {void} returns to Frontpage if success and shows error toast if failed.
+   * Check if key download has finished
    */
-  modalClose = () => {
-    if (this.props.keyDownloaded_SUCCESS) {
-      this.refs.toast.show(this.props.strings.downloaded, 1500);
-      setTimeout(() => {
-        Actions.pop();
-      }, 800);
-    } else if (typeof this.props.keyDownloaded_ERROR !== "undefined") {
-      this.refs.toast.show(this.props.strings.updateError, 1500);
+  componentDidUpdate() {
+    if (this.state.isDownloading !== this.props.keyDownloaded_LOADING) {
+      if (this.props.keyDownloaded_SUCCESS) {
+        this.setState({
+          isDownloaded: true,
+          isDownloading: false
+        });
+      } else {
+        this.setState({
+          isDownloaded: false,
+          isDownloading: false
+        });
+      }
+    }
+  }
+
+  /**
+   * Go to key or open download dialog if key is not downloaded
+   */
+  onClickUse = () => {
+    if (this.state.isDownloaded) {
+      Actions.Key();
+    } else {
+      new Alert.alert(
+        this.props.strings.download,
+        this.props.strings.downloadDialog,
+        [{
+          text: "Cancel", style: "cancel"
+        },
+        {
+          text: this.props.strings.ok, onPress: () => { this.downloadKey() }
+        }],
+        { cancelable: false }
+      );
     }
   };
 
   /**
-   * shows download dialog. downloads key if internet is available.
-   * @see KeyAction
+   * Download key if network connection is active
    */
-  onClickDownload = () => {
+  downloadKey = () => {
     if (this.props.isConnected === false) {
       new Alert.alert(
         this.props.strings.noNetwork,
@@ -124,53 +141,19 @@ class Info extends React.PureComponent {
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
-      this.props.actions.downloadKey(this.state.key.keyWeb);
+      this.setState({ isDownloading: true });
+      this.props.actions.downloadKey(this.props.selectedKey.keyWeb);
     }
-  };
+  }
 
   /**
    * Cleans HTML removing <br>
    */
   removeHtmlBr() {
-    if (this.state.key.keyInfo === undefined || this.state.key.keyInfo === null) {
+    if (this.props.selectedKey.keyInfo === undefined || this.props.selectedKey.keyInfo === null) {
       return this.props.strings.noKeySelected;
     }
-    return this.state.key.keyInfo.replace(/(\n|<br>)/gm, "");
-  }
-
-  /**
-   * shows the hidden download buttons
-   * @return {View} Fotter for the Screen
-   */
-  showDownload() {
-    return (
-      <Footer>
-        <FooterTab>
-          <Button transparent onPress={this.onClickBack}>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.strings.cancel}
-            </Text>
-          </Button>
-          <Button transparent onPress={this.onClickDownload}>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.strings.download}
-            </Text>
-          </Button>
-        </FooterTab>
-      </Footer>
-    );
+    return this.props.selectedKey.keyInfo.replace(/(\n|<br>)/gm, "");
   }
 
   render() {
@@ -197,7 +180,7 @@ class Info extends React.PureComponent {
           <Content>
             <Grid>
               <Col style={styles.container}>
-                {this.state.key.image === 1 && (
+                {this.props.selectedKey.image === 1 && (
                   <ImageZoom
                     cropWidth={Dimensions.get("window").width - 20}
                     cropHeight={this.props.deviceTypeAndroidTablet ? 560 : 280}
@@ -232,7 +215,7 @@ class Info extends React.PureComponent {
                       : styles.text
                   }
                 >
-                  {this.state.key.title}
+                  {this.props.selectedKey.title}
                 </Text>
                 <View style={styles.separator} />
                 <View style={styles.textBox}>
@@ -248,7 +231,19 @@ class Info extends React.PureComponent {
               </Col>
             </Grid>
           </Content>
-          {this.props.showDownload ? this.showDownload() : null}
+          <Footer>
+            <Button transparent onPress={() => { this.onClickUse() }}>
+              <Text
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.text3
+                    : styles.text3
+                }
+              >
+                {this.props.strings.useKey}
+              </Text>
+            </Button>
+          </Footer>
           <Modal
             animationType="fade"
             transparent={true}

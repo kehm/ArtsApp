@@ -166,21 +166,6 @@ class MenuContent extends React.PureComponent {
             {this.props.strings.updateLocation}
           </Text>
         </ListItem>
-        <ListItem button noBorder onPress={this.onClickInfo}>
-          <Text
-            style={
-              this.props.scene.name === "Frontpage"
-                ? this.props.deviceTypeAndroidTablet
-                  ? stylesAndroidTablet.textKeyInfo
-                  : styles.textKeyInfo
-                : this.props.deviceTypeAndroidTablet
-                  ? stylesAndroidTablet.text
-                  : styles.text
-            }
-          >
-            {this.props.strings.keyInfo}
-          </Text>
-        </ListItem>
         <ListItem button noBorder onPress={this.onClickUpdateKeys}>
           <Text
             style={
