@@ -15,7 +15,6 @@ import Key from "./Screens/Key";
 import Observation from "./Screens/Observation";
 import Species from "./Screens/Species";
 import Splash from "./Screens/Splash";
-import ValueInfo from "./Screens/ValueInfo";
 import Debug from "./Screens/Debug";
 import About from "./Screens/About";
 import Info from "./Screens/Info";
@@ -57,12 +56,6 @@ const scenes = Actions.create(
       type={ActionConst.RESET}
     />
     <Scene key="Key" hideNavBar panHandlers={null} component={Key} />
-    <Scene
-      key="ValueInfo"
-      hideNavBar
-      panHandlers={null}
-      component={ValueInfo}
-    />
     <Scene key="About" hideNavBar panHandlers={null} component={About} />
     <Scene key="Info" hideNavBar panHandlers={null} component={Info} />
     <Scene

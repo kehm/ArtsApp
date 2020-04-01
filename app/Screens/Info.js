@@ -34,7 +34,6 @@ import {
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
 import HTMLView from "react-native-htmlview";
-import ImageZoom from "react-native-image-pan-zoom";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -181,31 +180,24 @@ class Info extends React.PureComponent {
             <Grid>
               <Col style={styles.container}>
                 {this.props.selectedKey.image === 1 && (
-                  <ImageZoom
-                    cropWidth={Dimensions.get("window").width - 20}
-                    cropHeight={this.props.deviceTypeAndroidTablet ? 560 : 280}
-                    imageWidth={Dimensions.get("window").width - 20}
-                    imageHeight={this.props.deviceTypeAndroidTablet ? 540 : 270}
-                  >
-                    <Image
-                      style={
-                        this.props.deviceTypeAndroidTablet
-                          ? AndroidTabletStyles.image
-                          : styles.image
-                      }
-                      source={
-                        this.props.platform === "ios"
-                          ? {
-                            uri: ImageConfig.getInfoImg(this.props.chosenKey)
-                          }
-                          : {
-                            uri:
-                              "file://" +
-                              ImageConfig.getInfoImg(this.props.chosenKey)
-                          }
-                      }
-                    />
-                  </ImageZoom>
+                  <Image
+                    style={
+                      this.props.deviceTypeAndroidTablet
+                        ? AndroidTabletStyles.image
+                        : styles.image
+                    }
+                    source={
+                      this.props.platform === "ios"
+                        ? {
+                          uri: ImageConfig.getInfoImg(this.props.chosenKey)
+                        }
+                        : {
+                          uri:
+                            "file://" +
+                            ImageConfig.getInfoImg(this.props.chosenKey)
+                        }
+                    }
+                  />
                 )}
                 <Text
                   numberOfLines={2}
