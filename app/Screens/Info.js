@@ -45,6 +45,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 
+import SubPageHeader from "../components/SubPageHeader";
+
 const mapStateToProps = state => ({
   ...state.key,
   ...state.settings,
@@ -164,17 +166,19 @@ class Info extends React.PureComponent {
         }
       >
         <Container>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.onClickBack}>
-                <Icon name="ios-arrow-back" />
-              </Button>
-            </Left>
-            <Body style={{ flex: 3 }}>
-              <Title>{this.props.strings.keyInfo}</Title>
-            </Body>
-            <Right />
-          </Header>
+          <SubPageHeader title={this.props.strings.keyInfo} onClick={this.onClickBack} />
+          <Button style={styles.useButton} onPress={() => { this.onClickUse() }}>
+            <Text
+              style={[
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.text3
+                  : styles.text3,
+                styles.btnText
+              ]}
+            >
+              {this.props.strings.useKey}
+            </Text>
+          </Button>
           <Content>
             <Grid>
               <Col style={styles.container}>
@@ -222,19 +226,6 @@ class Info extends React.PureComponent {
               </Col>
             </Grid>
           </Content>
-          <Footer>
-            <Button transparent onPress={() => { this.onClickUse() }}>
-              <Text
-                style={
-                  this.props.deviceTypeAndroidTablet
-                    ? AndroidTabletStyles.text3
-                    : styles.text3
-                }
-              >
-                {this.props.strings.useKey}
-              </Text>
-            </Button>
-          </Footer>
           <Modal
             animationType="fade"
             transparent={true}
@@ -311,6 +302,15 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontWeight: "bold"
+  },
+  useButton: {
+    backgroundColor: '#ccc',
+    minWidth: 100,
+  },
+  btnText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 });
 

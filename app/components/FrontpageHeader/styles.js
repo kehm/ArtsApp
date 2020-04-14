@@ -1,8 +1,15 @@
 import { StyleSheet } from 'react-native';
 
-const statusbarHeight = 28;
-
 export default StyleSheet.create({
+  headerContainer: {
+    backgroundColor: '#f0a00c'
+  },
+  title: {
+    color: '#000'
+  },
+  icon: {
+    color: '#000'
+  },
   left: {
     maxWidth: 50
   },

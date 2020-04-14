@@ -50,6 +50,8 @@ import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 import * as ObservationAction from "../actions/ObservationAction";
 
+import SubPageHeader from "../components/SubPageHeader";
+
 const mapStateToProps = state => ({
   ...state.key,
   ...state.observations,
@@ -100,11 +102,6 @@ class Species extends React.PureComponent {
         })
       });
     }
-  }
-
-  componentDidUpdate() {
-    console.log(this.state.selectedSpeciesImages)
-    console.log(this.state.selectedSpeciesImages[0])
   }
 
   onClickBack = () => {
@@ -166,59 +163,10 @@ class Species extends React.PureComponent {
   };
 
   /**
-   * Renders the header after the available information about the species.
-   * @return {View} Header View
-   */
-  renderHeader() {
-    if (
-      this.props.selectedSpecies.latinName === "NA" &&
-      this.props.selectedSpecies.localName === "NA"
-    ) {
-      return (
-        <Body style={{ flex: 3 }}>
-          <Title>{}</Title>
-          <Subtitle>{}</Subtitle>
-        </Body>
-      );
-    } else if (this.props.selectedSpecies.latinName === "NA") {
-      return (
-        <Body style={{ flex: 3 }}>
-          <Title>{this.props.selectedSpecies.localName}</Title>
-        </Body>
-      );
-    } else if (this.props.selectedSpecies.localName === "NA") {
-      return (
-        <Body style={{ flex: 3 }}>
-          <Title>{this.props.selectedSpecies.latinName}</Title>
-        </Body>
-      );
-    }
-    return (
-      <Body style={{ flex: 3 }}>
-        <Title>{this.props.selectedSpecies.localName}</Title>
-        <Subtitle
-          style={
-            this.props.deviceTypeAndroidTablet
-              ? {
-                fontSize: 29,
-                marginLeft: 10,
-                marginBottom: 5,
-                marginTop: -10
-              }
-              : {}
-          }
-        >
-          {this.props.selectedSpecies.latinName}
-        </Subtitle>
-      </Body>
-    );
-  }
-
-  /**
    * render nearby observation if available.
    * @return {View} Nearby text view
    */
-  renderNerby() {
+  renderNearby() {
     if (this.props.nerby !== 0) {
       return (
         <Row style={{ justifyContent: "center" }}>
@@ -235,17 +183,7 @@ class Species extends React.PureComponent {
       );
     }
     return (
-      <Row style={{ justifyContent: "center" }}>
-        <Text
-          style={
-            this.props.deviceTypeAndroidTablet
-              ? AndroidTabletStyles.containerSpecies
-              : styles.containerSpecies
-          }
-        >
-          {""}
-        </Text>
-      </Row>
+      <View />
     );
   }
 
@@ -265,22 +203,18 @@ class Species extends React.PureComponent {
             visible={this.state.openImages}
             onRequestClose={() => this.setState({ openImages: false })}
           />
-          <Header hasTabs>
-            <Left>
-              <Button transparent onPress={this.onClickBack}>
-                <Icon name="ios-arrow-back" />
-              </Button>
-            </Left>
-            {this.renderHeader()}
-            <Right />
-          </Header>
+          <SubPageHeader
+            title={this.props.selectedSpecies.localName}
+            subtitle={this.props.selectedSpecies.latinName}
+            onClick={this.onClickBack} />
           <Content scrollEnabled={false}>
             <Grid>
               <Row
                 style={{
                   flex: 1,
                   alignItems: "center",
-                  justifyContent: "space-between"
+                  justifyContent: "space-between",
+                  backgroundColor: '#ddd'
                 }}
               >
                 <Col style={{ flex: 1 }}>
@@ -353,7 +287,7 @@ class Species extends React.PureComponent {
                   </Button>
                 </Col>
               </Row>
-              {this.renderNerby()}
+              {this.renderNearby()}
             </Grid>
             <Tabs>
               <Tab heading={<TabHeading><Text>{this.props.strings.spInfo}</Text></TabHeading>}>

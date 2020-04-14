@@ -330,6 +330,13 @@ class UpdateKeys extends React.PureComponent {
           />
           <View style={styles.container}>
             <Header>
+              <Body>
+                {this.state.listLength > 0 || this.state.showUP ? (
+                  <Text>{this.props.strings.updateKeyText}</Text>
+                ) : (
+                    <Text>{this.props.strings.noKeys}</Text>
+                  )}
+              </Body>
               <Right style={{ flex: 2, marginRight: -5 }}>
                 <Button
                   transparent
@@ -349,35 +356,6 @@ class UpdateKeys extends React.PureComponent {
                 </Button>
               </Right>
             </Header>
-            <View>
-              {this.state.listLength > 0 || this.state.showUP ? (
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text1
-                      : styles.text1
-                  }
-                >
-                  {" "}
-                  {this.props.strings.updateKeyText}{" "}
-                </Text>
-              ) : (
-                  <Text
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.text1
-                        : styles.text1
-                    }
-                  >
-                    {" "}
-                    {this.props.strings.noKeys}{" "}
-                  </Text>
-                )}
-              <View
-                key="divider"
-                style={{ height: 2, backgroundColor: "#dadada" }}
-              />
-            </View>
             {this.props.updateList.length === 0 && (
               <Text
                 style={

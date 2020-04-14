@@ -1,8 +1,6 @@
 /**
- * @file About.js
- * @author Kejtil Fossheim
- *
- * Screen with information about the application. Contains a hidden button that takes you to the debug-page.
+ * @file Screen with information about the application. Contains a hidden button that takes you to the debug-page.
+ * @author Kjetil Fossheim
  */
 
 import React, { Component } from "react";
@@ -30,6 +28,8 @@ import getTheme from "../native-base-theme/components";
 import common from "../native-base-theme/variables/commonColor";
 import androidTablet from "../native-base-theme/variables/androidTablet";
 
+import SubPageHeader from "../components/SubPageHeader";
+
 const mapStateToProps = state => ({
   ...state.settings,
   ...state.nav
@@ -48,9 +48,9 @@ class About extends React.PureComponent {
   };
 
   /**
-   * Function that counts clicks on the invisible button and goes to debug-page it clicked 20 times.
+   * Function that counts clicks on the invisible button and goes to debug-page if clicked 20 times.
    */
-  OnclickDebug = () => {
+  onClickDebug = () => {
     if (this.state.debugcount === 20) {
       Actions.Debug();
     } else {
@@ -58,8 +58,8 @@ class About extends React.PureComponent {
       if (this.state.debugcount > 14) {
         this.refs.toast.show(
           this.props.strings.enableDebug +
-            (20 - this.state.debugcount) +
-            this.props.strings.enableDebug2,
+          (20 - this.state.debugcount) +
+          this.props.strings.enableDebug2,
           1500
         );
       }
@@ -76,17 +76,7 @@ class About extends React.PureComponent {
         }
       >
         <Container>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.onClickBack}>
-                <Icon name="ios-arrow-back" />
-              </Button>
-            </Left>
-            <Body style={{ flex: 2 }}>
-              <Title>{this.props.strings.about}</Title>
-            </Body>
-            <Right />
-          </Header>
+          <SubPageHeader title={this.props.strings.about} onClick={this.onClickBack}/>
           <Content>
             <View style={styles.container}>
               <Image
@@ -107,7 +97,7 @@ class About extends React.PureComponent {
                 }
               />
             </View>
-            <Button transparent block onPress={this.OnclickDebug} />
+            <Button transparent block onPress={this.onClickDebug} />
           </Content>
           <Toast ref="toast" />
         </Container>

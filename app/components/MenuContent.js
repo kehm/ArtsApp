@@ -1,8 +1,6 @@
 /**
- * @file MenuContent.js
+ * @file Content render for the drawer menu
  * @author Kjetil Fossheim
- *
- * a content render for the drawer menu.
  */
 
 import React, { Component } from "react";
@@ -319,7 +317,8 @@ const styles = {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 20,
     marginLeft: 20,
-    paddingBottom: 20 - 20 * 0.75
+    paddingBottom: 20 - 20 * 0.75,
+    color: '#553917'
   },
   textKeyInfo: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
@@ -328,7 +327,7 @@ const styles = {
     color: "#ababab"
   },
   selectedElement: {
-    backgroundColor: "#ddd"
+    backgroundColor: '#f0a00c'
   }
 };
 
@@ -370,7 +369,8 @@ const stylesAndroidTablet = {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 40,
     marginLeft: 20,
-    paddingBottom: 40 - 40 * 0.75
+    paddingBottom: 40 - 40 * 0.75,
+    color: '#553917'
   },
   textKeyInfo: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
