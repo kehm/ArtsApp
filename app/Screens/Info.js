@@ -32,7 +32,6 @@ import {
   Col
 } from "native-base";
 import { Actions } from "react-native-router-flux";
-import Toast, { DURATION } from "react-native-easy-toast";
 import HTMLView from "react-native-htmlview";
 
 // theme
@@ -123,7 +122,7 @@ class Info extends React.PureComponent {
         {
           text: this.props.strings.ok, onPress: () => { this.downloadKey() }
         }],
-        { cancelable: false }
+        { cancelable: true }
       );
     }
   };
@@ -248,7 +247,6 @@ class Info extends React.PureComponent {
               </View>
             </View>
           </Modal>
-          <Toast ref="toast" />
         </Container>
       </StyleProvider>
     );

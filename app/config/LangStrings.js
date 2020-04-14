@@ -19,6 +19,7 @@ export default class LangStrings {
         frontpageBottomDescription: 'Tap on keys in list above to read more about each key or to start categorization of species!',
         beta: 'Sneak Peek',
         keys: 'Keys',
+        keysView: 'Discover',
         exit: 'Press once more for exiting the app.',
         noText: 'text is missing',
         noKeySelected: 'No key selected',
@@ -119,6 +120,7 @@ export default class LangStrings {
         frontpageBottomDescription: 'Klikk på nøklene i listen over for å lese mer om de enkelte nøklene eller for å begynne artsutvelgelse!',
         beta: 'Sneak peek',
         keys: 'Nøkler',
+        keysView: 'Utforsk',
         exit: 'Trykk en gang til for å gå ut av applikasjonen',
         noText: 'manglende tekst',
         noKeySelected: 'Ingen nøkkel valgt',
@@ -205,7 +207,7 @@ export default class LangStrings {
         level: 'Nivå: ',
         valueInfo: 'Verdi informasjon',
         irelevant: 'Ikke aktuelle valg',
-        noKeysDownloaded: 'Det er ikke noen nøkler nedlastet.',
+        noKeysDownloaded: 'Det er ingen nøkler nedlastet.',
       }
     };
   }

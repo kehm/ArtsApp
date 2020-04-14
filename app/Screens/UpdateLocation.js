@@ -1,6 +1,6 @@
 /**
  * @file Screen for updating location information about species.
- * @author Kejtil Fossheim
+ * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
 import {
@@ -46,12 +46,15 @@ import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as ObservationAction from "../actions/ObservationAction";
+import * as MenuAction from "../actions/MenuAction";
 
 // theme
 import getTheme from "../native-base-theme/components";
 import common from "../native-base-theme/variables/commonColor";
 import androidTablet from "../native-base-theme/variables/androidTablet";
 import { findIndex } from "lodash";
+
+import FrontpageHeader from "../components/FrontpageHeader";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -61,8 +64,10 @@ const mapStateToProps = state => ({
 });
 
 function mapDispatchToProps(dispatch) {
+  const { openMenu } = bindActionCreators({ ...MenuAction }, dispatch);
   return {
-    actions: bindActionCreators({ ...ObservationAction }, dispatch)
+    actions: bindActionCreators({ ...ObservationAction }, dispatch),
+    openMenu
   };
 }
 
@@ -157,13 +162,16 @@ class UpdateLocation extends React.PureComponent {
     }
   }
 
-  onClickBack = () => {
-    Actions.pop();
-  };
-
   onClickUpdate = () => {
     this.props.actions.changeModal();
     this.setState({ open: true });
+  };
+
+  /**
+   * Handle menu icon click
+   */
+  handleOnMenuClick = () => {
+    this.props.openMenu();
   };
 
   /**
@@ -313,39 +321,26 @@ class UpdateLocation extends React.PureComponent {
         }
       >
         <Container>
+          <FrontpageHeader
+            title={this.props.strings.updateLocation}
+            onMenu={this.handleOnMenuClick}
+          />
           <View style={styles.container}>
-            <Header>
-              <Left>
-                <Button
-                  transparent
-                  disabled={this.state.disableAll}
-                  onPress={this.onClickBack}
-                >
-                  <Icon name="ios-arrow-back" />
-                </Button>
-              </Left>
-              <Body style={{ flex: 3 }}>
-                <Title>{this.props.strings.updateLocation}</Title>
-              </Body>
-              <Right />
-            </Header>
-            <View>
-              <Text
-                style={
-                  this.props.deviceTypeAndroidTablet
-                    ? AndroidTabletStyles.text1
-                    : styles.text1
-                }
-              >
-                {this.props.strings.updateEx}
-              </Text>
-              <View
-                key="divider"
-                style={{ height: 2, backgroundColor: "#dadada" }}
-              />
-            </View>
-            <Content>{this.renderList()}</Content>
+            <Text
+              style={
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.text1
+                  : styles.text1
+              }
+            >
+              {this.props.strings.updateEx}
+            </Text>
+            <View
+              key="divider"
+              style={{ height: 2, backgroundColor: "#dadada" }}
+            />
           </View>
+          <Content>{this.renderList()}</Content>
           <Footer>
             <FooterTab>
               <Button

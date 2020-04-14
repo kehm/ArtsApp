@@ -17,7 +17,6 @@ import {
   Button
 } from "native-base";
 import { Actions } from "react-native-router-flux";
-import Toast, { DURATION } from "react-native-easy-toast";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -46,7 +45,12 @@ const drawerImage = require("../images/AA_logo.png");
 class MenuContent extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      frontSelect: true,
+      obsSelect: false,
+      locSelect: false,
+      keysSelect: false,
+    };
   }
 
   /**
@@ -77,7 +81,19 @@ class MenuContent extends React.PureComponent {
    * opens the user observation page.(Observation.js)
    * @return {void} [description]
    */
+  onClickKeys = () => {
+    this.setState({ frontSelect: true, obsSelect: false, locSelect: false, keysSelect: false });
+    this.props.actions.closeMenu();
+    Actions.Frontpage();
+  };
+
+  /**
+   * closes menu and
+   * opens the user observation page.(Observation.js)
+   * @return {void} [description]
+   */
   onClickObs = () => {
+    this.setState({ frontSelect: false, obsSelect: true, locSelect: false, keysSelect: false });
     this.props.actions.closeMenu();
     Actions.Observation();
   };
@@ -88,6 +104,7 @@ class MenuContent extends React.PureComponent {
    * @return {void} [description]
    */
   onClickLocation = () => {
+    this.setState({ frontSelect: false, obsSelect: false, locSelect: true, keysSelect: false });
     this.props.actions.closeMenu();
     Actions.UpdateLocation();
   };
@@ -120,6 +137,7 @@ class MenuContent extends React.PureComponent {
    * @return {void} [description]
    */
   onClickUpdateKeys = () => {
+    this.setState({ frontSelect: false, obsSelect: false, locSelect: false, keysSelect: true });
     this.props.actions.closeMenu();
     Actions.UpdateKeys();
   };
@@ -144,7 +162,18 @@ class MenuContent extends React.PureComponent {
   renderList() {
     return (
       <List keyi={this.props.debugMode}>
-        <ListItem button noBorder onPress={this.onClickObs}>
+        <ListItem button noBorder onPress={this.onClickKeys} style={this.state.frontSelect ? styles.selectedElement : null}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.keysView}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickObs} style={this.state.obsSelect ? styles.selectedElement : null}>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -155,7 +184,7 @@ class MenuContent extends React.PureComponent {
             {this.props.strings.myObs}
           </Text>
         </ListItem>
-        <ListItem button noBorder onPress={this.onClickLocation}>
+        <ListItem button noBorder onPress={this.onClickLocation} style={this.state.locSelect ? styles.selectedElement : null}>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -166,7 +195,7 @@ class MenuContent extends React.PureComponent {
             {this.props.strings.updateLocation}
           </Text>
         </ListItem>
-        <ListItem button noBorder onPress={this.onClickUpdateKeys}>
+        <ListItem button noBorder onPress={this.onClickUpdateKeys} style={this.state.keysSelect ? styles.selectedElement : null}>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -234,7 +263,6 @@ class MenuContent extends React.PureComponent {
               </Text>
             </Button>
           </View>
-          <Toast ref="toast" />
         </Container>
       </StyleProvider>
     );
@@ -298,6 +326,9 @@ const styles = {
     fontSize: 16,
     marginLeft: 20,
     color: "#ababab"
+  },
+  selectedElement: {
+    backgroundColor: "#ddd"
   }
 };
 

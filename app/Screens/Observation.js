@@ -31,6 +31,9 @@ import getTheme from "../native-base-theme/components";
 import common from "../native-base-theme/variables/commonColor";
 import androidTablet from "../native-base-theme/variables/androidTablet";
 
+import FrontpageHeader from "../components/FrontpageHeader";
+import * as MenuAction from "../actions/MenuAction";
+
 const mapStateToProps = state => ({
   ...state.key,
   ...state.observations,
@@ -39,8 +42,10 @@ const mapStateToProps = state => ({
 });
 
 function mapDispatchToProps(dispatch) {
+  const { openMenu } = bindActionCreators({ ...MenuAction }, dispatch);
   return {
-    actions: bindActionCreators({ ...ObservationAction }, dispatch)
+    actions: bindActionCreators({ ...ObservationAction }, dispatch),
+    openMenu
   };
 }
 
@@ -57,8 +62,11 @@ class Observation extends React.PureComponent {
     this.props.actions.getObservations();
   }
 
-  onClickBack = () => {
-    Actions.pop();
+  /**
+  * Handle menu icon click
+  */
+  handleOnMenuClick = () => {
+    this.props.openMenu();
   };
 
   /**
@@ -70,7 +78,7 @@ class Observation extends React.PureComponent {
       this.props.strings.deleteObsTitle,
       this.props.strings.deleteObs + " ",
       [
-        { text: this.props.strings.cancel, onPress: () => {}, style: "cancel" },
+        { text: this.props.strings.cancel, onPress: () => { }, style: "cancel" },
         {
           text: this.props.strings.accept,
           onPress: () => this.props.actions.deleteObservation(i)
@@ -150,24 +158,17 @@ class Observation extends React.PureComponent {
         }
       >
         <Container>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.onClickBack}>
-                <Icon name="ios-arrow-back" />
-              </Button>
-            </Left>
-            <Body style={{ flex: 3 }}>
-              <Title>{this.props.strings.myObs}</Title>
-            </Body>
-            <Right />
-          </Header>
+          <FrontpageHeader
+            title={this.props.strings.myObs}
+            onMenu={this.handleOnMenuClick}
+          />
           <Content>
             <List>
               {this.props.obsevationsList.length === 0 ? (
                 this.renderEmpty()
               ) : (
-                <List>{this.renderList()}</List>
-              )}
+                  <List>{this.renderList()}</List>
+                )}
             </List>
           </Content>
         </Container>

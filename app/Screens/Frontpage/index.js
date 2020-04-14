@@ -41,17 +41,16 @@ class Frontpage extends React.PureComponent<Props, State> {
     this.props.loadAllKeys();
   }
 
-  handleOnMenuPress = () => {
+  /**
+   * Handle menu icon click
+   */
+  handleOnMenuClick = () => {
     this.props.openMenu();
   };
 
   handleOnPressKey = key => {
     this.props.setKey(key.key_id, key.title);
-    /*if (key.keyDownloaded) {
-      Actions.Key();
-    }*/
     Actions.Info({ selectedKey: key });
-
   };
 
   handleOnDownloadKey = key => {
@@ -79,8 +78,8 @@ class Frontpage extends React.PureComponent<Props, State> {
       >
         <Container>
           <FrontpageHeader
-            title={strings.frontpageTitle}
-            onMenu={this.handleOnMenuPress}
+            title={strings.keysView}
+            onMenu={this.handleOnMenuClick}
           />
           <View style={styles.container}>
             <Explanation description={strings.frontpageTopDescription} />

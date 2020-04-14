@@ -47,6 +47,9 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 import * as SettingsAction from "../actions/SettingsAction";
+import * as MenuAction from "../actions/MenuAction";
+
+import FrontpageHeader from "../components/FrontpageHeader";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -55,8 +58,10 @@ const mapStateToProps = state => ({
 });
 
 function mapDispatchToProps(dispatch) {
+  const { openMenu } = bindActionCreators({ ...MenuAction }, dispatch);
   return {
-    actions: bindActionCreators({ ...KeyAction, ...SettingsAction }, dispatch)
+    actions: bindActionCreators({ ...KeyAction, ...SettingsAction }, dispatch),
+    openMenu
   };
 }
 
@@ -114,6 +119,13 @@ class UpdateKeys extends React.PureComponent {
       this.props.actions.resetUpdateKey();
     }
   }
+
+  /**
+  * Handle menu icon click
+  */
+  handleOnMenuClick = () => {
+    this.props.openMenu();
+  };
 
   /**
    * init list of keys that are downloaded.
@@ -312,22 +324,12 @@ class UpdateKeys extends React.PureComponent {
         }
       >
         <Container>
+          <FrontpageHeader
+            title={this.props.strings.manageKeys}
+            onMenu={this.handleOnMenuClick}
+          />
           <View style={styles.container}>
             <Header>
-              <Left>
-                <Button
-                  transparent
-                  disabled={
-                    this.props.keysUpdated_loading || this.state.disableAll
-                  }
-                  onPress={this.onClickHome}
-                >
-                  <Icon name="ios-arrow-back" />
-                </Button>
-              </Left>
-              <Body style={{ flex: 3 }}>
-                <Title>{this.props.strings.manageKeys}</Title>
-              </Body>
               <Right style={{ flex: 2, marginRight: -5 }}>
                 <Button
                   transparent
