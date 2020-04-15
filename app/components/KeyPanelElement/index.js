@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View, Text, Image, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import styles  from './styles.js';
+import styles from './styles.js';
 import TraitImageButton from '../TraitImageButton';
 import { setContentStrings } from '../../actions/SettingsAction.js';
 
@@ -35,6 +35,13 @@ const mapKey = key => {
 };
 
 class KeyPanelElement extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      defaultImage: false,
+      defaultImagePath: require("../../images/AA_logo.png")
+    };
+  }
 
   render() {
     const { keyObject, size, strings, onPress, onDownload } = this.props;
@@ -51,12 +58,13 @@ class KeyPanelElement extends React.Component<Props> {
             {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
             <Text style={styles.title}>{title}</Text>
             <View style={styles.imageContainer}>
-              <Image source={imageSource} resizeMode='contain' style={[styles.image, imageSize]} />
+              <Image source={this.state.defaultImage ? this.state.defaultImagePath : imageSource}
+                resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }) }} />
             </View>
             {!isDownloaded &&
-             <View style={styles.downloadContainer}>
-              <Icon name='cloud-download' style={styles.download} size={24} />
-             </View>
+              <View style={styles.downloadContainer}>
+                <Icon name='cloud-download' style={styles.download} size={24} />
+              </View>
             }
           </View>
         </View>
