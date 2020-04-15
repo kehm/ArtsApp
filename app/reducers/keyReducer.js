@@ -59,7 +59,7 @@ const DEFAULT_STATE = {
   resetting: false
 };
 
-export default function(state = DEFAULT_STATE, action) {
+export default function (state = DEFAULT_STATE, action) {
   switch (action.type) {
     case actionTypes.TEST_ACTION_TYPE_ONE:
       return { ...state, test: state.test + 1 };
@@ -173,7 +173,6 @@ export default function(state = DEFAULT_STATE, action) {
       const keys = updateKey(state.keys, "keyWeb", keyWeb, {
         keyDownloaded: 1
       });
-
       return {
         ...state,
         keys,

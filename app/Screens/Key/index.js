@@ -3,11 +3,13 @@
  */
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import { Container, StyleProvider, Header, Footer, Subtitle,
+import {
+  Container, StyleProvider, Header, Footer, Subtitle,
   FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem,
-  Left, Body, Right} from 'native-base';
+  Left, Body, Right
+} from 'native-base';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { bindActionCreators } from 'redux';
 
@@ -15,15 +17,15 @@ import getTheme from '../../native-base-theme/components';
 import common from '../../native-base-theme/variables/commonColor';
 import androidTablet from '../../native-base-theme/variables/androidTablet';
 
-import KeyHeader from '../../components/KeyHeader';
 import TraitPanel from '../../components/TraitPanel';
 import TraitList from '../../components/TraitList';
 import SpeciesPanel from '../../components/SpeciesPanel';
 import TraitDialog from '../../components/TraitDialog';
+import SubPageHeader from "../../components/SubPageHeader";
 
 import * as KeyAction from '../../actions/KeyAction';
 
-import styles  from './styles.js';
+import styles from './styles.js';
 
 type Props = {
   title: String,
@@ -45,28 +47,13 @@ class Key extends React.Component<Props, State> {
     };
   }
 
-  // TODO: Toggle panel not working on Android
-  // componentWillReceiveProps(nextProps) {
-  //   const prevValues = this.props.chosenValues;
-  //   const nextValues = nextProps.chosenValues;
-  //   const { isSpeciesPanelToggled } = this.state;
-
-  //   if(prevValues.length === 0 && nextValues.length > 0 && isSpeciesPanelToggled) {
-  //     this.toggleSpeciesPanel();
-  //   }
-  // }
-
   setStateAnimated(callback: (state: State) => void) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState(callback);
   }
 
-  onClose = () => {
+  onClickBack = () => {
     Actions.pop();
-  }
-
-  onKeyInfo = () => {
-    Actions.Info();
   }
 
   toggleSpeciesPanel = () => {
@@ -77,7 +64,7 @@ class Key extends React.Component<Props, State> {
   }
 
   onSpeciesSelected = (species) => {
-    Actions.Species({nerby: 0, selectedSpecies: species});
+    Actions.Species({ nerby: 0, selectedSpecies: species });
   }
 
   onViewAllSpecies = () => {
@@ -94,8 +81,8 @@ class Key extends React.Component<Props, State> {
   onValueInfo = (value) => {
     const { valueImages } = this.props;
     let images = valueImages.get(value.value_id);
-    if(!images) images = [];
-    Actions.ValueInfo({valueInfo: value.valueInfo, title: value.valueText, images});
+    if (!images) images = [];
+    Actions.ValueInfo({ valueInfo: value.valueInfo, title: value.valueText, images });
   }
 
   onTraitSelected = (trait) => {
@@ -131,24 +118,19 @@ class Key extends React.Component<Props, State> {
     return (
       <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
         <Container>
-          <KeyHeader
-            title={title}
-            closeTitle="Lukk"
-            onClose={this.onClose}
-            onInfo={this.onKeyInfo}
-          />
+          <SubPageHeader title={title} onClick={this.onClickBack} />
           <View style={styles.container} >
             <TraitPanel
-                traits={usedTraits}
-                chosenValues={chosenValues}
-                onSelect={this.onTraitSelected}
-                onReset={this.onTraitReset}
-                valueImages={valueImages}
-                header={strings.chosenTraits}
-                emptyHeader={strings.chosenTraitsHeader}
-                emptyDescription={strings.noTraitsSelected}
-                resetTitle={strings.reset}
-              />
+              traits={usedTraits}
+              chosenValues={chosenValues}
+              onSelect={this.onTraitSelected}
+              onReset={this.onTraitReset}
+              valueImages={valueImages}
+              header={strings.chosenTraits}
+              emptyHeader={strings.chosenTraitsHeader}
+              emptyDescription={strings.noTraitsSelected}
+              resetTitle={strings.reset}
+            />
             <TraitList
               traits={unusedTraits}
               activeTraits={activeTraits}
@@ -215,7 +197,7 @@ function mapStateToProps({ key, settings, observations }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-	  actions: bindActionCreators({ ...KeyAction}, dispatch)
+    actions: bindActionCreators({ ...KeyAction }, dispatch)
   };
 }
 

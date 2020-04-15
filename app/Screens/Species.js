@@ -214,7 +214,7 @@ class Species extends React.PureComponent {
                   flex: 1,
                   alignItems: "center",
                   justifyContent: "space-between",
-                  backgroundColor: '#ddd'
+                  backgroundColor: '#65C86012'
                 }}
               >
                 <Col style={{ flex: 1 }}>

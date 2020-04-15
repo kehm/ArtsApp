@@ -16,10 +16,6 @@ import {
 import {
   Container,
   StyleProvider,
-  Header,
-  Footer,
-  FooterTab,
-  Title,
   Spinner,
   Content,
   Button,
@@ -85,28 +81,44 @@ class Info extends React.PureComponent {
     BackHandler.removeEventListener("hardwareBackModal");
   }
 
+  /**
+   * If new props, trigger state update
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.keyDownloaded_LOADING && !prevState.isDownloading) {
+      return { isDownloading: true };
+    } else if (prevState.isDownloading && !nextProps.keyDownloaded_LOADING) {
+      if (nextProps.keyDownloaded_SUCCESS) {
+        return {
+          isDownloaded: true,
+          isDownloading: false
+        }
+      } else {
+        return {
+          isDownloaded: false,
+          isDownloading: false
+        }
+      }
+    } else return null;
+  }
+
+  /**
+   * Check if key download is successful
+   */
+  componentDidUpdate(prevProps, prevState) {
+    const { isDownloaded, isDownloading } = prevState;
+    if (isDownloaded !== this.state.isDownloaded) {
+      this.setState({ isDownloaded: isDownloaded });
+      Actions.pop();
+    }
+    if (isDownloading !== this.state.isDownloading) {
+      this.setState({ isDownloading: isDownloading });
+    }
+  }
+
   onClickBack = () => {
     Actions.pop();
   };
-
-  /**
-   * Check if key download has finished
-   */
-  componentDidUpdate() {
-    if (this.state.isDownloading !== this.props.keyDownloaded_LOADING) {
-      if (this.props.keyDownloaded_SUCCESS) {
-        this.setState({
-          isDownloaded: true,
-          isDownloading: false
-        });
-      } else {
-        this.setState({
-          isDownloaded: false,
-          isDownloading: false
-        });
-      }
-    }
-  }
 
   /**
    * Go to key or open download dialog if key is not downloaded
@@ -141,7 +153,6 @@ class Info extends React.PureComponent {
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
-      this.setState({ isDownloading: true });
       this.props.actions.downloadKey(this.props.selectedKey.keyWeb);
     }
   }
@@ -166,19 +177,7 @@ class Info extends React.PureComponent {
         }
       >
         <Container>
-          <SubPageHeader title={this.props.strings.keyInfo} onClick={this.onClickBack} />
-          <Button style={styles.useButton} onPress={() => { this.onClickUse() }}>
-            <Text
-              style={[
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3,
-                styles.btnText
-              ]}
-            >
-              {this.props.strings.useKey}
-            </Text>
-          </Button>
+          <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack} />
           <Content>
             <Grid>
               <Col style={styles.container}>
@@ -202,16 +201,6 @@ class Info extends React.PureComponent {
                     }
                   />
                 )}
-                <Text
-                  numberOfLines={2}
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text
-                      : styles.text
-                  }
-                >
-                  {this.props.selectedKey.title}
-                </Text>
                 <View style={styles.separator} />
                 <View style={styles.textBox}>
                   <HTMLView
@@ -226,6 +215,34 @@ class Info extends React.PureComponent {
               </Col>
             </Grid>
           </Content>
+          {!this.state.isDownloaded ? (
+            <Button rounded style={styles.useButton} onPress={() => { this.onClickUse() }}>
+              <Text
+                style={[
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.text3
+                    : styles.text3,
+                  styles.btnText
+                ]}
+              >
+                {this.props.strings.download}
+              </Text>
+              <Icon name='cloud-download' style={styles.download} size={24} />
+            </Button>
+          ) : (
+              <Button rounded style={styles.useButton} onPress={() => { this.onClickUse() }}>
+                <Text
+                  style={[
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.text3
+                      : styles.text3,
+                    styles.btnText
+                  ]}
+                >
+                  {this.props.strings.useKey}
+                </Text>
+              </Button>
+            )}
           <Modal
             animationType="fade"
             transparent={true}
@@ -262,7 +279,8 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   textBox: {
-    margin: 10
+    margin: 10,
+    paddingBottom: 20
   },
   text3: {
     fontSize: 15,
@@ -304,14 +322,23 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   useButton: {
-    backgroundColor: '#ccc',
-    minWidth: 100,
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: '#f0a00c',
+    minWidth: '60%',
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   btnText: {
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold'
-  }
+    color: '#000',
+    fontSize: 18,
+  },
+  download: {
+    color: '#000',
+    marginLeft: 20
+  },
 });
 
 const htmlstyles = StyleSheet.create({
@@ -352,7 +379,8 @@ const AndroidTabletStyles = StyleSheet.create({
     backgroundColor: "grey"
   },
   textBox: {
-    margin: 10
+    margin: 10,
+    paddingBottom: 20
   },
   text3: {
     fontSize: 30,

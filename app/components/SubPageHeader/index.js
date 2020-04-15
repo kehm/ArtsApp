@@ -10,7 +10,7 @@ import styles from './styles.js';
 type Props = {
     title: String,
     subtitle: String,
-    onClick: Function,
+    onClick: Function
 }
 class SubPageHeader extends React.Component<Props> {
 
