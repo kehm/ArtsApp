@@ -80,7 +80,8 @@ class Species extends React.PureComponent {
       images: [],
       selectedSpeciesImages: [],
       nerby: props.nerby,
-      openImages: false
+      openImages: false,
+      currentTab: 0
     };
   }
 
@@ -290,11 +291,12 @@ class Species extends React.PureComponent {
               {this.renderNearby()}
             </Grid>
             <Tabs>
-              <Tab heading={<TabHeading><Text>{this.props.strings.spInfo}</Text></TabHeading>}>
+              <Tab heading={this.props.strings.spInfo} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
+                activeTabStyle={styles.activeTabStyle}>
                 <View
                   style={{
                     height: this.props.deviceTypeAndroidTablet ? 670 : 335,
-                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5
+                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
                   }}
                 >
                   <InfoTab
@@ -304,7 +306,8 @@ class Species extends React.PureComponent {
                   />
                 </View>
               </Tab>
-              <Tab heading={<TabHeading><Text>{this.props.strings.distribution}</Text></TabHeading>}>
+              <Tab heading={this.props.strings.distribution} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
+                activeTabStyle={styles.activeTabStyle}>
                 <View
                   style={{
                     height: this.props.deviceTypeAndroidTablet ? 670 : 335,
@@ -549,6 +552,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
+  },
+  activeTabStyle: {
+    backgroundColor: '#5fbb5a'
+  },
+  tabTextStyle: {
+    color: '#000'
   }
 });
 

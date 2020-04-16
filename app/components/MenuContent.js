@@ -327,7 +327,7 @@ const styles = {
     color: "#ababab"
   },
   selectedElement: {
-    backgroundColor: '#f0a00c'
+    backgroundColor: '#5fbb5a'
   }
 };
 

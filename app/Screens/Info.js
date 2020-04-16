@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
   useButton: {
     position: 'absolute',
     bottom: 0,
-    backgroundColor: '#f0a00c',
+    backgroundColor: '#5fbb5a',
     minWidth: '60%',
     marginBottom: 10,
     justifyContent: 'center',

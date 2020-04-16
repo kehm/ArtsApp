@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   headerContainer: {
-    backgroundColor: '#f0a00c'
+    backgroundColor: '#5fbb5a'
   },
   title: {
     color: '#000'
