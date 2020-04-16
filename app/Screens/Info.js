@@ -177,7 +177,15 @@ class Info extends React.PureComponent {
         }
       >
         <Container>
-          <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack} />
+          <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
+            rightIcon={this.state.isDownloaded ? <Icon name='paper-plane' onPress={() => { this.onClickUse() }} /> : undefined} />
+          {this.state.isDownloaded ? (
+            <View />
+          ) : (
+              <View style={styles.topContainer}>
+                <Text style={styles.topText}>{this.props.strings.downloadHeader}</Text>
+              </View>
+            )}
           <Content>
             <Grid>
               <Col style={styles.container}>
@@ -230,18 +238,7 @@ class Info extends React.PureComponent {
               <Icon name='cloud-download' style={styles.download} size={24} />
             </Button>
           ) : (
-              <Button rounded style={styles.useButton} onPress={() => { this.onClickUse() }}>
-                <Text
-                  style={[
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3,
-                    styles.btnText
-                  ]}
-                >
-                  {this.props.strings.useKey}
-                </Text>
-              </Button>
+              <View />
             )}
           <Modal
             animationType="fade"
@@ -265,7 +262,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
+    marginTop: 80
   },
   image: {
     width: Dimensions.get("window").width - 50,
@@ -321,10 +319,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold"
   },
+  topContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 56,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2
+  },
+  topText: {
+    fontSize: 18,
+    textAlign: 'center',
+    padding: 10
+  },
   useButton: {
     position: 'absolute',
     bottom: 0,
-    backgroundColor: '#5fbb5a',
+    backgroundColor: '#f0a00c',
     minWidth: '60%',
     marginBottom: 10,
     justifyContent: 'center',

@@ -56,6 +56,10 @@ class Key extends React.Component<Props, State> {
     Actions.pop();
   }
 
+  onClickClose = () => {
+    Actions.Frontpage();
+  }
+
   toggleSpeciesPanel = () => {
     this.setStateAnimated((prevState) => ({
       ...prevState,
@@ -118,7 +122,8 @@ class Key extends React.Component<Props, State> {
     return (
       <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
         <Container>
-          <SubPageHeader title={title} onClick={this.onClickBack} />
+          <SubPageHeader title={title} onClick={this.onClickBack}
+            rightIcon={<Icon name='close' onPress={this.onClickClose} />} />
           <View style={styles.container} >
             <TraitPanel
               traits={usedTraits}

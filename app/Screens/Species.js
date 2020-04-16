@@ -81,7 +81,8 @@ class Species extends React.PureComponent {
       selectedSpeciesImages: [],
       nerby: props.nerby,
       openImages: false,
-      currentTab: 0
+      currentTab: 0,
+      defaultImage: require("../images/AA_logo.png")
     };
   }
 
@@ -262,7 +263,7 @@ class Species extends React.PureComponent {
                           ? AndroidTabletStyles.image
                           : styles.image
                       }
-                      source={this.state.selectedSpeciesImages.length !== 0 ? this.state.selectedSpeciesImages[0] : undefined}
+                      source={this.state.selectedSpeciesImages.length !== 0 ? this.state.selectedSpeciesImages[0] : this.state.defaultImage}
                     />
                   </TouchableHighlight>
                 </Col>
@@ -554,7 +555,7 @@ const styles = StyleSheet.create({
     elevation: 5
   },
   activeTabStyle: {
-    backgroundColor: '#5fbb5a'
+    backgroundColor: '#f0a00c'
   },
   tabTextStyle: {
     color: '#000'

@@ -48,23 +48,25 @@ class Frontpage extends React.PureComponent<Props, State> {
     this.props.openMenu();
   };
 
-  handleOnPressKey = key => {
+  /**
+   * Handle click on key panel. Go directly to key page if key is already downloaded else go to info page.
+   */
+  handleOnPressKey = (key) => {
     this.props.setKey(key.key_id, key.title);
-    Actions.Info({ selectedKey: key });
-  };
-
-  handleOnDownloadKey = key => {
-    if (!this.props.isConnected) {
-      new Alert.alert(
-        this.props.strings.noNetwork,
-        "",
-        [{ text: this.props.strings.ok, onPress: () => { } }],
-        { cancelable: false }
-      );
+    if (key.keyDownloaded > 0) {
+      Actions.Key();
     } else {
-      this.props.downloadKey(key.keyWeb);
+      Actions.Info({ selectedKey: key });
     }
   };
+
+  /**
+   * Handle click on info button. Go to info page.
+   */
+  handleOnInfoClick = (key) => {
+    this.props.setKey(key.key_id, key.title);
+    Actions.Info({ selectedKey: key });
+  }
 
   render() {
     const { keys, strings } = this.props;
@@ -87,7 +89,7 @@ class Frontpage extends React.PureComponent<Props, State> {
               keys={keys}
               strings={strings}
               onPress={this.handleOnPressKey}
-              onDownload={this.handleOnDownloadKey}
+              onInfo={this.handleOnInfoClick}
             />
             <Explanation description={strings.frontpageBottomDescription} />
           </View>

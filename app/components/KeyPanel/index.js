@@ -11,7 +11,8 @@ import styles from "./styles.js";
 type Props = {
   keys: Array,
   strings: Object,
-  onPress: Function
+  onPress: Function,
+  onInfo: Function
 };
 
 type State = {
@@ -38,7 +39,7 @@ class KeyPanel extends React.PureComponent<Props, State> {
   };
 
   renderItem = (item, size) => {
-    const { strings, onPress } = this.props;
+    const { strings, onPress, onInfo } = this.props;
     return (
       <KeyPanelElement
         key={item.key_id}
@@ -46,6 +47,7 @@ class KeyPanel extends React.PureComponent<Props, State> {
         strings={strings}
         size={size}
         onPress={onPress}
+        onInfo={onInfo}
       />
     );
   };

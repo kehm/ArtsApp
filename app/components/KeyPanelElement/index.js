@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, ActivityIndicator } from 'react-native';
+import { Right, Button, Icon as Icon2 } from 'native-base';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import styles from './styles.js';
@@ -18,6 +19,7 @@ type Props = {
   title: String,
   imageSource: Object,
   onPress: Function,
+  onInfo: Function,
   strings: Object,
 };
 
@@ -44,7 +46,7 @@ class KeyPanelElement extends React.Component<Props> {
   }
 
   render() {
-    const { keyObject, size, strings, onPress, onDownload } = this.props;
+    const { keyObject, size, strings, onPress, onInfo } = this.props;
     const { isBeta, isDownloaded, title, imageSource } = mapKey(keyObject);
     const containerSize = { height: size, width: size };
     const imageMarginH = isBeta ? 50 : 20;
@@ -61,11 +63,13 @@ class KeyPanelElement extends React.Component<Props> {
               <Image source={this.state.defaultImage ? this.state.defaultImagePath : imageSource}
                 resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }) }} />
             </View>
-            {!isDownloaded &&
+            {isDownloaded ? (
               <View style={styles.downloadContainer}>
-                <Icon name='cloud-download' style={styles.download} size={24} />
+                <Icon2 name='ios-information-circle-outline' style={styles.info} onPress={() => onInfo(keyObject)} />
               </View>
-            }
+            ) : (
+                <View />
+              )}
           </View>
         </View>
       </TouchableOpacity>

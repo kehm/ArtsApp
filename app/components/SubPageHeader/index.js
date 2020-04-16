@@ -10,12 +10,13 @@ import styles from './styles.js';
 type Props = {
     title: String,
     subtitle: String,
-    onClick: Function
+    onClick: Function,
+    rightIcon: Icon,
 }
 class SubPageHeader extends React.Component<Props> {
 
     render() {
-        const { title, subtitle, onClick } = this.props;
+        const { title, subtitle, onClick, rightIcon } = this.props;
         return (
             <Header style={styles.headerContainer}>
                 <Left style={styles.left}>
@@ -31,7 +32,9 @@ class SubPageHeader extends React.Component<Props> {
                             <View />
                         )}
                 </Body>
-                <Right />
+                <Right>
+                    {rightIcon}
+                </Right>
             </Header>
         );
     }

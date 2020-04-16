@@ -40,9 +40,14 @@ export default StyleSheet.create({
   downloadContainer: {
     position: 'absolute',
     bottom: 6,
+    flexDirection: 'row'
   },
   download: {
-    color: '#999999',
+    color: '#999999'
+  },
+  info: {
+    fontSize: 30,
+    color: '#3079b6'
   },
   downloadSpinner: {
     position: 'absolute',
