@@ -25,7 +25,7 @@ import {
   Icon,
   H2,
   Grid,
-  Col
+  Col,
 } from "native-base";
 import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
@@ -224,7 +224,7 @@ class Info extends React.PureComponent {
             </Grid>
           </Content>
           {!this.state.isDownloaded ? (
-            <Button rounded style={styles.useButton} onPress={() => { this.onClickUse() }}>
+            <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
               <Text
                 style={[
                   this.props.deviceTypeAndroidTablet
@@ -327,22 +327,20 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 2
+    zIndex: 2,
+    width: '100%'
   },
   topText: {
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'center',
     padding: 10
   },
-  useButton: {
-    position: 'absolute',
-    bottom: 0,
+  downloadBtn: {
     backgroundColor: '#f0a00c',
-    minWidth: '60%',
-    marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    width: '100%'
   },
   btnText: {
     color: '#000',

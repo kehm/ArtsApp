@@ -134,16 +134,8 @@ class Observation extends React.PureComponent {
 
   renderEmpty() {
     return (
-      <View style={styles.container}>
-        <Text
-          style={
-            this.props.deviceTypeAndroidTablet
-              ? AndroidTabletStyles.text
-              : styles.text
-          }
-        >
-          {this.props.strings.noObservations}
-        </Text>
+      <View style={styles.topContainer}>
+        <Text style={styles.topText}>{this.props.strings.noObservations}</Text>
       </View>
     );
   }
@@ -162,15 +154,16 @@ class Observation extends React.PureComponent {
             title={this.props.strings.myObs}
             onMenu={this.handleOnMenuClick}
           />
-          <Content>
-            <List>
-              {this.props.obsevationsList.length === 0 ? (
-                this.renderEmpty()
-              ) : (
+          {this.props.obsevationsList.length === 0 ? (
+            this.renderEmpty()
+          ) : (
+              <Content>
+                <List>
                   <List>{this.renderList()}</List>
-                )}
-            </List>
-          </Content>
+                </List>
+              </Content>
+            )}
+
         </Container>
       </StyleProvider>
     );
@@ -200,7 +193,23 @@ const styles = StyleSheet.create({
     marginTop: 50,
     left: 0,
     top: 0
-  }
+  },
+  topContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 56,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    width: '100%'
+  },
+  topText: {
+    fontSize: 14,
+    textAlign: 'center',
+    padding: 10
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({

@@ -86,7 +86,7 @@ export default class LangStrings {
         enableDebug2: ' more times',
         downloading: 'Downloading, this may take some time',
         downloaded: 'Download complete',
-        downloadDialog: 'The key will now be download. This can take some time...',
+        downloadDialog: 'The key will now be downloaded. This can take some time...',
         downloadHeader: 'Additional information about the key must be downloaded before you can use it',
         betaKeys: 'Beta keys',
         firstNoNett: 'You are not connected to a network. / \n In order to use ArtsApp, you will have to be online the first time using the application. / \n Du er ikke tilkoblet noe nettverk. / \n For å bruke ArtsApp, må du være online første gang du bruker applikasjonen.',
