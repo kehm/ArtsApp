@@ -22,11 +22,18 @@ import {
   Left,
   Right,
   Body,
-  Icon,
   H2,
   Grid,
   Col,
 } from "native-base";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+  MenuProvider,
+} from 'react-native-popup-menu';
+import Icon from "react-native-vector-icons/Entypo";
 import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
 
@@ -42,6 +49,7 @@ import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 
 import SubPageHeader from "../components/SubPageHeader";
+import * as SettingsAction from "../actions/SettingsAction";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -51,7 +59,7 @@ const mapStateToProps = state => ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...KeyAction }, dispatch)
+    actions: bindActionCreators({ ...KeyAction, ...SettingsAction }, dispatch)
   };
 }
 
@@ -130,16 +138,29 @@ class Info extends React.PureComponent {
       new Alert.alert(
         this.props.strings.download,
         this.props.strings.downloadDialog,
-        [{
-          text: "Cancel", style: "cancel"
-        },
-        {
-          text: this.props.strings.ok, onPress: () => { this.downloadKey() }
-        }],
+        [
+          { text: this.props.strings.cancel, style: "cancel" },
+          { text: this.props.strings.ok, onPress: () => { this.downloadKey() } }
+        ],
         { cancelable: true }
       );
     }
   };
+
+  /**
+   * Handle on click delete event
+   */
+  onClickDelete = () => {
+    new Alert.alert(
+      this.props.strings.deleteKeyHeader,
+      this.props.strings.deleteKey,
+      [
+        { text: this.props.strings.cancel, style: "cancel" },
+        { text: this.props.strings.ok, onPress: () => { this.props.actions.deletedata(this.props.selectedKey.key_id); Actions.Frontpage(); } }
+      ],
+      { cancelable: true }
+    );
+  }
 
   /**
    * Download key if network connection is active
@@ -149,7 +170,9 @@ class Info extends React.PureComponent {
       new Alert.alert(
         this.props.strings.noNetwork,
         "",
-        [{ text: this.props.strings.ok, onPress: () => { } }],
+        [
+          { text: this.props.strings.ok, onPress: () => { } }
+        ],
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
@@ -176,83 +199,99 @@ class Info extends React.PureComponent {
             : getTheme(common)
         }
       >
-        <Container>
-          <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
-            rightIcon={this.state.isDownloaded ? <Icon name='paper-plane' onPress={() => { this.onClickUse() }} /> : undefined} />
-          {this.state.isDownloaded ? (
-            <View />
-          ) : (
-              <View style={styles.topContainer}>
-                <Text style={styles.topText}>{this.props.strings.downloadHeader}</Text>
-              </View>
-            )}
-          <Content>
-            <Grid>
-              <Col style={styles.container}>
-                {this.props.selectedKey.image === 1 && (
-                  <Image
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.image
-                        : styles.image
-                    }
-                    source={
-                      this.props.platform === "ios"
-                        ? {
-                          uri: ImageConfig.getInfoImg(this.props.chosenKey)
-                        }
-                        : {
-                          uri:
-                            "file://" +
-                            ImageConfig.getInfoImg(this.props.chosenKey)
-                        }
-                    }
-                  />
-                )}
-                <View style={styles.separator} />
-                <View style={styles.textBox}>
-                  <HTMLView
-                    value={this.removeHtmlBr()}
-                    stylesheet={
-                      this.props.deviceTypeAndroidTablet
-                        ? htmlstylesAndroidTablet
-                        : htmlstyles
-                    }
-                  />
-                </View>
-              </Col>
-            </Grid>
-          </Content>
-          {!this.state.isDownloaded ? (
-            <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
-              <Text
-                style={[
-                  this.props.deviceTypeAndroidTablet
-                    ? AndroidTabletStyles.text3
-                    : styles.text3,
-                  styles.btnText
-                ]}
-              >
-                {this.props.strings.download}
-              </Text>
-              <Icon name='cloud-download' style={styles.download} size={24} />
-            </Button>
-          ) : (
+        <MenuProvider>
+          <Container>
+            <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
+              rightIcon={this.state.isDownloaded ?
+                <Menu>
+                  <MenuTrigger>
+                    <Icon name='dots-three-vertical' size={28} color={'black'} />
+                  </MenuTrigger>
+                  <MenuOptions style={styles.dotMenu}>
+                    <MenuOption onSelect={() => { this.onClickUse() }} >
+                      <Text style={styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
+                    </MenuOption>
+                    <MenuOption onSelect={() => { this.onClickDelete() }}>
+                      <Text style={styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
+                    </MenuOption>
+                  </MenuOptions>
+                </Menu>
+                : undefined} />
+            {this.state.isDownloaded ? (
               <View />
-            )}
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.props.keyDownloaded_LOADING}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
-                <Spinner color="green" />
+            ) : (
+                <View style={styles.topContainer}>
+                  <Text style={styles.topText}>{this.props.strings.downloadHeader}</Text>
+                </View>
+              )}
+            <Content>
+              <Grid>
+                <Col style={styles.container}>
+                  {this.props.selectedKey.image === 1 && (
+                    <Image
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.image
+                          : styles.image
+                      }
+                      source={
+                        this.props.platform === "ios"
+                          ? {
+                            uri: ImageConfig.getInfoImg(this.props.chosenKey)
+                          }
+                          : {
+                            uri:
+                              "file://" +
+                              ImageConfig.getInfoImg(this.props.chosenKey)
+                          }
+                      }
+                    />
+                  )}
+                  <View style={styles.separator} />
+                  <View style={styles.textBox}>
+                    <HTMLView
+                      value={this.removeHtmlBr()}
+                      stylesheet={
+                        this.props.deviceTypeAndroidTablet
+                          ? htmlstylesAndroidTablet
+                          : htmlstyles
+                      }
+                    />
+                  </View>
+                </Col>
+              </Grid>
+            </Content>
+            {!this.state.isDownloaded ? (
+              <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
+                <Text
+                  style={[
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.text3
+                      : styles.text3,
+                    styles.btnText
+                  ]}
+                >
+                  {this.props.strings.download}
+                </Text>
+                <Icon name='download' style={styles.download} size={24} />
+              </Button>
+            ) : (
+                <View />
+              )}
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.props.keyDownloaded_LOADING}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
+                  <Spinner color="green" />
+                </View>
               </View>
-            </View>
-          </Modal>
-        </Container>
+            </Modal>
+          </Container>
+        </MenuProvider>
       </StyleProvider>
     );
   }
@@ -349,6 +388,14 @@ const styles = StyleSheet.create({
   download: {
     color: '#000',
     marginLeft: 20
+  },
+  dotMenu: {
+    backgroundColor: '#eee',
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 16,
+    padding: 10,
   },
 });
 

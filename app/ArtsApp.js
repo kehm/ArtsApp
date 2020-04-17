@@ -1,5 +1,5 @@
 /**
- * @file Application entry point. Wrap Redux wrapper and menu drawer to undelying scenes.
+ * @file Application entry point. Wrap Redux wrapper and menu drawer to underlying scenes.
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";

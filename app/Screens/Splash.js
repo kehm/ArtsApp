@@ -53,6 +53,7 @@ class Splash extends React.PureComponent {
    */
   componentDidMount() {
     this.DbHelper.testDatabase().then(() => {
+      console.log("DATE: " + this.props.lastDownloadDate)
       if (this.props.lastDownloadDate === -1) {
         if (this.props.isConnected) {
           this.props.actions.getKeysFromAPI();

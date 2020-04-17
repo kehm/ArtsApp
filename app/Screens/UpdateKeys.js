@@ -229,28 +229,6 @@ class UpdateKeys extends React.PureComponent {
     }
   };
 
-  /**
-   * Shows Alert for deleting of keydata and deletes selected key if pressed yes.
-   * @param {integer} i id of selected key.
-   * @return {void} deletes selected key.
-   */
-  onClickDelete = i => {
-    Alert.alert(
-      this.props.strings.deleteKeyHeader,
-      this.props.strings.deleteKey + " ",
-      [
-        { text: this.props.strings.cancel, onPress: () => { }, style: "cancel" },
-        {
-          text: this.props.strings.accept,
-          onPress: () => {
-            this.props.actions.deletedata(i);
-          }
-        }
-      ],
-      { cancelable: true }
-    );
-  };
-
   keyExtractor = item => {
     return item.key_id.toString();
   };
@@ -264,13 +242,6 @@ class UpdateKeys extends React.PureComponent {
           key={item.item.key_id}
           onPress={this.refreshList.bind(this, item.item.key_id)}
         >
-          <Left>
-            <Icon
-              style={{ alignSelf: "center" }}
-              name="ios-trash"
-              onPress={this.onClickDelete.bind(this, item.item.key_id)}
-            />
-          </Left>
           <Body>
             <Text
               adjustsFontSizeToFit={true}
