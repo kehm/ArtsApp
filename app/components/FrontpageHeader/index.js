@@ -7,11 +7,12 @@ type Props = {
   title: String,
   rightCol: String,
   onMenu: Function,
+  rightIcon: Icon,
 }
 class FrontpageHeader extends React.Component<Props> {
 
   render() {
-    const { title, rightCol, onMenu } = this.props;
+    const { title, onMenu, rightIcon } = this.props;
     return (
       <Header style={styles.headerContainer}>
         <Left style={styles.left}>
@@ -22,7 +23,9 @@ class FrontpageHeader extends React.Component<Props> {
         <Body>
           <Title style={styles.title}>{title}</Title>
         </Body>
-        <Right style={styles.rightCol} />
+        <Right>
+          {rightIcon}
+        </Right>
       </Header>
     );
   }

@@ -130,17 +130,6 @@ class MenuContent extends React.PureComponent {
   };
 
   /**
-   * closes menu and
-   * opens the admin key page(UpdateKeys.js)
-   * @return {void} [description]
-   */
-  onClickUpdateKeys = () => {
-    this.setState({ frontSelect: false, obsSelect: false, locSelect: false, keysSelect: true });
-    this.props.actions.closeMenu();
-    Actions.UpdateKeys();
-  };
-
-  /**
    * handles alert for language changes.
    * @return {void} [description]
    */
@@ -191,17 +180,6 @@ class MenuContent extends React.PureComponent {
             }
           >
             {this.props.strings.updateLocation}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickUpdateKeys} style={this.state.keysSelect ? styles.selectedElement : null}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.manageKeys}
           </Text>
         </ListItem>
         <ListItem button noBorder onPress={this.onClickLang}>

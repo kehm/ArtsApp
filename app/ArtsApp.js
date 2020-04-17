@@ -21,7 +21,6 @@ import SpeciesLeft from "./Screens/SpeciesLeft";
 import About from "./Screens/About";
 import Info from "./Screens/Info";
 import UpdateLocation from "./Screens/UpdateLocation";
-import UpdateKeys from "./Screens/UpdateKeys";
 
 const mapStateToProps = state => ({
   ...state.nav,
@@ -71,12 +70,6 @@ const scenes = Actions.create(
       hideNavBar
       panHandlers={null}
       component={UpdateLocation}
-    />
-    <Scene
-      key="UpdateKeys"
-      hideNavBar
-      panHandlers={null}
-      component={UpdateKeys}
     />
     <Scene
       key="SpeciesLeft"
