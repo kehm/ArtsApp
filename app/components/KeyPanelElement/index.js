@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, Image, ActivityIndicator } from 'react-native';
-import { Right, Button, Icon as Icon2 } from 'native-base';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Right, Button } from 'native-base';
+import Icon from 'react-native-vector-icons/Entypo';
 
 import styles from './styles.js';
 import TraitImageButton from '../TraitImageButton';
@@ -65,7 +65,7 @@ class KeyPanelElement extends React.Component<Props> {
             </View>
             {isDownloaded ? (
               <View style={styles.downloadContainer}>
-                <Icon2 name='ios-information-circle-outline' style={styles.info} onPress={() => onInfo(keyObject)} />
+                <Icon name='info-with-circle' style={styles.info} onPress={() => onInfo(keyObject)} />
               </View>
             ) : (
                 <View />

@@ -12,9 +12,14 @@ import {
   ListItem,
   View,
   Container,
-  Button
+  Button,
+  Left,
+  Right,
+  Content
 } from "native-base";
 import { Actions } from "react-native-router-flux";
+import Icon from 'react-native-vector-icons/Entypo';
+import Flag from 'react-native-flags-typescript';
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -150,6 +155,9 @@ class MenuContent extends React.PureComponent {
     return (
       <List keyi={this.props.debugMode}>
         <ListItem button noBorder onPress={this.onClickKeys} style={this.state.frontSelect ? styles.selectedElement : null}>
+          <Left style={styles.leftIcon}>
+            <Icon name="map" size={26} />
+          </Left>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -161,6 +169,9 @@ class MenuContent extends React.PureComponent {
           </Text>
         </ListItem>
         <ListItem button noBorder onPress={this.onClickObs} style={this.state.obsSelect ? styles.selectedElement : null}>
+          <Left style={styles.leftIcon}>
+            <Icon name="drive" size={26} />
+          </Left>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -172,6 +183,9 @@ class MenuContent extends React.PureComponent {
           </Text>
         </ListItem>
         <ListItem button noBorder onPress={this.onClickLocation} style={this.state.locSelect ? styles.selectedElement : null}>
+          <Left style={styles.leftIcon}>
+            <Icon name="location" size={26} />
+          </Left>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -180,17 +194,6 @@ class MenuContent extends React.PureComponent {
             }
           >
             {this.props.strings.updateLocation}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickLang}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.language}
           </Text>
         </ListItem>
       </List>
@@ -238,6 +241,23 @@ class MenuContent extends React.PureComponent {
                 {this.props.strings.about}
               </Text>
             </Button>
+            <Button transparent style={styles.lang} onPress={this.onClickLang} >
+              <Text
+                style={
+                  [this.props.deviceTypeAndroidTablet
+                    ? stylesAndroidTablet.text
+                    : styles.text,
+                  styles.langTxt]
+                }
+              >
+                {this.props.strings.language + ":"}
+              </Text>
+              {this.props.strings.language === 'Change language' ? (
+                <Flag style={styles.flag} code="GB" type="flat" size={32} />
+              ) : (
+                  <Flag style={styles.flag} code="NO" type="flat" size={32} />
+                )}
+            </Button>
           </View>
         </Container>
       </StyleProvider>
@@ -270,7 +290,8 @@ const styles = {
   logoImg: {
     resizeMode: "contain",
     width: 37,
-    height: 37
+    height: 37,
+    marginBottom: 20
   },
   drawerCover: {
     backgroundColor: "#553917",
@@ -284,7 +305,8 @@ const styles = {
     position: "absolute",
     backgroundColor: "transparent",
     justifyContent: "center",
-    bottom: 20
+    bottom: 50,
+    right: 0
   },
   text: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
@@ -294,7 +316,7 @@ const styles = {
   textAbout: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 20,
-    marginLeft: 20,
+    marginLeft: 10,
     paddingBottom: 20 - 20 * 0.75,
     color: '#553917'
   },
@@ -306,6 +328,25 @@ const styles = {
   },
   selectedElement: {
     backgroundColor: '#f0a00c'
+  },
+  leftIcon: {
+    maxWidth: 30,
+    marginLeft: 20
+  },
+  lang: {
+    position: "absolute",
+    bottom: 5,
+    right: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  langTxt: {
+    marginTop: 10,
+    color: 'black'
+  },
+  flag: {
+    padding: 20,
+    marginLeft: 5
   }
 };
 

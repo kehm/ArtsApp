@@ -47,7 +47,6 @@ export default StyleSheet.create({
   },
   info: {
     fontSize: 30,
-    color: '#3079b6'
   },
   downloadSpinner: {
     position: 'absolute',
