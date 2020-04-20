@@ -2,6 +2,7 @@ import React from "react";
 import { View, LayoutAnimation, Alert } from "react-native";
 import { Container, StyleProvider } from "native-base";
 import { Actions } from "react-native-router-flux";
+import Icon from 'react-native-vector-icons/Entypo';
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -68,6 +69,13 @@ class Frontpage extends React.PureComponent<Props, State> {
     Actions.Info({ selectedKey: key });
   }
 
+  /**
+   * Update key list
+   */
+  handleOnPressUpdate = () => {
+    //TODO
+  }
+
   render() {
     const { keys, strings } = this.props;
     return (
@@ -82,6 +90,9 @@ class Frontpage extends React.PureComponent<Props, State> {
           <FrontpageHeader
             title={strings.keysView}
             onMenu={this.handleOnMenuClick}
+            rightIcon={
+              <Icon name="cw" size={24} onPress={this.handleOnPressUpdate} />
+            }
           />
           <View style={styles.container}>
             <Explanation description={strings.frontpageTopDescription} />

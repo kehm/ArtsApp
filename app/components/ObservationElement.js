@@ -1,8 +1,6 @@
 /**
- * @file ObservationElement.js
+ * @file List element representing an observation in Observation.js
  * @author Kjetil Fossheim
- *
- * list element for user observations in Observation.js
  */
 
 import React, { Component } from "react";
@@ -30,28 +28,19 @@ class ObservationElement extends React.PureComponent {
               style={
                 this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.text3
-                  : styles.text3
+                  : styles.headerTxt
               }
             >
-              {this.props.strings.pecies}
+              {this.props.localName + " ("}
             </Text>
             <Text
               style={
                 this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.text3
-                  : styles.text3
+                  : styles.headerTxt
               }
             >
-              {this.props.latinName + " /"}
-            </Text>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.localName}
+              {this.props.latinName + ")"}
             </Text>
           </Row>
           <Row>
@@ -62,7 +51,7 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.strings.date}
+              {this.props.strings.date + ": "}
             </Text>
             <Text
               style={
@@ -82,7 +71,7 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.strings.location}
+              {this.props.strings.location + ": "}
             </Text>
             <Text
               style={
@@ -100,7 +89,7 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.county + ", "}
+              {this.props.county + " "}
             </Text>
             <Text
               style={
@@ -109,7 +98,10 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.latitude + ", "}
+              {this.props.latitude !== 'undefined' ? (
+                "(" + this.props.latitude + ", ") : (
+                  ""
+                )}
             </Text>
             <Text
               style={
@@ -118,7 +110,10 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.longitude}
+              {this.props.longitude !== 'undefined' ? (
+                this.props.longitude + ")") : (
+                  ""
+                )}
             </Text>
           </Row>
         </Grid>
@@ -129,10 +124,15 @@ class ObservationElement extends React.PureComponent {
 
 const styles = StyleSheet.create({
   text3: {
-    fontSize: 12,
+    fontSize: 14,
     marginBottom: 5,
-    textAlign: "center",
-    color: "#000000"
+    color: "black"
+  },
+  headerTxt: {
+    fontSize: 14,
+    marginBottom: 5,
+    color: "black",
+    fontWeight: 'bold'
   }
 });
 
@@ -140,8 +140,7 @@ const AndroidTabletStyles = StyleSheet.create({
   text3: {
     fontSize: 24,
     marginBottom: 5,
-    textAlign: "center",
-    color: "#000000"
+    color: "black"
   }
 });
 

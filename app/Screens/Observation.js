@@ -1,8 +1,6 @@
 /**
- * @file Observation.js
+ * @file Display list of saved observations
  * @author Kjetil Fossheim
- *
- * Displays list of user stored observations.
  */
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
@@ -14,13 +12,13 @@ import {
   Content,
   List,
   ListItem,
-  Icon,
   Button,
   Left,
   Right,
   Body
 } from "native-base";
 import ObservationElement from "../components/ObservationElement";
+import Icon from 'react-native-vector-icons/Entypo';
 import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -123,7 +121,7 @@ class Observation extends React.PureComponent {
                   ? { fontSize: 50, alignSelf: "center" }
                   : {}
               }
-              name="ios-trash"
+              name="trash" size={22}
             />
           </Button>
         </ListItem>
