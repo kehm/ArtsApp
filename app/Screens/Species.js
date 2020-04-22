@@ -128,7 +128,6 @@ class Species extends React.PureComponent {
    * Open image gallery on image click
    */
   onClickImage = () => {
-    console.log(this.state.selectedSpeciesImages)
     if (this.state.selectedSpeciesImages.length !== 0) {
       this.setState({ openImages: true });
     }

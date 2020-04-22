@@ -13,4 +13,7 @@ export default StyleSheet.create({
     left: {
         maxWidth: 50
     },
+    rightCol: {
+        marginRight: 5
+    }
 });

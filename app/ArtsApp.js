@@ -21,6 +21,7 @@ import SpeciesLeft from "./Screens/SpeciesLeft";
 import About from "./Screens/About";
 import Info from "./Screens/Info";
 import UpdateLocation from "./Screens/UpdateLocation";
+import { MenuProvider } from "react-native-popup-menu";
 
 const mapStateToProps = state => ({
   ...state.nav,
@@ -155,28 +156,30 @@ class ArtsApp extends Component {
 
   render() {
     return (
-      <Drawer
-        ref={ref => {
-          this._drawer = ref;
-        }}
-        content={<MenuContent />}
-        tapToClose
-        type="overlay"
-        onClose={() => this.closeDrawer()}
-        openDrawerOffset={0.35}
-        panCloseMask={0.35}
-        styles={{
-          drawer: {
-            marginTop: Platform.OS === "ios" ? 20 : 0,
-            marginBottom: 20,
-            shadowColor: "#000000",
-            shadowOpacity: 0.8,
-            shadowRadius: 3
-          }
-        }}
-      >
-        <RouterWithRedux hideNavBar={true} scenes={scenes} />
-      </Drawer>
+      <MenuProvider>
+        <Drawer
+          ref={ref => {
+            this._drawer = ref;
+          }}
+          content={<MenuContent />}
+          tapToClose
+          type="overlay"
+          onClose={() => this.closeDrawer()}
+          openDrawerOffset={0.35}
+          panCloseMask={0.35}
+          styles={{
+            drawer: {
+              marginTop: Platform.OS === "ios" ? 20 : 0,
+              marginBottom: 20,
+              shadowColor: "#000000",
+              shadowOpacity: 0.8,
+              shadowRadius: 3
+            }
+          }}
+        >
+          <RouterWithRedux hideNavBar={true} scenes={scenes} />
+        </Drawer>
+      </MenuProvider>
     );
   }
 }

@@ -8,6 +8,7 @@ import {
   FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem,
   Left, Body, Right
 } from 'native-base';
+import ImageView from "react-native-image-viewing";
 
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -44,12 +45,24 @@ class Key extends React.Component<Props, State> {
       isSpeciesPanelToggled: true,
       isTraitDialogVisible: false,
       selectedTrait: null,
+      selectedSpeciesImages: [],
+      openImages: false,
     };
   }
 
   setStateAnimated(callback: (state: State) => void) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState(callback);
+  }
+
+  /**
+   * Open image gallery
+   */
+  openImageGallery = (images) => {
+    this.setState({
+      selectedSpeciesImages: images,
+      openImages: true
+    })
   }
 
   onClickBack = () => {
@@ -122,6 +135,13 @@ class Key extends React.Component<Props, State> {
     return (
       <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
         <Container>
+          <ImageView
+            images={this.state.selectedSpeciesImages}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+            backgroundColor='white'
+          />
           <SubPageHeader title={title} onClick={this.onClickBack}
             rightIcon={<Icon name='close' onPress={this.onClickClose} />} />
           <View style={styles.container} >
@@ -166,6 +186,7 @@ class Key extends React.Component<Props, State> {
               valueImages={valueImages}
               activeValues={activeValues}
               onInfo={this.onValueInfo}
+              onOpenImages={this.openImageGallery}
             />
           </View>
         </Container>

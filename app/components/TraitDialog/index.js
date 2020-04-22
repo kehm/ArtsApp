@@ -14,7 +14,8 @@ type Props = {
   valueImages: Map,
   onValueSelected: Function,
   onInfo: Function,
-  onCancelDialog: Function
+  onCancelDialog: Function,
+  onOpenImages: Function
 };
 
 class TraitDialog extends React.Component<Props> {
@@ -43,21 +44,24 @@ class TraitDialog extends React.Component<Props> {
 
     // Path to image
     const imagePaths = valueImages.get(item.value_id);
-    let imagePath = null;
-    if (imagePaths) imagePath = imagePaths[0];
-
+    let imagePath = undefined;
+    let paths = undefined;
+    if (imagePaths) {
+      imagePath = imagePaths[0];
+      paths = imagePaths
+    }
     const selected = selectedValue && selectedValue.value_id === item.value_id;
-    const isActive =
-      activeValues.length === 0 || activeValues.indexOf(item.value_id) > -1;
-
+    const isActive = activeValues.length === 0 || activeValues.indexOf(item.value_id) > -1;
     return (
       <TraitDialogButton
         value={item}
         isActive={isActive}
         imagePath={imagePath}
+        imagePaths={paths}
         selected={selected}
         onPress={() => this.onValueSelected(item)}
         onInfo={() => this.onValueInfo(item)}
+        onOpenImages={this.props.onOpenImages}
       />
     );
   };

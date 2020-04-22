@@ -11,7 +11,6 @@ import {
     TouchableHighlight,
     Text,
     Dimensions,
-    Alert
 } from "react-native";
 import {
     Container,
@@ -84,7 +83,7 @@ class ValueInfo extends React.PureComponent {
      */
     removeHtmlBr = () => {
         if (this.props.navigation.getParam("valueInfo") === null) {
-            return this.props.strings.noText;
+            return "";
         }
         return this.props.navigation
             .getParam("valueInfo")

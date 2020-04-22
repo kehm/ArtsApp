@@ -32,7 +32,7 @@ class SubPageHeader extends React.Component<Props> {
                             <View />
                         )}
                 </Body>
-                <Right>
+                <Right style={styles.rightCol}>
                     {rightIcon}
                 </Right>
             </Header>

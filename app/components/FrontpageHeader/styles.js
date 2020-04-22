@@ -15,5 +15,11 @@ export default StyleSheet.create({
   },
   icon: {
     color: '#000'
+  },
+  body: {
+    minWidth: 100
+  },
+  rightCol: {
+    marginRight: 5
   }
 });

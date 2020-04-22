@@ -31,7 +31,6 @@ import {
   MenuOptions,
   MenuOption,
   MenuTrigger,
-  MenuProvider,
 } from 'react-native-popup-menu';
 import Icon from "react-native-vector-icons/Entypo";
 import { Actions } from "react-native-router-flux";
@@ -199,99 +198,97 @@ class Info extends React.PureComponent {
             : getTheme(common)
         }
       >
-        <MenuProvider>
-          <Container>
-            <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
-              rightIcon={this.state.isDownloaded ?
-                <Menu>
-                  <MenuTrigger>
-                    <Icon name='dots-three-vertical' size={28} color={'black'} />
-                  </MenuTrigger>
-                  <MenuOptions style={styles.dotMenu}>
-                    <MenuOption onSelect={() => { this.onClickUse() }} >
-                      <Text style={styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
-                    </MenuOption>
-                    <MenuOption onSelect={() => { this.onClickDelete() }}>
-                      <Text style={styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
-                    </MenuOption>
-                  </MenuOptions>
-                </Menu>
-                : undefined} />
-            {this.state.isDownloaded ? (
-              <View />
-            ) : (
-                <View style={styles.topContainer}>
-                  <Text style={styles.topText}>{this.props.strings.downloadHeader}</Text>
-                </View>
-              )}
-            <Content>
-              <Grid>
-                <Col style={styles.container}>
-                  {this.props.selectedKey.image === 1 && (
-                    <Image
-                      style={
-                        this.props.deviceTypeAndroidTablet
-                          ? AndroidTabletStyles.image
-                          : styles.image
-                      }
-                      source={
-                        this.props.platform === "ios"
-                          ? {
-                            uri: ImageConfig.getInfoImg(this.props.chosenKey)
-                          }
-                          : {
-                            uri:
-                              "file://" +
-                              ImageConfig.getInfoImg(this.props.chosenKey)
-                          }
-                      }
-                    />
-                  )}
-                  <View style={styles.separator} />
-                  <View style={styles.textBox}>
-                    <HTMLView
-                      value={this.removeHtmlBr()}
-                      stylesheet={
-                        this.props.deviceTypeAndroidTablet
-                          ? htmlstylesAndroidTablet
-                          : htmlstyles
-                      }
-                    />
-                  </View>
-                </Col>
-              </Grid>
-            </Content>
-            {!this.state.isDownloaded ? (
-              <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
-                <Text
-                  style={[
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3,
-                    styles.btnText
-                  ]}
-                >
-                  {this.props.strings.download}
-                </Text>
-                <Icon name='download' style={styles.download} size={24} />
-              </Button>
-            ) : (
-                <View />
-              )}
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.props.keyDownloaded_LOADING}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
-                  <Spinner color="green" />
-                </View>
+        <Container>
+          <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
+            rightIcon={this.state.isDownloaded ?
+              <Menu>
+                <MenuTrigger>
+                  <Icon name='dots-three-vertical' size={28} color={'black'} />
+                </MenuTrigger>
+                <MenuOptions style={styles.dotMenu}>
+                  <MenuOption onSelect={() => { this.onClickUse() }} >
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
+                  </MenuOption>
+                  <MenuOption onSelect={() => { this.onClickDelete() }}>
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
+              : undefined} />
+          {this.state.isDownloaded ? (
+            <View />
+          ) : (
+              <View style={styles.topContainer}>
+                <Text style={styles.topText}>{this.props.strings.downloadHeader}</Text>
               </View>
-            </Modal>
-          </Container>
-        </MenuProvider>
+            )}
+          <Content>
+            <Grid>
+              <Col style={styles.container}>
+                {this.props.selectedKey.image === 1 && (
+                  <Image
+                    style={
+                      this.props.deviceTypeAndroidTablet
+                        ? AndroidTabletStyles.image
+                        : styles.image
+                    }
+                    source={
+                      this.props.platform === "ios"
+                        ? {
+                          uri: ImageConfig.getInfoImg(this.props.chosenKey)
+                        }
+                        : {
+                          uri:
+                            "file://" +
+                            ImageConfig.getInfoImg(this.props.chosenKey)
+                        }
+                    }
+                  />
+                )}
+                <View style={styles.separator} />
+                <View style={styles.textBox}>
+                  <HTMLView
+                    value={this.removeHtmlBr()}
+                    stylesheet={
+                      this.props.deviceTypeAndroidTablet
+                        ? htmlstylesAndroidTablet
+                        : htmlstyles
+                    }
+                  />
+                </View>
+              </Col>
+            </Grid>
+          </Content>
+          {!this.state.isDownloaded ? (
+            <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
+              <Text
+                style={[
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.text3
+                    : styles.text3,
+                  styles.btnText
+                ]}
+              >
+                {this.props.strings.download}
+              </Text>
+              <Icon name='download' style={styles.download} size={24} />
+            </Button>
+          ) : (
+              <View />
+            )}
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.props.keyDownloaded_LOADING}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
+                <Spinner color="green" />
+              </View>
+            </View>
+          </Modal>
+        </Container>
       </StyleProvider>
     );
   }

@@ -19,6 +19,7 @@ export default class LangStrings {
         beta: 'Sneak Peek',
         keys: 'Keys',
         keysView: 'Discover',
+        keyAbout: 'By choosing different traits in the key, the number of species will be limited and you will end up with one or a few species that align to your choices.',
         exit: 'Press once more for exiting the app.',
         noText: 'text is missing',
         noKeySelected: 'No key selected',
@@ -29,6 +30,7 @@ export default class LangStrings {
         langChoise: 'Choose your language / \n  Velg ditt språk',
         langText: 'The content of each identification key will not change at this moment, this function will be added later. / \n  Innholdet i hver identifikasjonsnøkkel vil ikke endres på dette tidspunktet, vi jobber med denne funksjonen.',
         updateDIA: 'One or more keys might need updating. Do you want to look for updates?',
+        lookForUpdates: 'Look for updates',
         accept: 'Yes',
         author: 'Author: ',
         ok: 'Ok',
@@ -60,7 +62,7 @@ export default class LangStrings {
         keyInfo: 'About key',
         updateLocation: 'Update Location',
         updateEx: 'Select the keys you want to update the location for.',
-        noLocation: 'Could not find Location, make sure it is turned on.',
+        noLocation: 'Could not find Location. Make sure your device has location turned on.',
         noLocationHeader: 'Location is not available',
         noLocationDialog: 'Could not locate your position. Do you still want to save the observation?',
         latitude: 'Latitude',
@@ -99,6 +101,8 @@ export default class LangStrings {
         updateKey: 'Update keys',
         manageKeys: 'Manage keys',
         lookForUpdate: 'Look for new updates',
+        updateSuccess: 'Update successful',
+        updateFailed: 'No new keys available',
         noKeys: 'There are no updates available.',
         updateKeyText: 'Select the keys you want to update.',
         nationalDistrubution: 'The map shows where in Norway it is expected that the species should be observed',
@@ -112,7 +116,8 @@ export default class LangStrings {
         level: 'Level: ',
         valueInfo: 'Value information',
         irelevant: 'Not applicable choices',
-        noKeysDownloaded: 'There is no Keys downloaded. '
+        noKeysDownloaded: 'There is no Keys downloaded. ',
+        help: 'You need to download the key before it can be used. If you have limited storage space on your device you will be able to delete the keys when you are finished using them. \n When the key is downloaded you start species identification by clicking the key. Select different traits to limit the possible species. Possible species are visible in the bottom of the window. In the top of the window you will se your selected traits. \n When you have found your species, click on the art to go to the art page. On the art page you can see picture of the art, read information and study distribution charts \n By clicking the save button in the top right corner, your observation is saved locally on your device. You can find an overview of all your saved observations in the My Observations menu option.'
       },
       no: {
         chosenTraitsHeader: 'Egenskaper ved nøkkel',
@@ -126,6 +131,7 @@ export default class LangStrings {
         beta: 'Sneak peek',
         keys: 'Nøkler',
         keysView: 'Utforsk',
+        keyAbout: 'Ved å velge ulike egenskaper i nøkkelen vil antallet arter snevres inn og man vil sitte igjen med en eller noen få arter som passer til dine valg. For sikker artsbestemmelse bør en god flora benyttes i tillegg.',
         exit: 'Trykk en gang til for å gå ut av applikasjonen',
         noText: 'manglende tekst',
         noKeySelected: 'Ingen nøkkel valgt',
@@ -136,6 +142,9 @@ export default class LangStrings {
         langChoise: 'Choose your language / \n  Velg ditt språk',
         langText: 'The content of each identification key will not change at this moment, this function will be added later. / \n  Innholdet i hver identifikasjonsnøkkel vil ikke endres på dette tidspunktet, vi jobber med denne funksjonen.',
         updateDIA: 'En eller flere nøkler kan være utdatert. Vil du se etter oppdateringer nå?',
+        lookForUpdates: 'Se etter oppdateringer',
+        updateSuccess: 'Oppdatering vellykket',
+        updateFailed: 'Ingen nye nøkler tilgjengelig',
         accept: 'Ja',
         author: 'Forfatter: ',
         ok: 'Ok',
@@ -167,7 +176,7 @@ export default class LangStrings {
         keyInfo: 'Om nøkkelen',
         updateLocation: 'Oppdater lokalitet',
         updateEx: 'Velg de nøklene du vil oppdatere lokaliteten til',
-        noLocation: 'Kunne ikke finne plassering, sørg for at sted er slått på',
+        noLocation: 'Kunne ikke finne plassering. Sørg for at enheten din har posisjon slått på.',
         noLocationHeader: 'Ingen posisjon tilgjengelig',
         noLocationDialog: 'Kunne ikke finne plassering. Vil du lagre observasjonen uansett?',
         updateUnavailable: 'Det er ikke mulig å legge til lokalitet for valgt nøkkel',
@@ -210,7 +219,7 @@ export default class LangStrings {
         updateKeyText: 'Velg de nøklene du vil oppdatere.',
         nationalDistrubution: 'Kartet over viser hvor i Norge det er forventet at arten skal kunne observeres',
         regonalDistrubution: 'Kartet over viser den regionale distribusjonen til arten',
-        noDistribution: 'Det er ingen tilgjengelig utbredelsesmodel for denne arten.',
+        noDistribution: 'Det er ingen utbredelsesmodel tilgjengelig for denne arten.',
         deleteKeyHeader: 'Slett nøkkel',
         deleteKey: 'Vil du slette nøkkelen fra enheten din?\nNøkkelen vil kunne lastes ned på nytt, men alle data og bilder vil bli slettet.',
         delete: 'Slett',
@@ -220,6 +229,7 @@ export default class LangStrings {
         valueInfo: 'Verdi informasjon',
         irelevant: 'Ikke aktuelle valg',
         noKeysDownloaded: 'Det er ingen nøkler nedlastet.',
+        help: 'Før nøkkelen kan brukes for første gang må du laste ned nøkkelen. Nøkkelen kan slettes ved en senere anledning dersom du har lite lagringsplass på enheten din. \n Når nøkkelen er lastet ned begynner du artsutvelgelse ved å klikke på nøkkelen. Velg blant forskjellige karakterene for å snevre inn utvalget. Du vil til enhver tid se aktuelle arter nederst i vinduet. Øverst i vinduet vil du se hvilke karakterer du har valg. \n Når du har funnet korrekt art klikker du på arten. På artssiden vil du kunne se bilder av arten, lese informasjon om arten samt studere utbredelseskartene. \n Ved å klikke på lagre-knappen øverst til høyre blir observasjonen lagret. Du vil da finne igjen observasjonen i menyvalget Mine Observasjoner.'
       }
     };
   }

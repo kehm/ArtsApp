@@ -20,10 +20,10 @@ class FrontpageHeader extends React.Component<Props> {
             <Icon size={28} name='menu' />
           </Button>
         </Left>
-        <Body>
+        <Body style={styles.body}>
           <Title style={styles.title}>{title}</Title>
         </Body>
-        <Right>
+        <Right style={styles.rightCol}>
           {rightIcon}
         </Right>
       </Header>

@@ -7,5 +7,13 @@ export default StyleSheet.create({
     justifyContent: 'space-around',
     paddingTop: 30,
     paddingBottom: 40,
-  }
+  },
+  dotMenu: {
+    backgroundColor: '#eee',
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 16,
+    padding: 10,
+  },
 });

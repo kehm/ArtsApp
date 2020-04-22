@@ -1,8 +1,9 @@
 import React from "react";
-import { View, LayoutAnimation, Alert } from "react-native";
+import { View, LayoutAnimation, Alert, Text } from "react-native";
 import { Container, StyleProvider } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
+import Toast, { DURATION } from "react-native-easy-toast";
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -13,6 +14,13 @@ import common from "../../native-base-theme/variables/commonColor";
 import androidTablet from "../../native-base-theme/variables/androidTablet";
 
 import styles from "./styles.js";
+
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
 
 import * as KeyAction from "../../actions/KeyAction";
 import * as MenuAction from "../../actions/MenuAction";
@@ -73,6 +81,8 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Update key list
    */
   handleOnPressUpdate = () => {
+    this.refs.toast.show(this.props.strings.updateFailed);
+    //this.refs.toast.show(this.props.strings.updateSuccess);
     //TODO
   }
 
@@ -91,19 +101,29 @@ class Frontpage extends React.PureComponent<Props, State> {
             title={strings.keysView}
             onMenu={this.handleOnMenuClick}
             rightIcon={
-              <Icon name="cw" size={24} onPress={this.handleOnPressUpdate} />
+              <Menu>
+                <MenuTrigger>
+                  <Icon name='dots-three-vertical' size={28} color={'black'} />
+                </MenuTrigger>
+                <MenuOptions style={styles.dotMenu}>
+                  <MenuOption onSelect={() => { this.handleOnPressUpdate() }} >
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdates}</Text>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
             }
           />
           <View style={styles.container}>
-            <Explanation description={strings.frontpageTopDescription} />
+            <Explanation description={strings.frontpageTopDescription + " " + strings.frontpageBottomDescription} />
             <KeyPanel
               keys={keys}
               strings={strings}
               onPress={this.handleOnPressKey}
               onInfo={this.handleOnInfoClick}
             />
-            <Explanation description={strings.frontpageBottomDescription} />
+            <Explanation description={this.props.strings.keyAbout} />
           </View>
+          <Toast ref="toast" />
         </Container>
       </StyleProvider>
     );

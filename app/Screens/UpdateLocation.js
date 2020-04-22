@@ -11,7 +11,8 @@ import {
   TextInput,
   Dimensions,
   Text,
-  Modal
+  Modal,
+  Alert
 } from "react-native";
 import {
   StyleProvider,
@@ -31,7 +32,6 @@ import {
   Title,
   Content,
   Button,
-  Icon,
   H1,
   H2,
   H3,
@@ -41,6 +41,7 @@ import {
 } from "native-base";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
+import Icon from "react-native-vector-icons/Entypo";
 
 // redux
 import { connect } from "react-redux";
@@ -243,7 +244,7 @@ class UpdateLocation extends React.PureComponent {
    */
   getCoordinate = () => {
     if (this.props.latitude === "undefined") {
-      alert(this.props.strings.noLocation);
+      Alert.alert(this.props.strings.noLocationHeader, this.props.strings.noLocation);
     } else {
       this.setState({
         latitude: this.props.latitude + "",
@@ -293,12 +294,13 @@ class UpdateLocation extends React.PureComponent {
                     paddingTop: 5,
                     alignSelf: "center"
                   }}
+                  size={18}
                   name={
                     this.state.chosenKeys.some(a => {
                       return a === this.props.keys[i].key_id;
                     })
-                      ? "ios-radio-button-on"
-                      : "ios-radio-button-off"
+                      ? "check"
+                      : "circle"
                   }
                 />
               </Row>
@@ -341,29 +343,21 @@ class UpdateLocation extends React.PureComponent {
             />
           </View>
           <Content>{this.renderList()}</Content>
-          <Footer>
-            <FooterTab>
-              <Button
-                block
-                transparent
-                disabled={
-                  this.props.modalOpen || this.state.disableAll ? true : false
-                }
-                onPress={this.onClickUpdate}
-              >
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.textbutton
-                      : styles.textbutton
-                  }
-                >
-                  {this.props.strings.updateLocation}
-                </Text>
-                <Icon name="md-download" />
-              </Button>
-            </FooterTab>
-          </Footer>
+          <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUpdate(); }} disabled={
+            this.props.modalOpen || this.state.disableAll ? true : false
+          }>
+            <Text
+              style={[
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.text3
+                  : styles.text3,
+                styles.btnText
+              ]}
+            >
+              {this.props.strings.updateLocation}
+            </Text>
+            <Icon name='cw' style={styles.download} size={24} />
+          </Button>
           <Toast ref="uptoast" />
           <Modal
             animationType="fade"
@@ -415,6 +409,26 @@ class UpdateLocation extends React.PureComponent {
                     >
                       {this.props.strings.withCoor + " "}
                     </Text>
+                    <Button
+                      primary
+                      transparent
+                      iconLeft
+                      disabled={this.props.nerby_updated_loading ? true : false}
+                      onPress={this.getCoordinate}
+                      style={{ alignSelf: "center", marginBottom: 10 }}
+                    >
+                      <Icon name="location-pin" size={26} />
+
+                      <Text
+                        style={
+                          this.props.deviceTypeAndroidTablet
+                            ? AndroidTabletStyles.text1
+                            : styles.text1
+                        }
+                      >
+                        {this.props.strings.curCoor}
+                      </Text>
+                    </Button>
                     <TextInput
                       disabled={
                         this.props.keysUpdated_loading || this.state.disableAll
@@ -451,24 +465,6 @@ class UpdateLocation extends React.PureComponent {
                       autoCorrect={false}
                       keyboardType="numeric"
                     />
-                    <Button
-                      primary
-                      rounded
-                      bordered
-                      disabled={this.props.nerby_updated_loading ? true : false}
-                      onPress={this.getCoordinate}
-                      style={{ alignSelf: "center", marginBottom: 10 }}
-                    >
-                      <Text
-                        style={
-                          this.props.deviceTypeAndroidTablet
-                            ? AndroidTabletStyles.text1
-                            : styles.text1
-                        }
-                      >
-                        {this.props.strings.curCoor}
-                      </Text>
-                    </Button>
                   </View>
                   <View
                     style={{
@@ -477,12 +473,13 @@ class UpdateLocation extends React.PureComponent {
                     }}
                   >
                     <Button
-                      rounded
-                      bordered
+                      iconLeft
+                      style={{ padding: 10 }}
+                      transparent
                       disabled={this.props.nerby_updated_loading ? true : false}
                       onPress={() => this.props.actions.changeModal()}
                     >
-                      <Icon name="md-close" />
+                      <Icon name="chevron-left" size={26} />
                       <Text
                         style={
                           this.props.deviceTypeAndroidTablet
@@ -497,8 +494,8 @@ class UpdateLocation extends React.PureComponent {
                       <Spinner color="green" />
                     ) : null}
                     <Button
-                      rounded
-                      bordered
+                      transparent
+                      iconLeft
                       disabled={
                         this.state.chosenKeys.length === 0 ||
                           this.state.latitude === "" ||
@@ -506,8 +503,9 @@ class UpdateLocation extends React.PureComponent {
                           ? true
                           : false
                       }
-                      onPress={this.updateObsetvations}
+                      onPress={() => this.updateObsetvations()}
                     >
+                      <Icon name="share-alternative" size={26} />
                       <Text
                         style={
                           this.props.deviceTypeAndroidTablet
@@ -544,7 +542,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     margin: 10,
     textAlign: "center",
-    color: "#000000"
+    color: "black"
   },
   textbutton: {
     fontSize: 15,
@@ -605,7 +603,22 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     fontWeight: "bold"
-  }
+  },
+  downloadBtn: {
+    backgroundColor: '#f0a00c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%'
+  },
+  btnText: {
+    color: '#000',
+    fontSize: 18,
+  },
+  download: {
+    color: '#000',
+    marginLeft: 20
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({
