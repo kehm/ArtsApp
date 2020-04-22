@@ -30,7 +30,6 @@ export default class LangStrings {
         langChoise: 'Choose your language / \n  Velg ditt språk',
         langText: 'The content of each identification key will not change at this moment, this function will be added later. / \n  Innholdet i hver identifikasjonsnøkkel vil ikke endres på dette tidspunktet, vi jobber med denne funksjonen.',
         updateDIA: 'One or more keys might need updating. Do you want to look for updates?',
-        lookForUpdates: 'Look for updates',
         accept: 'Yes',
         author: 'Author: ',
         ok: 'Ok',
@@ -100,7 +99,7 @@ export default class LangStrings {
         updateKeySuccess: 'Selected keys updated.',
         updateKey: 'Update keys',
         manageKeys: 'Manage keys',
-        lookForUpdate: 'Look for new updates',
+        lookForUpdate: 'Look for updates',
         updateSuccess: 'Update successful',
         updateFailed: 'No new keys available',
         noKeys: 'There are no updates available.',
@@ -117,7 +116,8 @@ export default class LangStrings {
         valueInfo: 'Value information',
         irelevant: 'Not applicable choices',
         noKeysDownloaded: 'There is no Keys downloaded. ',
-        help: 'You need to download the key before it can be used. If you have limited storage space on your device you will be able to delete the keys when you are finished using them. \n When the key is downloaded you start species identification by clicking the key. Select different traits to limit the possible species. Possible species are visible in the bottom of the window. In the top of the window you will se your selected traits. \n When you have found your species, click on the art to go to the art page. On the art page you can see picture of the art, read information and study distribution charts \n By clicking the save button in the top right corner, your observation is saved locally on your device. You can find an overview of all your saved observations in the My Observations menu option.'
+        help: 'You need to download the key before it can be used. If you have limited storage space on your device you will be able to delete the keys when you are finished using them. \n\n When the key is downloaded you start species identification by clicking the key. Select different traits to limit the possible species. Possible species are visible in the bottom of the window. In the top of the window you will se your selected traits. \n\n When you have found your species, click on the art to go to the art page. On the art page you can see picture of the art, read information and study distribution charts \n By clicking the save button in the top right corner, your observation is saved locally on your device. You can find an overview of all your saved observations in the My Observations menu option.',
+        helpHeader: 'Help'
       },
       no: {
         chosenTraitsHeader: 'Egenskaper ved nøkkel',
@@ -142,7 +142,6 @@ export default class LangStrings {
         langChoise: 'Choose your language / \n  Velg ditt språk',
         langText: 'The content of each identification key will not change at this moment, this function will be added later. / \n  Innholdet i hver identifikasjonsnøkkel vil ikke endres på dette tidspunktet, vi jobber med denne funksjonen.',
         updateDIA: 'En eller flere nøkler kan være utdatert. Vil du se etter oppdateringer nå?',
-        lookForUpdates: 'Se etter oppdateringer',
         updateSuccess: 'Oppdatering vellykket',
         updateFailed: 'Ingen nye nøkler tilgjengelig',
         accept: 'Ja',
@@ -214,7 +213,7 @@ export default class LangStrings {
         updateKeySuccess: 'Valgte nøkler er oppdatert.',
         updateKey: 'Oppdater nøkler',
         manageKeys: 'Administrer nøkler',
-        lookForUpdate: 'Se etter nye oppdateringer',
+        lookForUpdate: 'Se etter oppdateringer',
         noKeys: 'Det er ingen tilgjengelig oppdateringer.',
         updateKeyText: 'Velg de nøklene du vil oppdatere.',
         nationalDistrubution: 'Kartet over viser hvor i Norge det er forventet at arten skal kunne observeres',
@@ -229,7 +228,8 @@ export default class LangStrings {
         valueInfo: 'Verdi informasjon',
         irelevant: 'Ikke aktuelle valg',
         noKeysDownloaded: 'Det er ingen nøkler nedlastet.',
-        help: 'Før nøkkelen kan brukes for første gang må du laste ned nøkkelen. Nøkkelen kan slettes ved en senere anledning dersom du har lite lagringsplass på enheten din. \n Når nøkkelen er lastet ned begynner du artsutvelgelse ved å klikke på nøkkelen. Velg blant forskjellige karakterene for å snevre inn utvalget. Du vil til enhver tid se aktuelle arter nederst i vinduet. Øverst i vinduet vil du se hvilke karakterer du har valg. \n Når du har funnet korrekt art klikker du på arten. På artssiden vil du kunne se bilder av arten, lese informasjon om arten samt studere utbredelseskartene. \n Ved å klikke på lagre-knappen øverst til høyre blir observasjonen lagret. Du vil da finne igjen observasjonen i menyvalget Mine Observasjoner.'
+        help: 'Før nøkkelen kan brukes for første gang må du laste ned nøkkelen. Nøkkelen kan slettes ved en senere anledning dersom du har lite lagringsplass på enheten din. \n\n Når nøkkelen er lastet ned begynner du artsutvelgelse ved å klikke på nøkkelen. Velg blant de forskjellige karakterene for å snevre inn utvalget. Du vil til enhver tid se aktuelle arter nederst i vinduet. Øverst i vinduet vil du se hvilke karakterer du har valgt. \n\n Når du har funnet korrekt art, klikker du på arten for å gå videre. På artssiden vil du kunne se bilder og lese informasjon om arten, samt studere utbredelseskartene. \n\n Ved å klikke på lagre-knappen øverst til høyre blir observasjonen lagret. Du kan finne igjen observasjonen din i menyvalget Mine Observasjoner.',
+        helpHeader: 'Hjelp'
       }
     };
   }

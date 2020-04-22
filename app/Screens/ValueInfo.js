@@ -125,7 +125,7 @@ class ValueInfo extends React.PureComponent {
                 }
             >
                 <Container>
-                <SubPageHeader title={this.props.strings.valueInfo} onClick={this.onClickBack} />
+                    <SubPageHeader title={this.props.navigation.getParam("title")} onClick={this.onClickBack} />
                     <Content>
                         <View style={styles.container}>
                             <View style={styles.container2}>
@@ -173,16 +173,6 @@ class ValueInfo extends React.PureComponent {
                                 </Row>
                             </View>
                             <View style={styles.container3}>
-                                <Text
-                                    numberOfLines={3}
-                                    style={
-                                        this.props.deviceTypeAndroidTablet
-                                            ? AndroidTabletStyles.text
-                                            : styles.text
-                                    }
-                                >
-                                    {this.props.navigation.getParam("title", "")}
-                                </Text>
                                 <HTMLView
                                     value={this.removeHtmlBr()}
                                     stylesheet={

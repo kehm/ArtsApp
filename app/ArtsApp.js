@@ -19,6 +19,7 @@ import ValueInfo from "./Screens/ValueInfo";
 import Debug from "./Screens/Debug";
 import SpeciesLeft from "./Screens/SpeciesLeft";
 import About from "./Screens/About";
+import Help from "./Screens/Help";
 import Info from "./Screens/Info";
 import UpdateLocation from "./Screens/UpdateLocation";
 import { MenuProvider } from "react-native-popup-menu";
@@ -65,6 +66,7 @@ const scenes = Actions.create(
       component={ValueInfo}
     />
     <Scene key="About" hideNavBar panHandlers={null} component={About} />
+    <Scene key="Help" hideNavBar panHandlers={null} component={Help} />
     <Scene key="Info" hideNavBar panHandlers={null} component={Info} />
     <Scene
       key="UpdateLocation"

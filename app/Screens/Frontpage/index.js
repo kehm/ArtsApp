@@ -107,7 +107,10 @@ class Frontpage extends React.PureComponent<Props, State> {
                 </MenuTrigger>
                 <MenuOptions style={styles.dotMenu}>
                   <MenuOption onSelect={() => { this.handleOnPressUpdate() }} >
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdates}</Text>
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
+                  </MenuOption>
+                  <MenuOption onSelect={() => { Actions.Help() }} >
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
                   </MenuOption>
                 </MenuOptions>
               </Menu>

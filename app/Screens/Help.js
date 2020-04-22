@@ -2,18 +2,12 @@
  * Screen for showing step-by-step instructions on how to use the app
  */
 import React, { Component } from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, Text } from "react-native";
 import {
     StyleProvider,
     Container,
-    Header,
-    Title,
     Content,
-    Left,
-    Body,
-    Right,
     Button,
-    Icon
 } from "native-base";
 import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
@@ -53,14 +47,25 @@ class Help extends React.PureComponent {
                 }
             >
                 <Container>
-                    <SubPageHeader title={this.props.strings.help} onClick={this.onClickBack} />
+                    <SubPageHeader title={this.props.strings.helpHeader} onClick={this.onClickBack} />
                     <Content>
-
+                        <View style={styles.container}>
+                            <Text>{this.props.strings.help}</Text>
+                        </View>
                     </Content>
                 </Container>
             </StyleProvider>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "flex-start",
+        alignItems: "center",
+        padding: 10
+    },
+});
 
 export default connect(mapStateToProps)(Help);
