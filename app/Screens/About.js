@@ -21,6 +21,7 @@ import HTMLView from "react-native-htmlview";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { aboutNO, aboutEN } from "../config/aboutText";
 
 // theme
@@ -28,12 +29,20 @@ import getTheme from "../native-base-theme/components";
 import common from "../native-base-theme/variables/commonColor";
 import androidTablet from "../native-base-theme/variables/androidTablet";
 
+import * as SettingsAction from "../actions/SettingsAction";
 import SubPageHeader from "../components/SubPageHeader";
+import AsyncStorageHandler from "../config/AsyncStorageHandler";
 
 const mapStateToProps = state => ({
   ...state.settings,
   ...state.nav
 });
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({ ...SettingsAction }, dispatch)
+  };
+}
 
 class About extends React.PureComponent {
   constructor(props) {
@@ -76,7 +85,7 @@ class About extends React.PureComponent {
         }
       >
         <Container>
-          <SubPageHeader title={this.props.strings.about} onClick={this.onClickBack}/>
+          <SubPageHeader title={this.props.strings.about} onClick={this.onClickBack} />
           <Content>
             <View style={styles.container}>
               <Image
@@ -162,4 +171,4 @@ const htmlstylesAndroidTablet = StyleSheet.create({
   div: { fontSize: 30 }
 });
 
-export default connect(mapStateToProps)(About);
+export default connect(mapStateToProps, mapDispatchToProps)(About);

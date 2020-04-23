@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Header, Title, Button, Left, Body, Right } from 'native-base';
+import { Header, Title, Left, Body, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/Entypo';
 import styles from './styles.js';
 
@@ -16,9 +16,9 @@ class FrontpageHeader extends React.Component<Props> {
     return (
       <Header style={styles.headerContainer}>
         <Left style={styles.left}>
-          <Button transparent onPress={onMenu}>
+          <TouchableOpacity onPress={onMenu}>
             <Icon size={28} name='menu' />
-          </Button>
+          </TouchableOpacity>
         </Left>
         <Body style={styles.body}>
           <Title style={styles.title}>{title}</Title>

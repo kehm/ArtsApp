@@ -10,7 +10,8 @@ export function setLanguage(lang) {
   return {
     type: actionTypes.SET_LANGUAGE,
     payload: {
-      promise: new AsyncStorageHandler().setLanguage(lang)
+      promise: new AsyncStorageHandler().setLanguage(lang),
+      language: lang
     }
   };
 }

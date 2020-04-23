@@ -48,7 +48,7 @@ const DEFAULT_STATE = {
     Platform.OS === "android" && DeviceInfo.isTablet() ? true : false
 };
 
-export default function(state = DEFAULT_STATE, actions) {
+export default function (state = DEFAULT_STATE, actions) {
   switch (actions.type) {
     case actionTypes.SET_LANGUAGE:
       return { ...state };

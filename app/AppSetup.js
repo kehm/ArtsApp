@@ -52,6 +52,7 @@ class AppSetup extends Component {
     } else {
       this.watchID = -1;
     }
+    console.log(this.props.language)
   }
 
   /**
@@ -69,10 +70,10 @@ class AppSetup extends Component {
    * Sets language "no" if no other language specified in AsyncStorage
    */
   async setAppLanguage() {
-    new AsyncStorageHandler().getLanguage().then((lang) => {
-      if (lang !== null) {
-        this.props.actions.setContentStrings(lang);
-        this.props.actions.setLanguage(lang);
+    this.props.actions.getLanguage().then((lang) => {
+      if (lang.value !== undefined) {
+        this.props.actions.setContentStrings(lang.value);
+        this.props.actions.setLanguage(lang.value);
       } else {
         this.props.actions.setContentStrings("no");
         this.props.actions.setLanguage("no");

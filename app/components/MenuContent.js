@@ -140,7 +140,7 @@ class MenuContent extends React.PureComponent {
    */
   onClickLang = () => {
     Alert.alert(
-      this.props.strings.langChoise,
+      this.props.strings.langSelect,
       this.props.strings.langText + " ",
       [
         { text: this.props.strings.en, onPress: () => this.onClick(7) },
@@ -252,7 +252,7 @@ class MenuContent extends React.PureComponent {
               >
                 {this.props.strings.language + ":"}
               </Text>
-              {this.props.strings.language === 'Change language' ? (
+              {this.props.language === 'no' ? (
                 <Flag style={styles.flag} code="GB" type="flat" size={32} />
               ) : (
                   <Flag style={styles.flag} code="NO" type="flat" size={32} />

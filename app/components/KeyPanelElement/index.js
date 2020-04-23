@@ -1,6 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, Image, ActivityIndicator } from 'react-native';
-import { Right, Button } from 'native-base';
+import { TouchableOpacity, View, Text, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 
 import styles from './styles.js';
@@ -64,9 +63,9 @@ class KeyPanelElement extends React.Component<Props> {
                 resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }) }} />
             </View>
             {isDownloaded ? (
-              <View style={styles.downloadContainer}>
+              <TouchableOpacity style={styles.downloadContainer}>
                 <Icon name='info-with-circle' style={styles.info} onPress={() => onInfo(keyObject)} />
-              </View>
+              </TouchableOpacity>
             ) : (
                 <View />
               )}

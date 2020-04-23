@@ -306,15 +306,14 @@ class Species extends React.PureComponent {
                       fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
                       marginBottom: 10,
                       textAlign: "center",
-                      color: 'black'
+                      color: 'black',
+                      marginBottom: 20,
+                      fontWeight: 'bold'
                     }}
                   >
                     {this.props.strings.newObs}
                   </Text>
-                  <View
-                    key="divider"
-                    style={{ height: 2, backgroundColor: "#dadada" }}
-                  />
+
                   <View style={{ flexDirection: "row" }}>
                     <Text
                       style={
@@ -332,12 +331,12 @@ class Species extends React.PureComponent {
                           : styles.text3
                       }
                     >
-                      {this.props.selectedSpecies.latinName +
-                        " / " +
-                        this.props.selectedSpecies.localName}
+                      {this.props.selectedSpecies.localName +
+                        " (" +
+                        this.props.selectedSpecies.latinName + ")"}
                     </Text>
                   </View>
-                  <View style={{ flexDirection: "row" }}>
+                                    <View style={{ flexDirection: "row" }}>
                     <Text
                       style={
                         this.props.deviceTypeAndroidTablet
@@ -389,7 +388,8 @@ class Species extends React.PureComponent {
                         fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
                         borderColor: "black",
                         borderWidth: 1,
-                        padding: 5
+                        padding: 5,
+                        marginTop: 20
                       }}
                       onChangeText={place => this.setState({ place })}
                       value={this.state.place}
@@ -412,7 +412,8 @@ class Species extends React.PureComponent {
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
-                      padding: 10
+                      padding: 10,
+                      marginTop: 20
                     }}
                   >
                     <Button

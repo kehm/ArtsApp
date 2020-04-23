@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Header, Title, Button, Icon, Left, Body, Right, Subtitle } from 'native-base';
+import { Header, Title, Icon, Left, Body, Right, Subtitle } from 'native-base';
 import styles from './styles.js';
 
 type Props = {
@@ -20,9 +20,9 @@ class SubPageHeader extends React.Component<Props> {
         return (
             <Header style={styles.headerContainer}>
                 <Left style={styles.left}>
-                    <Button transparent onPress={onClick}>
+                    <TouchableOpacity onPress={onClick}>
                         <Icon style={styles.icon} name="arrow-back" />
-                    </Button>
+                    </TouchableOpacity>
                 </Left>
                 <Body>
                     <Title style={styles.title}>{title}</Title>

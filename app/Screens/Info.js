@@ -11,14 +11,14 @@ import {
   BackHandler,
   Dimensions,
   Alert,
-  Modal
+  Modal,
+  TouchableOpacity
 } from "react-native";
 import {
   Container,
   StyleProvider,
   Spinner,
   Content,
-  Button,
   Left,
   Right,
   Body,
@@ -260,7 +260,7 @@ class Info extends React.PureComponent {
             </Grid>
           </Content>
           {!this.state.isDownloaded ? (
-            <Button transparent style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
+            <TouchableOpacity style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
               <Text
                 style={[
                   this.props.deviceTypeAndroidTablet
@@ -272,7 +272,7 @@ class Info extends React.PureComponent {
                 {this.props.strings.download}
               </Text>
               <Icon name='download' style={styles.download} size={24} />
-            </Button>
+            </TouchableOpacity>
           ) : (
               <View />
             )}
@@ -372,15 +372,19 @@ const styles = StyleSheet.create({
     padding: 10
   },
   downloadBtn: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: '#f0a00c',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    width: '100%'
+    width: '100%',
+    height: 50
   },
   btnText: {
     color: '#000',
     fontSize: 18,
+    marginTop: 16
   },
   download: {
     color: '#000',
