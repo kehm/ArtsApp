@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   topContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#E1ECDF',
     position: 'absolute',
     top: 56,
     borderBottomWidth: 1,

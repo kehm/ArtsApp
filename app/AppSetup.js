@@ -52,7 +52,6 @@ class AppSetup extends Component {
     } else {
       this.watchID = -1;
     }
-    console.log(this.props.language)
   }
 
   /**
@@ -71,13 +70,8 @@ class AppSetup extends Component {
    */
   async setAppLanguage() {
     this.props.actions.getLanguage().then((lang) => {
-      if (lang.value !== undefined) {
-        this.props.actions.setContentStrings(lang.value);
-        this.props.actions.setLanguage(lang.value);
-      } else {
-        this.props.actions.setContentStrings("no");
-        this.props.actions.setLanguage("no");
-      }
+      this.props.actions.setContentStrings("no");
+      this.props.actions.setLanguage("no");
     });
   }
 

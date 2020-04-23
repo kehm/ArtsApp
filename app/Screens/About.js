@@ -5,18 +5,7 @@
 
 import React, { Component } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import {
-  StyleProvider,
-  Container,
-  Header,
-  Title,
-  Content,
-  Left,
-  Body,
-  Right,
-  Button,
-  Icon
-} from "native-base";
+import { StyleProvider, Container, Content, Button } from "native-base";
 import HTMLView from "react-native-htmlview";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";

@@ -10,9 +10,12 @@ import styles from "./styles.js";
 
 type Props = {
   keys: Array,
+  index: String,
+  prevIndex: String,
   strings: Object,
   onPress: Function,
-  onInfo: Function
+  onInfo: Function,
+  onUpdateIndex: Function,
 };
 
 type State = {
@@ -26,16 +29,26 @@ class KeyPanel extends React.PureComponent<Props, State> {
 
   _currentKeyId: null;
 
-  getElementSize = () => {
-    const { width } = Dimensions.get("window");
-    return Math.min(width - 60, 500);
-  };
+  /**
+  * Change visible swiper element on new index selected
+  */
+  componentDidUpdate() {
+    if (this.props.index !== this.props.prevIndex) {
+      let diff = this.props.index - this.props.prevIndex;
+      this._swiper.scrollBy(diff);
+    }
+  }
 
   handleIndexChanged = index => {
     const keyId = this.props.keys[index].key_id;
     if (keyId !== this._currentKeyId) {
       this._currentKeyId = keyId;
     }
+  };
+
+  getElementSize = () => {
+    const { width } = Dimensions.get("window");
+    return Math.min(width - 60, 500);
   };
 
   renderItem = (item, size) => {
@@ -52,28 +65,10 @@ class KeyPanel extends React.PureComponent<Props, State> {
     );
   };
 
-  componentDidUpdate(nextProps) {
-    if (this._currentKeyId !== null && this._swiper) {
-      const oldIndex = this.props.keys.findIndex(
-        k => k.key_id === this._currentKeyId
-      );
-      const newIndex = this.props.keys.findIndex(
-        k => k.key_id === this._currentKeyId
-      );
-
-      if (newIndex !== oldIndex) {
-        const offset = newIndex - oldIndex;
-        setTimeout(() => {
-          this._swiper.scrollBy(offset, true);
-        }, 500);
-      }
-    }
-  }
-
   render() {
     const { keys } = this.props;
     const size = this.getElementSize();
-    const containerSize = { height: size + 40 };
+    const containerSize = { height: size + 10 };
     const isAndroid = Platform.OS === "android";
     const dotStyle = isAndroid ? styles.dotStyleAndroid : styles.dotStyleIos;
     const activeDotStyle = isAndroid ? styles.activeDotStyleAndroid : styles.activeDotStyleIos;
@@ -83,6 +78,8 @@ class KeyPanel extends React.PureComponent<Props, State> {
           style={styles.swiper}
           dotStyle={dotStyle}
           activeDotStyle={activeDotStyle}
+          showsPagination={false}
+          scrollEnabled={false}
           onIndexChanged={this.handleIndexChanged}
           ref={swiper => {
             this._swiper = swiper;

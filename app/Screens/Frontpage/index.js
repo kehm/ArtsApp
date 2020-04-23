@@ -1,10 +1,10 @@
 import React from "react";
-import { View, LayoutAnimation, Alert, Text } from "react-native";
-import { Container, StyleProvider } from "native-base";
+import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput } from "react-native";
+import { Container, StyleProvider, Item, Left, Right } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
 import Toast, { DURATION } from "react-native-easy-toast";
-
+import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -14,13 +14,6 @@ import common from "../../native-base-theme/variables/commonColor";
 import androidTablet from "../../native-base-theme/variables/androidTablet";
 
 import styles from "./styles.js";
-
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
 
 import * as KeyAction from "../../actions/KeyAction";
 import * as MenuAction from "../../actions/MenuAction";
@@ -32,6 +25,7 @@ import Explanation from "../../components/Explanation";
 import KeyPanel from "../../components/KeyPanel";
 
 import { sortKeys } from "../../utilities/keys";
+import { FlatList } from "react-native-gesture-handler";
 
 type Props = {
   deviceTypeAndroidTablet: Boolean,
@@ -43,7 +37,10 @@ type State = {};
 class Frontpage extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      index: 0,
+      prevIndex: 0
+    }
   }
 
   componentDidMount() {
@@ -86,6 +83,15 @@ class Frontpage extends React.PureComponent<Props, State> {
     //TODO
   }
 
+  /**
+   * Update swiper index
+   */
+  updateIndex = (index) => {
+    if (index !== this.state.index) {
+      this.setState({ index: index, prevIndex: this.state.index })
+    }
+  }
+
   render() {
     const { keys, strings } = this.props;
     return (
@@ -117,14 +123,32 @@ class Frontpage extends React.PureComponent<Props, State> {
             }
           />
           <View style={styles.container}>
-            <Explanation description={strings.frontpageTopDescription + " " + strings.frontpageBottomDescription} />
             <KeyPanel
               keys={keys}
+              index={this.state.index}
+              prevIndex={this.state.prevIndex}
               strings={strings}
               onPress={this.handleOnPressKey}
               onInfo={this.handleOnInfoClick}
+              onUpdateIndex={this.updateIndex}
             />
-            <Explanation description={this.props.strings.keyAbout} />
+            <Text style={styles.listHeader}>{this.props.strings.selectKey}:</Text>
+            <FlatList
+              style={styles.list}
+              data={keys}
+              renderItem={(item) =>
+                <TouchableOpacity style={[styles.listItem, item.index === this.state.index ? styles.selected : undefined]} onPress={() => this.updateIndex(item.index)}>
+                    <Text style={[styles.listText, item.index === this.state.index ? styles.selectedText : undefined]} >{item.item.title}</Text>
+                  <Right>
+                    <TouchableOpacity style={styles.iconContainer} onPress={() => {this.updateIndex(item.index); this.handleOnPressKey(item.item)}}>
+                      <Icon style={styles.icon} name='chevron-right' size={28} color={'black'} />
+                    </TouchableOpacity>
+                  </Right>
+                </TouchableOpacity>
+              }
+              keyExtractor={(key) => key.key_id.toString()}
+            />
+            <TextInput placeholder={this.props.strings.search} style={styles.search} />
           </View>
           <Toast ref="toast" />
         </Container>
@@ -132,6 +156,8 @@ class Frontpage extends React.PureComponent<Props, State> {
     );
   }
 }
+//<Explanation description={strings.frontpageTopDescription + " " + strings.frontpageBottomDescription} />
+//<Explanation description={this.props.strings.keyAbout} />
 
 function mapStateToProps({ key, settings }) {
   const { deviceTypeAndroidTablet, isConnected, strings } = settings;

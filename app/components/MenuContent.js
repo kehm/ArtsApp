@@ -2,7 +2,6 @@
  * @file Content render for the drawer menu
  * @author Kjetil Fossheim
  */
-
 import React, { Component } from "react";
 import { Image, Platform, Dimensions, Alert } from "react-native";
 import {
@@ -57,24 +56,23 @@ class MenuContent extends React.PureComponent {
   }
 
   /**
-   * handles on language click, changes language to selected language
-   * @param {[type]} a id of selected button. 7 = language english, 8 = language Norwegian, 9 = closeMenu
-   * @return {void}
+   * Change language
    */
-  onClick(a) {
-    switch (a) {
-      case 7:
-        this.props.actions.closeMenu();
-        this.props.actions.setLanguage("en");
-        this.props.actions.setContentStrings("en");
+  onClickSelectLanguage(lang) {
+    switch (lang) {
+      case this.props.strings.en:
+        if (this.props.language !== "en") {
+          this.props.actions.closeMenu();
+          this.props.actions.setLanguage("en");
+          this.props.actions.setContentStrings("en");
+        }
         break;
-      case 8:
-        this.props.actions.closeMenu();
-        this.props.actions.setLanguage("no");
-        this.props.actions.setContentStrings("no");
-        break;
-      case 9:
-        this.props.actions.closeMenu();
+      case this.props.strings.no:
+        if (this.props.language !== "no") {
+          this.props.actions.closeMenu();
+          this.props.actions.setLanguage("no");
+          this.props.actions.setContentStrings("no");
+        }
         break;
     }
   }
@@ -135,19 +133,18 @@ class MenuContent extends React.PureComponent {
   };
 
   /**
-   * handles alert for language changes.
-   * @return {void} [description]
+   * Show select language dialog
    */
   onClickLang = () => {
-    Alert.alert(
+    new Alert.alert(
       this.props.strings.langSelect,
-      this.props.strings.langText + " ",
+      this.props.strings.langText,
       [
-        { text: this.props.strings.en, onPress: () => this.onClick(7) },
-        { text: this.props.strings.no, onPress: () => this.onClick(8) },
-        { text: this.props.strings.cancel, onPress: () => this.onClick(9) }
+        { text: this.props.strings.cancel, style: "cancel" },
+        { text: this.props.strings.en, onPress: () => this.onClickSelectLanguage(this.props.strings.en) },
+        { text: this.props.strings.no, onPress: () => this.onClickSelectLanguage(this.props.strings.no) }
       ],
-      { cancelable: false }
+      { cancelable: true }
     );
   };
 
