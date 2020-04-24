@@ -51,7 +51,7 @@ export default StyleSheet.create({
   },
   iconContainer: {
     paddingLeft: 20,
-    paddingRight:10
+    paddingRight: 10
   },
   search: {
     backgroundColor: '#E1ECDF',

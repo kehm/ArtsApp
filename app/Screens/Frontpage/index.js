@@ -7,6 +7,8 @@ import Toast, { DURATION } from "react-native-easy-toast";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { FlatList } from "react-native-gesture-handler";
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 // theme
 import getTheme from "../../native-base-theme/components";
@@ -25,7 +27,6 @@ import Explanation from "../../components/Explanation";
 import KeyPanel from "../../components/KeyPanel";
 
 import { sortKeys } from "../../utilities/keys";
-import { FlatList } from "react-native-gesture-handler";
 
 type Props = {
   deviceTypeAndroidTablet: Boolean,
@@ -58,6 +59,10 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Handle click on key panel. Go directly to key page if key is already downloaded else go to info page.
    */
   handleOnPressKey = (key) => {
+    if (key === undefined) {
+      key = this.props.keys[this.state.index];
+      console.log(key)
+    }
     this.props.setKey(key.key_id, key.title);
     if (key.keyDownloaded > 0) {
       Actions.Key();
@@ -133,20 +138,30 @@ class Frontpage extends React.PureComponent<Props, State> {
               onUpdateIndex={this.updateIndex}
             />
             <Text style={styles.listHeader}>{this.props.strings.selectKey}:</Text>
-            <FlatList
+            <SwipeListView
               style={styles.list}
+              useFlatList={true}
               data={keys}
               renderItem={(item) =>
-                <TouchableOpacity style={[styles.listItem, item.index === this.state.index ? styles.selected : undefined]} onPress={() => this.updateIndex(item.index)}>
-                    <Text style={[styles.listText, item.index === this.state.index ? styles.selectedText : undefined]} >{item.item.title}</Text>
+                <TouchableOpacity style={[styles.listItem, item.index === this.state.index ? styles.selected : undefined]} onPressIn={() => this.updateIndex(item.index)}>
+                  <Text style={[styles.listText, item.index === this.state.index ? styles.selectedText : undefined]} >{item.item.title}</Text>
                   <Right>
-                    <TouchableOpacity style={styles.iconContainer} onPress={() => {this.updateIndex(item.index); this.handleOnPressKey(item.item)}}>
+                    <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.index); this.handleOnPressKey(item.item) }}>
                       <Icon style={styles.icon} name='chevron-right' size={28} color={'black'} />
                     </TouchableOpacity>
                   </Right>
                 </TouchableOpacity>
               }
+              renderHiddenItem={(rowData, rowMap) => (
+                <View />
+              )}
               keyExtractor={(key) => key.key_id.toString()}
+              leftOpenValue={75}
+              rightOpenValue={-75}
+              onRowOpen={(rowKey, rowMap, toValue) => {
+                rowMap[rowKey].closeRow();
+                this.handleOnPressKey();
+              }}
             />
             <TextInput placeholder={this.props.strings.search} style={styles.search} />
           </View>
