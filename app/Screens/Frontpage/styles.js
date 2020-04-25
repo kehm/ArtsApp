@@ -15,6 +15,12 @@ export default StyleSheet.create({
     fontSize: 16,
     padding: 10,
   },
+  headerContainer : {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: "center",
+
+  },
   list: {
     minHeight: 200,
     color: 'black',
@@ -43,7 +49,8 @@ export default StyleSheet.create({
   listHeader: {
     textAlign: 'center',
     paddingBottom: 6,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingRight: 4
   },
   icon: {
     marginTop: 4,

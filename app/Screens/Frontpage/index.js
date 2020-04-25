@@ -42,16 +42,17 @@ class Frontpage extends React.PureComponent<Props, State> {
     this.state = {
       index: 0,
       prevIndex: 0,
-      keyList: this.props.keys
+      init: false,
+      keyList: []
     }
   }
 
   /**
-   * Set keyList from props if empty
+   * Set initial keyList from props if empty
    */
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.keyList.length === 0) {
-      this.setState({ keyList: prevProps.keys })
+    if (!prevState.init && prevProps.keys.length !== 0) {
+      this.setState({ init: true, keyList: prevProps.keys })
     }
   }
 
@@ -59,7 +60,7 @@ class Frontpage extends React.PureComponent<Props, State> {
   * If new props, trigger state update
   */
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.keys !== prevState.keyList) {
+    if (!prevState.init && nextProps.keys !== prevState.keyList) {
       return {
         keyList: nextProps.keys
       }
@@ -165,7 +166,10 @@ class Frontpage extends React.PureComponent<Props, State> {
               onInfo={this.handleOnInfoClick}
               onUpdateIndex={this.updateIndex}
             />
-            <Text style={styles.listHeader}>{this.props.strings.selectKey}:</Text>
+            <View style={styles.headerContainer}>
+              <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
+              <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} />
+            </View>
             <SwipeListView
               style={styles.list}
               useFlatList={true}
