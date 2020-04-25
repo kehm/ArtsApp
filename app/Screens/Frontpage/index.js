@@ -38,14 +38,32 @@ type State = {};
 class Frontpage extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
+    this.props.loadAllKeys();
     this.state = {
       index: 0,
-      prevIndex: 0
+      prevIndex: 0,
+      keyList: this.props.keys
     }
   }
 
-  componentDidMount() {
-    this.props.loadAllKeys();
+  /**
+   * Set keyList from props if empty
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.keyList.length === 0) {
+      this.setState({ keyList: prevProps.keys })
+    }
+  }
+
+  /**
+  * If new props, trigger state update
+  */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.keys !== prevState.keyList) {
+      return {
+        keyList: nextProps.keys
+      }
+    } else return null;
   }
 
   /**
@@ -60,7 +78,7 @@ class Frontpage extends React.PureComponent<Props, State> {
    */
   handleOnPressKey = (key) => {
     if (key === undefined) {
-      key = this.props.keys[this.state.index];
+      key = this.state.keyList[this.state.index];
       console.log(key)
     }
     this.props.setKey(key.key_id, key.title);
@@ -97,8 +115,18 @@ class Frontpage extends React.PureComponent<Props, State> {
     }
   }
 
+  filterList = (filter) => {
+    this.setState({
+      keyList: this.props.keys.filter(key => {
+        if (key.title.toUpperCase().includes(filter.toUpperCase())) {
+          return key;
+        }
+      })
+    })
+  }
+
   render() {
-    const { keys, strings } = this.props;
+    const { strings } = this.props;
     return (
       <StyleProvider
         style={
@@ -129,7 +157,7 @@ class Frontpage extends React.PureComponent<Props, State> {
           />
           <View style={styles.container}>
             <KeyPanel
-              keys={keys}
+              keys={this.state.keyList}
               index={this.state.index}
               prevIndex={this.state.prevIndex}
               strings={strings}
@@ -141,7 +169,8 @@ class Frontpage extends React.PureComponent<Props, State> {
             <SwipeListView
               style={styles.list}
               useFlatList={true}
-              data={keys}
+              data={this.state.keyList}
+              extraData={this.state}
               renderItem={(item) =>
                 <TouchableOpacity style={[styles.listItem, item.index === this.state.index ? styles.selected : undefined]} onPressIn={() => this.updateIndex(item.index)}>
                   <Text style={[styles.listText, item.index === this.state.index ? styles.selectedText : undefined]} >{item.item.title}</Text>
@@ -163,7 +192,11 @@ class Frontpage extends React.PureComponent<Props, State> {
                 this.handleOnPressKey();
               }}
             />
-            <TextInput placeholder={this.props.strings.search} style={styles.search} />
+            <TextInput
+              placeholder={this.props.strings.search}
+              style={styles.search}
+              onChangeText={(input) => this.filterList(input)}
+              value={this.state.filter} />
           </View>
           <Toast ref="toast" />
         </Container>
