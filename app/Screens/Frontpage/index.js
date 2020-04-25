@@ -38,12 +38,12 @@ type State = {};
 class Frontpage extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
-    this.props.loadAllKeys();
+    this.props.setAllKeys();
     this.state = {
-      index: 0,
-      prevIndex: 0,
       init: false,
-      keyList: []
+      keyList: [],
+      selected: undefined,
+      filter: ''
     }
   }
 
@@ -51,8 +51,8 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Set initial keyList from props if empty
    */
   componentDidUpdate(prevProps, prevState) {
-    if (!prevState.init && prevProps.keys.length !== 0) {
-      this.setState({ init: true, keyList: prevProps.keys })
+    if (!prevState.init && this.props.keys.length !== 0) {
+      this.setState({ init: true, keyList: this.props.keys, selected: this.props.keys[0].key_id })
     }
   }
 
@@ -75,18 +75,27 @@ class Frontpage extends React.PureComponent<Props, State> {
   };
 
   /**
-   * Handle click on key panel. Go directly to key page if key is already downloaded else go to info page.
+   * Handle click on key panel and list. Go directly to key page if key is already downloaded else go to info page.
    */
   handleOnPressKey = (key) => {
     if (key === undefined) {
-      key = this.state.keyList[this.state.index];
-      console.log(key)
-    }
-    this.props.setKey(key.key_id, key.title);
-    if (key.keyDownloaded > 0) {
-      Actions.Key();
+      key = this.state.keyList.filter(key => {
+        if (key.key_id === this.state.selected) {
+          this.props.setKey(key.key_id, key.title);
+          if (key.keyDownloaded > 0) {
+            Actions.Key();
+          } else {
+            Actions.Info({ selectedKey: key });
+          }
+        }
+      });
     } else {
-      Actions.Info({ selectedKey: key });
+      this.props.setKey(key.key_id, key.title);
+      if (key.keyDownloaded > 0) {
+        Actions.Key();
+      } else {
+        Actions.Info({ selectedKey: key });
+      }
     }
   };
 
@@ -110,14 +119,15 @@ class Frontpage extends React.PureComponent<Props, State> {
   /**
    * Update swiper index
    */
-  updateIndex = (index) => {
-    if (index !== this.state.index) {
-      this.setState({ index: index, prevIndex: this.state.index })
+  updateIndex = (key) => {
+    if (key.key_id !== this.state.selected) {
+      this.setState({ selected: key.key_id })
     }
   }
 
   filterList = (filter) => {
     this.setState({
+      filter: filter,
       keyList: this.props.keys.filter(key => {
         if (key.title.toUpperCase().includes(filter.toUpperCase())) {
           return key;
@@ -158,13 +168,12 @@ class Frontpage extends React.PureComponent<Props, State> {
           />
           <View style={styles.container}>
             <KeyPanel
-              keys={this.state.keyList}
-              index={this.state.index}
-              prevIndex={this.state.prevIndex}
+              keys={this.props.keys}
+              index={0}
+              selected={this.state.selected}
               strings={strings}
               onPress={this.handleOnPressKey}
               onInfo={this.handleOnInfoClick}
-              onUpdateIndex={this.updateIndex}
             />
             <View style={styles.headerContainer}>
               <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
@@ -176,10 +185,10 @@ class Frontpage extends React.PureComponent<Props, State> {
               data={this.state.keyList}
               extraData={this.state}
               renderItem={(item) =>
-                <TouchableOpacity style={[styles.listItem, item.index === this.state.index ? styles.selected : undefined]} onPressIn={() => this.updateIndex(item.index)}>
-                  <Text style={[styles.listText, item.index === this.state.index ? styles.selectedText : undefined]} >{item.item.title}</Text>
+                <TouchableOpacity style={[styles.listItem, item.item.key_id === this.state.selected ? styles.selected : undefined]} onPressIn={() => this.updateIndex(item.item)}>
+                  <Text style={[styles.listText, item.item.key_id === this.state.selected ? styles.selectedText : undefined]} >{item.item.title}</Text>
                   <Right>
-                    <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.index); this.handleOnPressKey(item.item) }}>
+                    <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.item); this.handleOnPressKey(item.item) }}>
                       <Icon style={styles.icon} name='chevron-right' size={28} color={'black'} />
                     </TouchableOpacity>
                   </Right>
@@ -196,11 +205,16 @@ class Frontpage extends React.PureComponent<Props, State> {
                 this.handleOnPressKey();
               }}
             />
-            <TextInput
-              placeholder={this.props.strings.search}
-              style={styles.search}
-              onChangeText={(input) => this.filterList(input)}
-              value={this.state.filter} />
+            <View style={styles.searchContainer}>
+              <TextInput
+                placeholder={this.props.strings.search}
+                style={styles.search}
+                onChangeText={(input) => this.filterList(input)}
+                value={this.state.filter} />
+              <TouchableOpacity style={styles.clearIcon} onPress={() => { this.filterList("") }}>
+                <Icon name="circle-with-cross" size={22} ></Icon>
+              </TouchableOpacity>
+            </View>
           </View>
           <Toast ref="toast" />
         </Container>
@@ -233,7 +247,7 @@ function mapDispatchToProps(dispatch) {
   );
 
   return {
-    loadAllKeys: setAllKeys,
+    setAllKeys,
     setKey,
     downloadKey,
     openMenu

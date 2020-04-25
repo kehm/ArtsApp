@@ -11,11 +11,10 @@ import styles from "./styles.js";
 type Props = {
   keys: Array,
   index: String,
-  prevIndex: String,
+  selected: Number,
   strings: Object,
   onPress: Function,
   onInfo: Function,
-  onUpdateIndex: Function,
 };
 
 type State = {
@@ -25,6 +24,10 @@ type State = {
 class KeyPanel extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
+    this.state = ({
+      currentIndex: 0,
+      prevIndex: 0,
+    })
   }
 
   _currentKeyId: null;
@@ -33,10 +36,18 @@ class KeyPanel extends React.PureComponent<Props, State> {
   * Change visible swiper element on new index selected
   */
   componentDidUpdate() {
-    if (this.props.index !== this.props.prevIndex) {
-      let diff = this.props.index - this.props.prevIndex;
-      this._swiper.scrollBy(diff);
-    }
+    this.props.keys.some((key, i) => {
+      if (key.key_id === this.props.selected) {
+        if (i !== this.state.currentIndex) {
+          this._swiper.scrollBy(i - this.state.currentIndex)
+          this.setState({
+            currentIndex: i,
+            prevIndex: this.state.currentIndex
+          })
+        }
+        return key;
+      }
+    })
   }
 
   handleIndexChanged = index => {

@@ -23,16 +23,7 @@ import {
   Right,
   Body
 } from "native-base";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableHighlight,
-  Image,
-  Modal
-} from "react-native";
+import { Alert, StyleSheet, Text, View, TextInput, TouchableHighlight, Image, Modal } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
 import ImageView from "react-native-image-viewing";
@@ -336,7 +327,7 @@ class Species extends React.PureComponent {
                         this.props.selectedSpecies.latinName + ")"}
                     </Text>
                   </View>
-                                    <View style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: "row" }}>
                     <Text
                       style={
                         this.props.deviceTypeAndroidTablet

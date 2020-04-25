@@ -15,7 +15,7 @@ export default StyleSheet.create({
     fontSize: 16,
     padding: 10,
   },
-  headerContainer : {
+  headerContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: "center",
@@ -65,6 +65,12 @@ export default StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     color: 'black',
-    height: 40
+    height: 40,
+    width: '100%'
+  },
+  clearIcon: {
+    position: 'absolute',
+    right: 12,
+    bottom: 8
   }
 });

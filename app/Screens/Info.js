@@ -3,38 +3,13 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  BackHandler,
-  Dimensions,
-  Alert,
-  Modal,
-  TouchableOpacity
-} from "react-native";
-import {
-  Container,
-  StyleProvider,
-  Spinner,
-  Content,
-  Left,
-  Right,
-  Body,
-  H2,
-  Grid,
-  Col,
-} from "native-base";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
+import { View, StyleSheet, Image, Text, BackHandler, Dimensions, Alert, Modal, TouchableOpacity } from "react-native";
+import { Container, StyleProvider, Spinner, Content, Left, Right, Grid, Col } from "native-base";
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import Icon from "react-native-vector-icons/Entypo";
 import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
+import ImageView from "react-native-image-viewing";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -69,9 +44,17 @@ class Info extends React.PureComponent {
     if (this.props.selectedKey.keyDownloaded > 0) {
       isDownloaded = true;
     }
+    let imageSource = [];
+    if (this.props.platform === "ios") {
+      imageSource.push({ uri: ImageConfig.getInfoImg(this.props.chosenKey) });
+    } else {
+      imageSource.push({ uri: "file://" + ImageConfig.getInfoImg(this.props.chosenKey) });
+    }
     this.state = {
       isDownloaded: isDownloaded,
-      isDownloading: false
+      isDownloading: false,
+      imageSource: imageSource,
+      openImages: false
     }
   }
 
@@ -199,6 +182,12 @@ class Info extends React.PureComponent {
         }
       >
         <Container>
+          <ImageView
+            images={this.state.imageSource}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+          />
           <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
             rightIcon={this.state.isDownloaded ?
               <Menu>
@@ -226,24 +215,16 @@ class Info extends React.PureComponent {
             <Grid>
               <Col style={styles.container}>
                 {this.props.selectedKey.image === 1 && (
-                  <Image
-                    style={
-                      this.props.deviceTypeAndroidTablet
-                        ? AndroidTabletStyles.image
-                        : styles.image
-                    }
-                    source={
-                      this.props.platform === "ios"
-                        ? {
-                          uri: ImageConfig.getInfoImg(this.props.chosenKey)
-                        }
-                        : {
-                          uri:
-                            "file://" +
-                            ImageConfig.getInfoImg(this.props.chosenKey)
-                        }
-                    }
-                  />
+                  <TouchableOpacity onPress={() => this.setState({ openImages: true })}>
+                    <Image
+                      style={
+                        this.props.deviceTypeAndroidTablet
+                          ? AndroidTabletStyles.image
+                          : styles.image
+                      }
+                      source={this.state.imageSource.length !== 0 ? this.state.imageSource[0] : undefined}
+                    />
+                  </TouchableOpacity>
                 )}
                 <View style={styles.separator} />
                 <View style={styles.textBox}>
