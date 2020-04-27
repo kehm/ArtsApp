@@ -10,15 +10,13 @@ import styles from "./styles.js";
 
 type Props = {
   keys: Array,
+  list: Array,
   index: String,
   selected: Number,
   strings: Object,
   onPress: Function,
   onInfo: Function,
-};
-
-type State = {
-  currentKeyId: Number
+  onUpdate: Function,
 };
 
 class KeyPanel extends React.PureComponent<Props, State> {
@@ -27,33 +25,38 @@ class KeyPanel extends React.PureComponent<Props, State> {
     this.state = ({
       currentIndex: 0,
       prevIndex: 0,
+      currentKey: undefined,
     })
   }
-
-  _currentKeyId: null;
 
   /**
-  * Change visible swiper element on new index selected
+  * Change visible swiper element on new list item selected
   */
   componentDidUpdate() {
-    this.props.keys.some((key, i) => {
-      if (key.key_id === this.props.selected) {
-        if (i !== this.state.currentIndex) {
-          this._swiper.scrollBy(i - this.state.currentIndex)
-          this.setState({
-            currentIndex: i,
-            prevIndex: this.state.currentIndex
-          })
+    if (this.state.currentKey !== this.props.selected) {
+      this.props.keys.some((key, i) => {
+        if (key.key_id === this.props.selected) {
+          if (i !== this.state.currentIndex) {
+            this._swiper.scrollBy(i - this.state.currentIndex)
+            this.setState({
+              currentIndex: i,
+              prevIndex: this.state.currentIndex,
+              currentKey: key.key_id
+            })
+          }
+          return key;
         }
-        return key;
-      }
-    })
+      });
+    }
   }
 
+  /**
+   * Change swiper index on swipe
+   */
   handleIndexChanged = index => {
-    const keyId = this.props.keys[index].key_id;
-    if (keyId !== this._currentKeyId) {
-      this._currentKeyId = keyId;
+    if (this.props.selected !== this.props.keys[index].key_id) {
+      this.setState({ currentKey: this.props.keys[index].key_id });
+      this.props.onUpdate(this.props.keys[index]);
     }
   };
 
@@ -77,7 +80,6 @@ class KeyPanel extends React.PureComponent<Props, State> {
   };
 
   render() {
-    const { keys } = this.props;
     const size = this.getElementSize();
     const containerSize = { height: size + 10 };
     const isAndroid = Platform.OS === "android";
@@ -90,13 +92,13 @@ class KeyPanel extends React.PureComponent<Props, State> {
           dotStyle={dotStyle}
           activeDotStyle={activeDotStyle}
           showsPagination={false}
-          scrollEnabled={false}
+          scrollEnabled={this.props.keys.length === this.props.list.length ? true : false}
           onIndexChanged={this.handleIndexChanged}
           ref={swiper => {
             this._swiper = swiper;
           }}
         >
-          {keys.map(k => this.renderItem(k, size))}
+          {this.props.keys.map(k => this.renderItem(k, size))}
         </Swiper>
       </View>
     );

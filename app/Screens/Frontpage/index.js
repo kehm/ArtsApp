@@ -169,11 +169,13 @@ class Frontpage extends React.PureComponent<Props, State> {
           <View style={styles.container}>
             <KeyPanel
               keys={this.props.keys}
+              list={this.state.keyList}
               index={0}
               selected={this.state.selected}
               strings={strings}
               onPress={this.handleOnPressKey}
               onInfo={this.handleOnInfoClick}
+              onUpdate={this.updateIndex}
             />
             <View style={styles.headerContainer}>
               <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
@@ -185,7 +187,7 @@ class Frontpage extends React.PureComponent<Props, State> {
               data={this.state.keyList}
               extraData={this.state}
               renderItem={(item) =>
-                <TouchableOpacity style={[styles.listItem, item.item.key_id === this.state.selected ? styles.selected : undefined]} onPressIn={() => this.updateIndex(item.item)}>
+                <TouchableOpacity style={[styles.listItem, item.item.key_id === this.state.selected ? styles.selected : undefined]} onPress={() => this.updateIndex(item.item)}>
                   <Text style={[styles.listText, item.item.key_id === this.state.selected ? styles.selectedText : undefined]} >{item.item.title}</Text>
                   <Right>
                     <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.item); this.handleOnPressKey(item.item) }}>
@@ -202,7 +204,8 @@ class Frontpage extends React.PureComponent<Props, State> {
               rightOpenValue={-75}
               onRowOpen={(rowKey, rowMap, toValue) => {
                 rowMap[rowKey].closeRow();
-                this.handleOnPressKey();
+                this.updateIndex(rowMap[rowKey].props.item);
+                this.handleOnPressKey(rowMap[rowKey].props.item);
               }}
             />
             <View style={styles.searchContainer}>
