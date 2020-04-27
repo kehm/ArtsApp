@@ -70,11 +70,10 @@ class AppSetup extends Component {
    */
   async setAppLanguage() {
     this.props.actions.getLanguage().then((lang) => {
-      if (lang !== undefined && lang instanceof String) {
-        this.props.actions.setContentStrings(lang);
-        this.props.actions.setLanguage(lang);
+      if (lang !== undefined && typeof lang.value === 'string') {
+        this.props.actions.setContentStrings(lang.value);
+        this.props.actions.setLanguage(lang.value);
       } else {
-        console.log(lang)
         this.props.actions.setContentStrings("no");
         this.props.actions.setLanguage("no");
       }

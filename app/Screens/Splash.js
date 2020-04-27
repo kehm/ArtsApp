@@ -53,20 +53,21 @@ class Splash extends React.PureComponent {
    */
   componentDidMount() {
     this.DbHelper.testDatabase().then(() => {
-      console.log("DATE: " + this.props.lastDownloadDate)
-      if (this.props.lastDownloadDate === -1) {
-        if (this.props.isConnected) {
-          this.props.actions.getKeysFromAPI();
+      this.props.actions.getLastDownload().then((date) => {
+        if (date.value === null) {
+          if (this.props.isConnected) {
+            this.props.actions.getKeysFromAPI();
+          } else {
+            Alert.alert(
+              this.props.strings.noNetWorkTitle,
+              this.props.strings.firstNoNett + " ",
+              [{ text: this.props.strings.ok, onPress: () => this.startApp() }]
+            );
+          }
         } else {
-          Alert.alert(
-            this.props.strings.noNetWorkTitle,
-            this.props.strings.firstNoNett + " ",
-            [{ text: this.props.strings.ok, onPress: () => this.startApp() }]
-          );
+          Actions.Frontpage();
         }
-      } else {
-        Actions.Frontpage();
-      }
+      });
     });
   }
 

@@ -45,6 +45,7 @@ class Frontpage extends React.PureComponent<Props, State> {
       selected: undefined,
       filter: ''
     }
+    console.log(this.props.lastDownloadDate)
   }
 
   /**

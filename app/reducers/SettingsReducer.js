@@ -23,7 +23,6 @@ import DeviceInfo from "react-native-device-info";
  * -deleted = key success deleted flag
  * -latitude = cur latitude
  * -longitude = cur longitude
- * -getLastDownloadDate = getLastDownloadDate flag
  * -updateList = updated keys
  * -deviceTypeAndroidTablet = TRUE if device is android and a tablet(more than 7')
  * @type {Object}
@@ -42,7 +41,6 @@ const DEFAULT_STATE = {
   deleted: false,
   latitude: "undefined",
   longitude: "undefined",
-  getLastDownloadDate: false,
   updateList: [],
   deviceTypeAndroidTablet:
     Platform.OS === "android" && DeviceInfo.isTablet() ? true : false
@@ -73,9 +71,6 @@ export default function (state = DEFAULT_STATE, actions) {
     case `${actionTypes.GET_LAST_DOWNLOAD}_LOADING`:
       return { ...state };
     case `${actionTypes.GET_LAST_DOWNLOAD}_SUCCESS`:
-      if (typeof actions.payload === "undefined") {
-        return { ...state, lastDownloadDate: -1, getLastDownloadDate: true };
-      }
       return { ...state, lastDownloadDate: actions.payload };
     case `${actionTypes.GET_LAST_DOWNLOAD}_ERROR`:
       return { ...state, lastDownloadDate_error: actions.payload };

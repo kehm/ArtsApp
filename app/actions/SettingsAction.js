@@ -29,7 +29,8 @@ export function setLastDownload(date) {
   return {
     type: actionTypes.SET_LAST_DOWNLOAD,
     payload: {
-      promise: new AsyncStorageHandler().setLastDownload(date)
+      promise: new AsyncStorageHandler().setLastDownload(date),
+      lastDownloadDate: date
     }
   };
 }
