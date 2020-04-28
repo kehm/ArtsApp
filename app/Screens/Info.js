@@ -106,6 +106,9 @@ class Info extends React.PureComponent {
     }
   }
 
+  /**
+   * Handle on click back
+   */
   onClickBack = () => {
     Actions.pop();
   };

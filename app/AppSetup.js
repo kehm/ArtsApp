@@ -28,7 +28,8 @@ class AppSetup extends Component {
     this.state = {
       initialPosition: "unknown",
       lastPosition: "unknown",
-      ready: false
+      ready: false,
+      netInfo: undefined
     };
   }
 
@@ -40,7 +41,7 @@ class AppSetup extends Component {
       this.setState({ ready: true }); // Render ArtsApp when language is set
     });
     NetInfo.fetch().then(conn => { this.props.actions.isOnline(conn.isConnected); }); // Fetch initial connectivity status
-    NetInfo.addEventListener(conn => { this.props.actions.isOnline(conn.isConnected); }); // Add listener for future connectivity changes
+    this.setState({ netInfo: NetInfo.addEventListener(conn => { this.props.actions.isOnline(conn.isConnected); }) }) // Add listener for future connectivity changes
     const useLocation = await this.requestLocationPermission(); // Request position
     if (useLocation) {
       this.watchID = Geolocation.watchPosition(position => {
@@ -58,7 +59,7 @@ class AppSetup extends Component {
    * Removes listeners when component is killed.
    */
   componentWillUnmount() {
-    // TODO: Unsubscribe NetInfo listener
+    this.state.netInfo(); // unsubscribe NetInfo event listener
     if (this.watchID !== -1) {
       Geolocation.clearWatch(this.watchID);
     }
