@@ -56,12 +56,23 @@ class Splash extends React.PureComponent {
       this.props.actions.getLastDownload().then((date) => {
         if (date.value === null) {
           if (this.props.isConnected) {
-            this.props.actions.getKeysFromAPI();
+            this.props.actions.getKeysFromAPI().then(() => {
+              // Set last download timestamp after getting keys
+              let date = new Date();
+              let month = date.getMonth();
+              if (month < 10) {
+                month = "0" + month;
+              }
+              this.props.actions.setLastDownload(
+                date.getFullYear() + "" + month + "" + date.getDate()
+              );
+              Actions.Frontpage(); // Redirect to frontpage
+            });
           } else {
             Alert.alert(
               this.props.strings.noNetWorkTitle,
               this.props.strings.firstNoNett + " ",
-              [{ text: this.props.strings.ok, onPress: () => this.startApp() }]
+              [{ text: this.props.strings.ok, onPress: () => BackHandler.exitApp() }]
             );
           }
         } else {
@@ -69,19 +80,6 @@ class Splash extends React.PureComponent {
         }
       });
     });
-  }
-
-  /**
-   * Update last download timestamp if getKeysFromAPI is successful
-   */
-  componentDidUpdate() {
-    if (this.props.keysFromApi_success) {
-      let date = new Date();
-      this.props.actions.setLastDownload(
-        date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
-      );
-      Actions.Frontpage();
-    }
   }
 
   /**

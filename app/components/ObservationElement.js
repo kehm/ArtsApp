@@ -51,35 +51,6 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.strings.date + ": "}
-            </Text>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.obsDateTime}
-            </Text>
-          </Row>
-          <Row>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.strings.location + ": "}
-            </Text>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
               {this.props.place + ", "}
             </Text>
             <Text
@@ -114,6 +85,17 @@ class ObservationElement extends React.PureComponent {
                 this.props.longitude + ")") : (
                   ""
                 )}
+            </Text>
+          </Row>
+          <Row>
+            <Text
+              style={
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.text3
+                  : styles.text3
+              }
+            >
+              {this.props.obsDateTime}
             </Text>
           </Row>
         </Grid>

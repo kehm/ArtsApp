@@ -4,19 +4,8 @@
  */
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
-import {
-  StyleProvider,
-  Container,
-  Header,
-  Title,
-  Content,
-  List,
-  ListItem,
-  Button,
-  Left,
-  Right,
-  Body
-} from "native-base";
+import { StyleProvider, Container, Content, List, ListItem, Button } from "native-base";
+import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import ObservationElement from "../components/ObservationElement";
 import Icon from 'react-native-vector-icons/Entypo';
 import { Actions } from "react-native-router-flux";
@@ -52,7 +41,7 @@ class Observation extends React.PureComponent {
     super(props);
     this.state = {
       open: false,
-      deleteobsNr: -1
+      deleteobsNr: -1,
     };
   }
 
@@ -95,7 +84,7 @@ class Observation extends React.PureComponent {
     ret = [];
     for (let i = 0; i < this.props.obsevationsList.length; i++) {
       ret.push(
-        <ListItem key={this.props.obsevationsList.item(i).userObservation_id}>
+        <ListItem key={this.props.obsevationsList.item(i).userObservation_id} onLongPress={() => { this.menu.open() }}>
           <ObservationElement
             latinName={this.props.obsevationsList.item(i).latinName}
             localName={this.props.obsevationsList.item(i).localName}
@@ -105,25 +94,14 @@ class Observation extends React.PureComponent {
             longitude={this.props.obsevationsList.item(i).longitude}
             obsDateTime={this.props.obsevationsList.item(i).obsDateTime}
           />
-          <Button
-            style={
-              this.props.deviceTypeAndroidTablet ? { alignSelf: "center" } : {}
-            }
-            transparent
-            onPress={this.onClickDelete.bind(
-              this,
-              this.props.obsevationsList.item(i).userObservation_id
-            )}
-          >
-            <Icon
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? { fontSize: 50, alignSelf: "center" }
-                  : {}
-              }
-              name="trash" size={22}
-            />
-          </Button>
+          <Menu ref={c => (this.menu = c)}>
+            <MenuTrigger />
+            <MenuOptions style={styles.dotMenu}>
+              <MenuOption onSelect={() => { this.onClickDelete(this.props.obsevationsList.item(i).userObservation_id) }} >
+                <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
         </ListItem>
       );
     }
@@ -207,6 +185,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     padding: 10
+  },
+  dotMenu: {
+    backgroundColor: '#eee',
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 16,
+    padding: 10,
   },
 });
 

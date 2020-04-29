@@ -1,6 +1,6 @@
 import React from "react";
-import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, BackHandler } from "react-native";
-import { Container, StyleProvider, Item, Left, Right } from "native-base";
+import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, BackHandler, Modal } from "react-native";
+import { Container, StyleProvider, Item, Left, Right, Spinner } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
 import Toast, { DURATION } from "react-native-easy-toast";
@@ -43,7 +43,8 @@ class Frontpage extends React.PureComponent<Props, State> {
       init: false,
       keyList: [],
       selected: undefined,
-      filter: ''
+      filter: '',
+      openModal: false
     }
   }
 
@@ -122,12 +123,29 @@ class Frontpage extends React.PureComponent<Props, State> {
   }
 
   /**
-   * Update key list
+   * Look for updated keys
    */
   handleOnPressUpdate = () => {
-    this.refs.toast.show(this.props.strings.updateFailed);
-    //this.refs.toast.show(this.props.strings.updateSuccess);
-    //TODO
+    if (this.props.isConnected) {
+      this.props.getKeysFromAPI().then(() => {
+        // Set last download timestamp after getting keys
+        let date = new Date();
+        let month = date.getMonth();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        this.props.setLastDownload(
+          date.getFullYear() + "" + month + "" + date.getDate()
+        );
+        this.props.keys.map((key) => {
+          console.log(key)
+        })
+        this.setState({ openModal: false });
+        this.refs.toast.show(this.props.strings.updateSuccess);
+      });
+    } else {
+      this.refs.toast.show(this.props.strings.disNoNetwork);
+    }
   }
 
   /**
@@ -170,7 +188,7 @@ class Frontpage extends React.PureComponent<Props, State> {
                   <Icon name='dots-three-vertical' size={28} color={'black'} />
                 </MenuTrigger>
                 <MenuOptions style={styles.dotMenu}>
-                  <MenuOption onSelect={() => { this.handleOnPressUpdate() }} >
+                  <MenuOption onSelect={() => { this.setState({ openModal: true }); this.handleOnPressUpdate() }} >
                     <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
                   </MenuOption>
                   <MenuOption onSelect={() => { Actions.Help() }} >
@@ -233,6 +251,18 @@ class Frontpage extends React.PureComponent<Props, State> {
               </TouchableOpacity>
             </View>
           </View>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.openModal}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>{this.props.strings.lookingForUpdates}</Text>
+                <Spinner color="green" />
+              </View>
+            </View>
+          </Modal>
           <Toast ref="toast" />
         </Container>
       </StyleProvider>
@@ -253,7 +283,7 @@ function mapStateToProps({ key, settings }) {
 }
 
 function mapDispatchToProps(dispatch) {
-  const { setAllKeys, openMenu, setKey, downloadKey } = bindActionCreators(
+  const { setAllKeys, openMenu, setKey, downloadKey, getKeysFromAPI, setLastDownload } = bindActionCreators(
     {
       ...KeyAction,
       ...MenuAction,
@@ -267,7 +297,9 @@ function mapDispatchToProps(dispatch) {
     setAllKeys,
     setKey,
     downloadKey,
-    openMenu
+    openMenu,
+    getKeysFromAPI,
+    setLastDownload
   };
 }
 
