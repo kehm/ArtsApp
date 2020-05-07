@@ -3,16 +3,19 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Header, Title, Left, Body, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/Entypo';
 import styles from './styles.js';
+import { TextInput } from 'react-native-gesture-handler';
 
 type Props = {
   title: String,
+  body: Function,
   onMenu: Function,
   rightIcon: Icon,
+  showTitle: Boolean,
 }
 class FrontpageHeader extends React.Component<Props> {
 
   render() {
-    const { title, onMenu, rightIcon } = this.props;
+    const { title, body, onMenu, rightIcon } = this.props;
     return (
       <Header style={styles.headerContainer}>
         <Left style={styles.left}>
@@ -21,7 +24,11 @@ class FrontpageHeader extends React.Component<Props> {
           </TouchableOpacity>
         </Left>
         <Body style={styles.body}>
-          <Title style={styles.title}>{title}</Title>
+          {title !== undefined ? (
+            <Title style={styles.title}>{title}</Title>
+          ) : (
+              body
+            )}
         </Body>
         <Right style={styles.rightCol}>
           {rightIcon}

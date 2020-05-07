@@ -10,7 +10,6 @@ import styles from "./styles.js";
 
 type Props = {
   keys: Array,
-  list: Array,
   index: String,
   selected: Number,
   strings: Object,
@@ -87,12 +86,11 @@ class KeyPanel extends React.PureComponent<Props, State> {
     const activeDotStyle = isAndroid ? styles.activeDotStyleAndroid : styles.activeDotStyleIos;
     return (
       <View style={[styles.container, containerSize]}>
-        <Swiper
+        <Swiper scrollEnabled={false}
           style={styles.swiper}
           dotStyle={dotStyle}
           activeDotStyle={activeDotStyle}
           showsPagination={false}
-          scrollEnabled={this.props.keys.length === this.props.list.length ? true : false}
           onIndexChanged={this.handleIndexChanged}
           ref={swiper => {
             this._swiper = swiper;

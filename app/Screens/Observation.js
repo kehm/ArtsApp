@@ -3,7 +3,7 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, TextInput, View, Alert } from "react-native";
 import { StyleProvider, Container, Content, List, ListItem, Button } from "native-base";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import ObservationElement from "../components/ObservationElement";
@@ -20,6 +20,7 @@ import androidTablet from "../native-base-theme/variables/androidTablet";
 
 import FrontpageHeader from "../components/FrontpageHeader";
 import * as MenuAction from "../actions/MenuAction";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -42,11 +43,32 @@ class Observation extends React.PureComponent {
     this.state = {
       open: false,
       deleteobsNr: -1,
+      obsList: [],
+      filter: '',
+      openFilter: false
     };
+    this.props.actions.getObservations();
   }
 
-  componentDidMount() {
-    this.props.actions.getObservations();
+  /**
+   * If new props, trigger state update
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.observationsList !== prevState.observationsList) {
+      return {
+        observationsList: nextProps.observationsList,
+      }
+    } else return null;
+  }
+
+  /**
+   * Set new state if observations list is updated
+   */
+  componentDidUpdate(prevProps, prevState) {
+    const { observationsList } = prevState;
+    if (observationsList !== this.state.obsList) {
+      this.setState({ obsList: observationsList });
+    }
   }
 
   /**
@@ -81,23 +103,23 @@ class Observation extends React.PureComponent {
    * @return {array} list of Listitems of user observations
    */
   renderList() {
-    ret = [];
-    for (let i = 0; i < this.props.obsevationsList.length; i++) {
+    let ret = [];
+    for (let i = 0; i < this.props.observationsList.length; i++) {
       ret.push(
-        <ListItem key={this.props.obsevationsList.item(i).userObservation_id} onLongPress={() => { this.menu.open() }}>
+        <ListItem key={this.props.observationsList.item(i).userObservation_id} onLongPress={() => { this.menu.open() }}>
           <ObservationElement
-            latinName={this.props.obsevationsList.item(i).latinName}
-            localName={this.props.obsevationsList.item(i).localName}
-            place={this.props.obsevationsList.item(i).place}
-            county={this.props.obsevationsList.item(i).county}
-            latitude={this.props.obsevationsList.item(i).latitude}
-            longitude={this.props.obsevationsList.item(i).longitude}
-            obsDateTime={this.props.obsevationsList.item(i).obsDateTime}
+            latinName={this.props.observationsList.item(i).latinName}
+            localName={this.props.observationsList.item(i).localName}
+            place={this.props.observationsList.item(i).place}
+            county={this.props.observationsList.item(i).county}
+            latitude={this.props.observationsList.item(i).latitude}
+            longitude={this.props.observationsList.item(i).longitude}
+            obsDateTime={this.props.observationsList.item(i).obsDateTime}
           />
           <Menu ref={c => (this.menu = c)}>
             <MenuTrigger />
             <MenuOptions style={styles.dotMenu}>
-              <MenuOption onSelect={() => { this.onClickDelete(this.props.obsevationsList.item(i).userObservation_id) }} >
+              <MenuOption onSelect={() => { this.onClickDelete(this.props.observationsList.item(i).userObservation_id) }} >
                 <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
               </MenuOption>
             </MenuOptions>
@@ -106,6 +128,22 @@ class Observation extends React.PureComponent {
       );
     }
     return ret;
+  }
+
+  /**
+   * Filter observations list
+   */
+  filterList = (filter) => {
+    console.log(filter)
+    let list = [];
+    if (filter === '') {
+      list = this.props.observationsList;
+    }
+
+    this.setState({
+      filter: filter,
+      obsList: list
+    });
   }
 
   renderEmpty() {
@@ -127,10 +165,23 @@ class Observation extends React.PureComponent {
       >
         <Container>
           <FrontpageHeader
-            title={this.props.strings.myObs}
+            title={this.state.openFilter ? undefined : this.props.strings.myObs}
+            body={
+              <TextInput
+                placeholder={this.props.strings.search}
+                style={styles.search}
+                onChangeText={(input) => this.filterList(input)}
+                value={this.state.filter} />
+            }
             onMenu={this.handleOnMenuClick}
+            rightIcon={!this.state.openFilter ? (
+              <Icon name='magnifying-glass' size={26} color={'black'} onPress={() => { this.setState({ openFilter: true }) }} />
+            ) : (
+                <Icon name='circle-with-cross' size={26} color={'black'} onPress={() => { this.setState({ openFilter: false }); this.filterList(''); }} />
+              )
+            }
           />
-          {this.props.obsevationsList.length === 0 ? (
+          {this.state.obsList.length === 0 ? (
             this.renderEmpty()
           ) : (
               <Content>
@@ -139,7 +190,6 @@ class Observation extends React.PureComponent {
                 </List>
               </Content>
             )}
-
         </Container>
       </StyleProvider>
     );
@@ -193,6 +243,21 @@ const styles = StyleSheet.create({
     color: '#000',
     fontSize: 16,
     padding: 10,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  search: {
+    maxWidth: '80%',
+    paddingLeft: 20,
+    paddingRight: 20,
+    color: 'black',
+    height: 40,
+    width: '100%'
+  },
+  clearIcon: {
+    marginTop: 8
   },
 });
 

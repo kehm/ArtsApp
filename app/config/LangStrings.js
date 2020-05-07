@@ -167,7 +167,7 @@ export default class LangStrings {
         myObs: 'Mine observasjoner',
         newObsAddeed: 'Ny observasjon lagret',
         enterLocation: 'Vennligst oppgi sted og fylke',
-        place: 'Sted',
+        place: 'Stedsnavn',
         county: 'Fylke',
         cancel: 'Avbryt',
         save: 'Lagre',

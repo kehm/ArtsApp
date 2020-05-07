@@ -79,7 +79,8 @@ class Species extends React.PureComponent {
       currentTab: 0,
       defaultImage: require("../images/AA_logo.png"),
       saved: false,
-      countyItems: undefined
+      countyItems: undefined,
+      missingText: false
     };
   }
 
@@ -112,11 +113,10 @@ class Species extends React.PureComponent {
    */
   onClickNewObs = () => {
     if (this.state.place !== '' && this.state.county !== '') {
-      console.log(this.state.county)
       this.setState({ open: false });
       this.saveNewObs();
     } else {
-      this.refs.toast.show(this.props.strings.enterLocation);
+      this.setState({ missingText: true });
     }
   };
 
@@ -133,7 +133,7 @@ class Species extends React.PureComponent {
    * Create new observation object and save it to the DB
    */
   saveNewObs() {
-    let newObs = {
+    this.props.actions.insertObservation({
       latinName: this.props.selectedSpecies.latinName,
       localName: this.props.selectedSpecies.localName,
       order: this.props.selectedSpecies.order,
@@ -145,8 +145,7 @@ class Species extends React.PureComponent {
       county: this.state.county,
       key_id: this.props.chosenKey,
       obsDateTime: this.state.obsDateTime
-    };
-    this.props.actions.insertObservation(newObs);
+    });
     this.setState({ saved: true });
     this.refs.toast.show(this.props.strings.newObsAddeed);
   }
@@ -159,7 +158,8 @@ class Species extends React.PureComponent {
       this.setState({
         latitude: this.props.latitude,
         longitude: this.props.longitude,
-        open: true
+        open: true,
+        missingText: false
       });
     } else {
       new Alert.alert(
@@ -172,7 +172,8 @@ class Species extends React.PureComponent {
               this.setState({
                 latitude: this.props.latitude,
                 longitude: this.props.longitude,
-                open: true
+                open: true,
+                missingText: false
               });
             }
           }
@@ -281,14 +282,7 @@ class Species extends React.PureComponent {
               <Form>
                 <TextInput
                   placeholder={this.props.strings.place}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 60 : 35,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                    borderColor: "black",
-                    borderWidth: 1,
-                    padding: 5,
-                    marginTop: 20
-                  }}
+                  style={[styles.textInput, this.state.missingText ? styles.missingText : undefined]}
                   onChangeText={place => this.setState({ place })}
                   value={this.state.place}
                 />
@@ -326,13 +320,6 @@ class Species extends React.PureComponent {
                   </Text>
                 </Button>
                 <Button
-                  disabled={
-                    this.state.county === "" ||
-                      this.state.place === "" ||
-                      this.state.latitude === ""
-                      ? true
-                      : false
-                  }
                   transparent
                   iconLeft
                   onPress={this.onClickNewObs}
@@ -541,6 +528,15 @@ const styles = StyleSheet.create({
   },
   text3: {
     color: 'black',
+  },
+  textInput: {
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 5,
+    marginTop: 20,
+  },
+  missingText: {
+    borderColor: "red",
   }
 });
 

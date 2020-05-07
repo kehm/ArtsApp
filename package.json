@@ -31,7 +31,7 @@
     "react-native-router-flux": "^4.2.0-beta.2",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.3.0",
-    "react-native-sqlite-storage": "^4.1.0",
+    "react-native-sqlite-storage": "^5.0.0",
     "react-native-swipe-list-view": "^2.5.0",
     "react-native-swiper": "^1.6.0-rc.3",
     "react-native-vector-icons": "^6.6.0",

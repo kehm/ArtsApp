@@ -4,9 +4,11 @@
  */
 
 import React, { Component } from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { StyleProvider, Container, Content, Button } from "native-base";
+import { View, StyleSheet, Image, Modal, Text } from "react-native";
+import { StyleProvider, Container, Content, Button, Spinner } from "native-base";
 import HTMLView from "react-native-htmlview";
+import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
+import Icon from 'react-native-vector-icons/Entypo';
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
@@ -28,22 +30,50 @@ const mapStateToProps = state => ({
 });
 
 function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({ ...SettingsAction }, dispatch)
-  };
+  const { getKeysFromAPI, setLastDownload } = bindActionCreators(
+    {
+      ...SettingsAction
+    },
+    dispatch
+  );
+  return { getKeysFromAPI, setLastDownload };
 }
 
 class About extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      debugcount: 0
+      debugcount: 0,
+      openModal: false
     };
   }
 
   onClickBack = () => {
     Actions.pop();
   };
+
+  /**
+ * Look for updated keys
+ */
+  handleOnPressUpdate = () => {
+    if (this.props.isConnected) {
+      this.props.getKeysFromAPI().then(() => {
+        // Set last download timestamp after getting keys
+        let date = new Date();
+        let month = date.getMonth();
+        if (month < 10) {
+          month = "0" + month;
+        }
+        this.props.setLastDownload(
+          date.getFullYear() + "" + month + "" + date.getDate()
+        );
+        this.setState({ openModal: false });
+        this.refs.toast.show(this.props.strings.updateSuccess);
+      });
+    } else {
+      this.refs.toast.show(this.props.strings.disNoNetwork);
+    }
+  }
 
   /**
    * Function that counts clicks on the invisible button and goes to debug-page if clicked 20 times.
@@ -74,7 +104,22 @@ class About extends React.PureComponent {
         }
       >
         <Container>
-          <SubPageHeader title={this.props.strings.about} onClick={this.onClickBack} />
+          <SubPageHeader title={this.props.strings.about} onClick={this.onClickBack}
+            rightIcon={
+              <Menu>
+                <MenuTrigger>
+                  <Icon name='dots-three-vertical' size={28} color={'black'} />
+                </MenuTrigger>
+                <MenuOptions style={styles.dotMenu}>
+                  <MenuOption onSelect={() => { this.setState({ openModal: true }); this.handleOnPressUpdate() }} >
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
+                  </MenuOption>
+                  <MenuOption onSelect={() => { Actions.Help() }} >
+                    <Text style={styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
+            } />
           <Content>
             <View style={styles.container}>
               <Image
@@ -97,6 +142,18 @@ class About extends React.PureComponent {
             </View>
             <Button transparent block onPress={this.onClickDebug} />
           </Content>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.openModal}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>{this.props.strings.lookingForUpdates}</Text>
+                <Spinner color="green" />
+              </View>
+            </View>
+          </Modal>
           <Toast ref="toast" />
         </Container>
       </StyleProvider>
@@ -117,7 +174,33 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 0,
     justifyContent: "center"
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({

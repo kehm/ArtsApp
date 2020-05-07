@@ -1,10 +1,9 @@
 import React from "react";
-import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, BackHandler, Modal } from "react-native";
-import { Container, StyleProvider, Item, Left, Right, Spinner } from "native-base";
+import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, BackHandler } from "react-native";
+import { Container, StyleProvider, Item, Left, Right } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
 import Toast, { DURATION } from "react-native-easy-toast";
-import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { FlatList } from "react-native-gesture-handler";
@@ -44,7 +43,7 @@ class Frontpage extends React.PureComponent<Props, State> {
       keyList: [],
       selected: undefined,
       filter: '',
-      openModal: false
+      openFilter: false
     }
   }
 
@@ -93,6 +92,9 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Handle click on key panel and list. Go directly to key page if key is already downloaded else go to info page.
    */
   handleOnPressKey = (key) => {
+    if (this.state.openFilter && this.state.filter === '') {
+      this.setState({ openFilter: false });
+    }
     if (key === undefined) {
       key = this.state.keyList.filter(key => {
         if (key.key_id === this.state.selected) {
@@ -123,40 +125,20 @@ class Frontpage extends React.PureComponent<Props, State> {
   }
 
   /**
-   * Look for updated keys
-   */
-  handleOnPressUpdate = () => {
-    if (this.props.isConnected) {
-      this.props.getKeysFromAPI().then(() => {
-        // Set last download timestamp after getting keys
-        let date = new Date();
-        let month = date.getMonth();
-        if (month < 10) {
-          month = "0" + month;
-        }
-        this.props.setLastDownload(
-          date.getFullYear() + "" + month + "" + date.getDate()
-        );
-        this.props.keys.map((key) => {
-          console.log(key)
-        })
-        this.setState({ openModal: false });
-        this.refs.toast.show(this.props.strings.updateSuccess);
-      });
-    } else {
-      this.refs.toast.show(this.props.strings.disNoNetwork);
-    }
-  }
-
-  /**
    * Update swiper index
    */
   updateIndex = (key) => {
+    if (this.state.openFilter && this.state.filter === '') {
+      this.setState({ openFilter: false });
+    }
     if (key.key_id !== this.state.selected) {
       this.setState({ selected: key.key_id })
     }
   }
 
+  /**
+   * Filter key list
+   */
   filterList = (filter) => {
     this.setState({
       filter: filter,
@@ -180,47 +162,47 @@ class Frontpage extends React.PureComponent<Props, State> {
       >
         <Container>
           <FrontpageHeader
-            title={strings.keysView}
+            title={this.state.openFilter ? undefined : strings.keysView}
+            body={
+              <TextInput
+                placeholder={this.props.strings.search}
+                autoFocus={true}
+                style={styles.search}
+                onChangeText={(input) => this.filterList(input)}
+                value={this.state.filter} />
+            }
             onMenu={this.handleOnMenuClick}
-            rightIcon={
-              <Menu>
-                <MenuTrigger>
-                  <Icon name='dots-three-vertical' size={28} color={'black'} />
-                </MenuTrigger>
-                <MenuOptions style={styles.dotMenu}>
-                  <MenuOption onSelect={() => { this.setState({ openModal: true }); this.handleOnPressUpdate() }} >
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
-                  </MenuOption>
-                  <MenuOption onSelect={() => { Actions.Help() }} >
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
-                  </MenuOption>
-                </MenuOptions>
-              </Menu>
+            rightIcon={!this.state.openFilter ? (
+              <Icon name='magnifying-glass' size={26} color={'black'} onPress={() => { this.setState({ openFilter: true, selected: this.props.keys[0].key_id }); }} />
+            ) : (
+                <Icon name='circle-with-cross' size={26} color={'black'} onPress={() => { this.setState({ openFilter: false, selected: this.props.keys[0].key_id }); this.filterList(''); }} />
+              )
             }
           />
           <View style={styles.container}>
-            <KeyPanel
-              keys={this.props.keys}
-              list={this.state.keyList}
-              index={0}
-              selected={this.state.selected}
-              strings={strings}
-              onPress={this.handleOnPressKey}
-              onInfo={this.handleOnInfoClick}
-              onUpdate={this.updateIndex}
-            />
-            <View style={styles.headerContainer}>
-              <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
-              <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} />
+            <View style={this.state.openFilter ? styles.hide : undefined}>
+              <KeyPanel
+                keys={this.state.keyList}
+                index={0}
+                selected={this.state.selected}
+                strings={strings}
+                onPress={this.handleOnPressKey}
+                onInfo={this.handleOnInfoClick}
+                onUpdate={this.updateIndex}
+              />
+              <View style={[styles.headerContainer]}>
+                <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
+                <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} />
+              </View>
             </View>
             <SwipeListView
-              style={styles.list}
+              style={[styles.list, this.state.openFilter ? styles.filteredList : undefined]}
               useFlatList={true}
               data={this.state.keyList}
               extraData={this.state}
               renderItem={(item) =>
-                <TouchableOpacity style={[styles.listItem, item.item.key_id === this.state.selected ? styles.selected : undefined]} onPress={() => this.updateIndex(item.item)}>
-                  <Text style={[styles.listText, item.item.key_id === this.state.selected ? styles.selectedText : undefined]} >{item.item.title}</Text>
+                <TouchableOpacity style={[styles.listItem, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selected : undefined)]} onPress={() => this.state.openFilter ? undefined : this.updateIndex(item.item)}>
+                  <Text style={[styles.listText, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selectedText : undefined)]} >{item.item.title}</Text>
                   <Right>
                     <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.item); this.handleOnPressKey(item.item) }}>
                       <Icon style={styles.icon} name='chevron-right' size={28} color={'black'} />
@@ -240,29 +222,7 @@ class Frontpage extends React.PureComponent<Props, State> {
                 this.handleOnPressKey(rowMap[rowKey].props.item);
               }}
             />
-            <View style={styles.searchContainer}>
-              <TextInput
-                placeholder={this.props.strings.search}
-                style={styles.search}
-                onChangeText={(input) => this.filterList(input)}
-                value={this.state.filter} />
-              <TouchableOpacity style={styles.clearIcon} onPress={() => { this.filterList("") }}>
-                <Icon name="circle-with-cross" size={22} ></Icon>
-              </TouchableOpacity>
-            </View>
           </View>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.openModal}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>{this.props.strings.lookingForUpdates}</Text>
-                <Spinner color="green" />
-              </View>
-            </View>
-          </Modal>
           <Toast ref="toast" />
         </Container>
       </StyleProvider>

@@ -954,7 +954,7 @@ export default class DB_helper {
   getObservations() {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
-        "SELECT * FROM UserObservation ",
+        "SELECT * FROM UserObservation",
         [],
         result => {
           resolve(result.rows);

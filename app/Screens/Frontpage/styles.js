@@ -19,7 +19,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: "center",
-
   },
   list: {
     minHeight: 200,
@@ -27,6 +26,10 @@ export default StyleSheet.create({
     borderTopColor: 'black',
     borderTopWidth: 1,
     backgroundColor: '#65C86012'
+  },
+  filteredList: {
+    borderTopWidth: 0,
+    marginTop: -8
   },
   listItem: {
     flexDirection: 'row',
@@ -73,30 +76,21 @@ export default StyleSheet.create({
     right: 12,
     bottom: 8
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+  hide: {
+    display: 'none'
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
+  search: {
+    maxWidth: '80%',
+    marginTop: 6,
+    paddingRight: 20,
+    color: 'black',
+    height: 40,
+    width: '100%',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    fontSize: 18,
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-    fontWeight: "bold"
+  clearIcon: {
+    marginTop: 8
   },
 });

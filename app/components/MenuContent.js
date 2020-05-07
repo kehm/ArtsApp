@@ -4,18 +4,7 @@
  */
 import React, { Component } from "react";
 import { Image, Platform, Dimensions, Alert } from "react-native";
-import {
-  StyleProvider,
-  Text,
-  List,
-  ListItem,
-  View,
-  Container,
-  Button,
-  Left,
-  Right,
-  Content
-} from "native-base";
+import { StyleProvider, Text, List, ListItem, View, Container, Button, Left, Content } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
 import Flag from 'react-native-flags-typescript';
@@ -56,6 +45,23 @@ class MenuContent extends React.PureComponent {
   }
 
   /**
+   * Find active scene and set matching menu ekement selected
+   */
+  componentDidUpdate() {
+    switch (Actions.currentScene) {
+      case (Actions.Frontpage.name):
+        this.setState({ frontSelect: true, obsSelect: false, locSelect: false, keysSelect: false });
+        break;
+      case (Actions.Observation.name):
+        this.setState({ frontSelect: false, obsSelect: true, locSelect: false, keysSelect: false });
+        break;
+      case (Actions.UpdateLocation.name):
+        this.setState({ frontSelect: false, obsSelect: false, locSelect: true, keysSelect: false });
+        break;
+    }
+  }
+
+  /**
    * Change language
    */
   onClickSelectLanguage(lang) {
@@ -78,15 +84,15 @@ class MenuContent extends React.PureComponent {
   }
 
   /**
-   * closes menu and
-   * opens the user observation page.(Observation.js)
-   * @return {void} [description]
-   */
+ * closes menu and
+ * opens the user observation page.(Observation.js)
+ * @return {void} [description]
+ */
   onClickKeys = () => {
-    this.setState({ frontSelect: true, obsSelect: false, locSelect: false, keysSelect: false });
     this.props.actions.closeMenu();
     Actions.Frontpage();
   };
+
 
   /**
    * closes menu and
@@ -94,7 +100,6 @@ class MenuContent extends React.PureComponent {
    * @return {void} [description]
    */
   onClickObs = () => {
-    this.setState({ frontSelect: false, obsSelect: true, locSelect: false, keysSelect: false });
     this.props.actions.closeMenu();
     Actions.Observation();
   };
@@ -105,7 +110,6 @@ class MenuContent extends React.PureComponent {
    * @return {void} [description]
    */
   onClickLocation = () => {
-    this.setState({ frontSelect: false, obsSelect: false, locSelect: true, keysSelect: false });
     this.props.actions.closeMenu();
     Actions.UpdateLocation();
   };
