@@ -1,5 +1,5 @@
 import React from "react";
-import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, BackHandler } from "react-native";
+import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput } from "react-native";
 import { Container, StyleProvider, Item, Left, Right } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -44,20 +44,6 @@ class Frontpage extends React.PureComponent<Props, State> {
       filter: '',
       openFilter: false
     }
-  }
-
-  /**
-   * Add back button listener
-   */
-  componentDidMount() {
-    BackHandler.addEventListener("hardwareBackModal", () => { this.filterList(''); });
-  }
-
-  /**
-   * Remove back button listener
-   */
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackModal", () => { this.filterList(''); });
   }
 
   /**

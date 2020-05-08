@@ -117,6 +117,7 @@ class ArtsApp extends Component {
    */
   handleBackPress = () => {
     try {
+      this.closeDrawer();
       Actions.pop();
       return true;
     } catch (err) {

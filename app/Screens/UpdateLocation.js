@@ -7,7 +7,6 @@ import {
   View,
   StyleSheet,
   Image,
-  BackHandler,
   TextInput,
   Dimensions,
   Text,
@@ -84,19 +83,6 @@ class UpdateLocation extends React.PureComponent {
     };
   }
 
-  componentDidMount() {
-    BackHandler.addEventListener("hardwareBackModal", () => {
-      if (this.props.nerby_updated_loading) {
-        return true;
-      }
-      if (this.props.modalOpen) {
-        this.props.actions.changeModal();
-        return true;
-      }
-      return false;
-    });
-  }
-
   /**
    * Waithing for location to be updated. If already inside a key, it updates that keys data, if not return to frontpage. Shows error toast.
    * @see this.showToast
@@ -115,10 +101,6 @@ class UpdateLocation extends React.PureComponent {
         Actions.pop();
       }, 500);
     }
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackModal");
   }
 
   /**

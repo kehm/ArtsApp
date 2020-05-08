@@ -96,7 +96,11 @@ class Observation extends React.PureComponent {
         { text: this.props.strings.cancel, onPress: () => { }, style: "cancel" },
         {
           text: this.props.strings.accept,
-          onPress: () => this.props.actions.deleteObservation(i)
+          onPress: () => {
+            this.props.actions.deleteObservation(i).then(() => {
+              this.props.actions.getObservations();
+            })
+          }
         }
       ],
       { cancelable: true }
@@ -143,7 +147,6 @@ class Observation extends React.PureComponent {
   }
 
   render() {
-    console.log(this.state.obsList)
     return (
       <StyleProvider
         style={

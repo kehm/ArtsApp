@@ -3,24 +3,10 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { SectionList, Text, View, BackHandler } from "react-native";
+import { SectionList, Text, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { List, ListItem } from "native-base";
-import {
-    Button,
-    Spinner,
-    Icon,
-    Container,
-    StyleProvider,
-    Header,
-    Footer,
-    FooterTab,
-    Title,
-    Content,
-    Left,
-    Body,
-    Right
-} from "native-base";
+import { Button, Icon, Container, StyleProvider, Header, Footer, FooterTab, Title, Content, Left, Right } from "native-base";
 import SpeciesElement from "../components/SpeciesElement";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { findIndex } from "lodash";
@@ -68,19 +54,6 @@ class SpeciesLeft extends React.PureComponent {
             leftNerbyList: props.navigation.getParam("leftNerbyList", []),
             leftNotGeo: this.setNotNerby(props.nerbyList)
         };
-    }
-
-    componentDidMount() {
-        BackHandler.addEventListener("hardwareBackModal", () => {
-            if (this.props.nerby_updated_loading) {
-                return true;
-            }
-            return false;
-        });
-    }
-
-    componentWillUnmount() {
-        BackHandler.removeEventListener("hardwareBackModal");
     }
 
     /**

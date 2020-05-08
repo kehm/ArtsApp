@@ -3,8 +3,8 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { View, StyleSheet, Image, Text, BackHandler, Dimensions, Alert, Modal, TouchableOpacity } from "react-native";
-import { Container, StyleProvider, Spinner, Content, Left, Right, Grid, Col } from "native-base";
+import { View, StyleSheet, Image, Text, Dimensions, Alert, Modal, TouchableOpacity } from "react-native";
+import { Container, StyleProvider, Spinner, Content, Left, Grid, Col } from "native-base";
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import Icon from "react-native-vector-icons/Entypo";
 import { Actions } from "react-native-router-flux";
@@ -56,19 +56,6 @@ class Info extends React.PureComponent {
       imageSource: imageSource,
       openImages: false
     }
-  }
-
-  componentDidMount() {
-    BackHandler.addEventListener("hardwareBackModal", () => {
-      if (this.props.keyDownloaded_LOADING) {
-        return true;
-      }
-      return false;
-    });
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackModal");
   }
 
   /**
