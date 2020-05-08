@@ -3,8 +3,8 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View, Alert } from "react-native";
-import { StyleProvider, Container, Content, List, ListItem, Button } from "native-base";
+import { StyleSheet, Text, TextInput, View, Alert, FlatList } from "react-native";
+import { StyleProvider, Container, Content } from "native-base";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import ObservationElement from "../components/ObservationElement";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -42,12 +42,11 @@ class Observation extends React.PureComponent {
     super(props);
     this.state = {
       open: false,
-      deleteobsNr: -1,
       obsList: [],
       obsFunc: [],
       fullList: [],
       filter: '',
-      openFilter: false
+      openFilter: false,
     };
     this.props.actions.getObservations();
   }
@@ -102,44 +101,11 @@ class Observation extends React.PureComponent {
       ],
       { cancelable: true }
     );
-    // this.setState({open: true, deleteobsNr: i,});
   };
 
   /**
-   * Renders list of all user observations.
-   * @return {array} list of Listitems of user observations
-   */
-  renderList() {
-    let ret = [];
-    for (let i = 0; i < this.state.obsList.length; i++) {
-      ret.push(
-        <ListItem key={this.state.obsList[i].userObservation_id} onLongPress={() => { this.menu.open() }}>
-          <ObservationElement
-            latinName={this.state.obsList[i].latinName}
-            localName={this.state.obsList[i].localName}
-            place={this.state.obsList[i].place}
-            county={this.state.obsList[i].county}
-            latitude={this.state.obsList[i].latitude}
-            longitude={this.state.obsList[i].longitude}
-            obsDateTime={this.state.obsList[i].obsDateTime}
-          />
-          <Menu ref={c => (this.menu = c)}>
-            <MenuTrigger />
-            <MenuOptions style={styles.dotMenu}>
-              <MenuOption onSelect={() => { this.onClickDelete(this.state.obsList[i].userObservation_id) }} >
-                <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
-              </MenuOption>
-            </MenuOptions>
-          </Menu>
-        </ListItem>
-      );
-    }
-    return ret;
-  }
-
-  /**
-   * Filter observations list
-   */
+ * Filter observations list
+ */
   filterList = (filter) => {
     let list = [];
     if (filter === '') {
@@ -177,6 +143,7 @@ class Observation extends React.PureComponent {
   }
 
   render() {
+    console.log(this.state.obsList)
     return (
       <StyleProvider
         style={
@@ -207,11 +174,24 @@ class Observation extends React.PureComponent {
           {this.state.obsList.length === 0 ? (
             this.renderEmpty()
           ) : (
-              <Content>
-                <List>
-                  <List>{this.renderList()}</List>
-                </List>
-              </Content>
+              <FlatList
+                style={styles.list}
+                data={this.state.obsList}
+                keyExtractor={item => item.userObservation_id.toString()}
+                renderItem={(item) =>
+                  <ObservationElement
+                    latinName={item.item.latinName}
+                    localName={item.item.localName}
+                    place={item.item.place}
+                    county={item.item.county}
+                    latitude={item.item.latitude}
+                    longitude={item.item.longitude}
+                    obsDateTime={item.item.obsDateTime}
+                    obsId={item.item.userObservation_id}
+                    onDelete={this.onClickDelete}
+                  />
+                }
+              />
             )}
         </Container>
       </StyleProvider>
@@ -259,14 +239,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 10
   },
-  dotMenu: {
-    backgroundColor: '#eee',
-  },
-  dotMenuTxt: {
-    color: '#000',
-    fontSize: 16,
-    padding: 10,
-  },
   searchContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -285,6 +257,10 @@ const styles = StyleSheet.create({
   clearIcon: {
     marginTop: 8
   },
+  list: {
+    backgroundColor: '#65C86012',
+    zIndex: 2000
+  }
 });
 
 const AndroidTabletStyles = StyleSheet.create({

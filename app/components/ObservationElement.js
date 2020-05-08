@@ -4,9 +4,10 @@
  */
 
 import React, { Component } from "react";
-import { StyleSheet, Text } from "react-native";
-import { Content, Grid, Row } from "native-base";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Grid, Row } from "native-base";
 import { connect } from "react-redux";
+import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 
 const mapStateToProps = state => ({
   ...state.settings,
@@ -21,7 +22,7 @@ class ObservationElement extends React.PureComponent {
 
   render() {
     return (
-      <Content>
+      <TouchableOpacity style={styles.itemContainer} onLongPress={() => this.menu.open()}>
         <Grid>
           <Row>
             <Text
@@ -31,7 +32,7 @@ class ObservationElement extends React.PureComponent {
                   : styles.headerTxt
               }
             >
-              {this.props.localName + " ("}
+              {this.props.localName}
             </Text>
             <Text
               style={
@@ -40,7 +41,7 @@ class ObservationElement extends React.PureComponent {
                   : styles.headerTxt
               }
             >
-              {this.props.latinName + ")"}
+              {"(" + this.props.latinName + ")"}
             </Text>
           </Row>
           <Row>
@@ -97,9 +98,17 @@ class ObservationElement extends React.PureComponent {
             >
               {this.props.obsDateTime}
             </Text>
+            <Menu ref={c => (this.menu = c)}>
+              <MenuTrigger />
+              <MenuOptions style={styles.dotMenu}>
+                <MenuOption onSelect={() => { this.props.onDelete(this.props.obsId) }} >
+                  <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
           </Row>
         </Grid>
-      </Content>
+      </TouchableOpacity >
     );
   }
 }
@@ -107,15 +116,25 @@ class ObservationElement extends React.PureComponent {
 const styles = StyleSheet.create({
   text3: {
     fontSize: 14,
-    marginBottom: 5,
-    color: "black"
+    color: "black",
+    paddingLeft: 10
   },
   headerTxt: {
     fontSize: 14,
-    marginBottom: 5,
     color: "black",
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+    paddingLeft: 10,
+    paddingTop: 10
+  },
+  itemContainer: {
+    borderBottomColor: 'white',
+    borderBottomWidth: 1,
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 16,
+    padding: 10,
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({
