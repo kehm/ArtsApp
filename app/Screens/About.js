@@ -201,6 +201,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold"
   },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 16,
+    padding: 10,
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({

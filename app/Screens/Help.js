@@ -50,6 +50,8 @@ class Help extends React.PureComponent {
                     <SubPageHeader title={this.props.strings.helpHeader} onClick={this.onClickBack} />
                     <Content>
                         <View style={styles.container}>
+                            <Text>{this.props.strings.frontpageTopDescription + " " + this.props.strings.frontpageBottomDescription} </Text>
+                            <Text>{this.props.strings.keyAbout} </Text>
                             <Text>{this.props.strings.help}</Text>
                         </View>
                     </Content>

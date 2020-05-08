@@ -44,6 +44,8 @@ class Observation extends React.PureComponent {
       open: false,
       deleteobsNr: -1,
       obsList: [],
+      obsFunc: [],
+      fullList: [],
       filter: '',
       openFilter: false
     };
@@ -66,8 +68,13 @@ class Observation extends React.PureComponent {
    */
   componentDidUpdate(prevProps, prevState) {
     const { observationsList } = prevState;
-    if (observationsList !== this.state.obsList) {
-      this.setState({ obsList: observationsList });
+    if (observationsList !== this.state.obsFunc) {
+      let arr = this.makeArray(observationsList);
+      if (this.state.filter === '') {
+        this.setState({ obsFunc: observationsList, fullList: arr, obsList: arr });
+      } else {
+        this.setState({ obsFunc: observationsList, fullList: arr });
+      }
     }
   }
 
@@ -104,22 +111,22 @@ class Observation extends React.PureComponent {
    */
   renderList() {
     let ret = [];
-    for (let i = 0; i < this.props.observationsList.length; i++) {
+    for (let i = 0; i < this.state.obsList.length; i++) {
       ret.push(
-        <ListItem key={this.props.observationsList.item(i).userObservation_id} onLongPress={() => { this.menu.open() }}>
+        <ListItem key={this.state.obsList[i].userObservation_id} onLongPress={() => { this.menu.open() }}>
           <ObservationElement
-            latinName={this.props.observationsList.item(i).latinName}
-            localName={this.props.observationsList.item(i).localName}
-            place={this.props.observationsList.item(i).place}
-            county={this.props.observationsList.item(i).county}
-            latitude={this.props.observationsList.item(i).latitude}
-            longitude={this.props.observationsList.item(i).longitude}
-            obsDateTime={this.props.observationsList.item(i).obsDateTime}
+            latinName={this.state.obsList[i].latinName}
+            localName={this.state.obsList[i].localName}
+            place={this.state.obsList[i].place}
+            county={this.state.obsList[i].county}
+            latitude={this.state.obsList[i].latitude}
+            longitude={this.state.obsList[i].longitude}
+            obsDateTime={this.state.obsList[i].obsDateTime}
           />
           <Menu ref={c => (this.menu = c)}>
             <MenuTrigger />
             <MenuOptions style={styles.dotMenu}>
-              <MenuOption onSelect={() => { this.onClickDelete(this.props.observationsList.item(i).userObservation_id) }} >
+              <MenuOption onSelect={() => { this.onClickDelete(this.state.obsList[i].userObservation_id) }} >
                 <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
               </MenuOption>
             </MenuOptions>
@@ -134,16 +141,31 @@ class Observation extends React.PureComponent {
    * Filter observations list
    */
   filterList = (filter) => {
-    console.log(filter)
     let list = [];
     if (filter === '') {
-      list = this.props.observationsList;
+      list = this.state.fullList;
+    } else {
+      for (let i = 0; i < this.state.fullList.length; i++) {
+        if (this.state.fullList[i].localName.toUpperCase().includes(filter.toUpperCase())) {
+          list.push(this.state.fullList[i]);
+        }
+      }
     }
-
     this.setState({
       filter: filter,
       obsList: list
     });
+  }
+
+  /**
+   * Convert functions object into array
+   */
+  makeArray = (f) => {
+    let list = [];
+    for (let i = 0; i < f.length; i++) {
+      list.push(f.item(i));
+    }
+    return list;
   }
 
   renderEmpty() {
@@ -169,6 +191,7 @@ class Observation extends React.PureComponent {
             body={
               <TextInput
                 placeholder={this.props.strings.search}
+                autoFocus={true}
                 style={styles.search}
                 onChangeText={(input) => this.filterList(input)}
                 value={this.state.filter} />
@@ -250,11 +273,14 @@ const styles = StyleSheet.create({
   },
   search: {
     maxWidth: '80%',
-    paddingLeft: 20,
+    marginTop: 6,
     paddingRight: 20,
     color: 'black',
     height: 40,
-    width: '100%'
+    width: '100%',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    fontSize: 18,
   },
   clearIcon: {
     marginTop: 8

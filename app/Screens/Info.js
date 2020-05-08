@@ -374,9 +374,6 @@ const styles = StyleSheet.create({
     color: '#000',
     marginLeft: 20
   },
-  dotMenu: {
-    backgroundColor: '#eee',
-  },
   dotMenuTxt: {
     color: '#000',
     fontSize: 16,

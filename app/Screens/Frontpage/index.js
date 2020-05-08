@@ -22,7 +22,6 @@ import * as ObservationAction from "../../actions/ObservationAction";
 import * as SettingsAction from "../../actions/SettingsAction";
 
 import FrontpageHeader from "../../components/FrontpageHeader";
-import Explanation from "../../components/Explanation";
 import KeyPanel from "../../components/KeyPanel";
 
 import { sortKeys } from "../../utilities/keys";
@@ -229,8 +228,6 @@ class Frontpage extends React.PureComponent<Props, State> {
     );
   }
 }
-//<Explanation description={strings.frontpageTopDescription + " " + strings.frontpageBottomDescription} />
-//<Explanation description={this.props.strings.keyAbout} />
 
 function mapStateToProps({ key, settings }) {
   const { deviceTypeAndroidTablet, isConnected, strings } = settings;

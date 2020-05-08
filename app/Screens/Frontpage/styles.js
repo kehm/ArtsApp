@@ -63,14 +63,6 @@ export default StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 10
   },
-  search: {
-    backgroundColor: '#E1ECDF',
-    paddingLeft: 20,
-    paddingRight: 20,
-    color: 'black',
-    height: 40,
-    width: '100%'
-  },
   clearIcon: {
     position: 'absolute',
     right: 12,
