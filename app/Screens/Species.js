@@ -112,14 +112,20 @@ class Species extends React.PureComponent {
    * Create new observation object and save it to the DB
    */
   saveNewObs() {
+    let longitude = 'undefined';
+    let latitude = 'undefined';
+    if (this.state.longitude !== '' && this.state.latitude !== '') {
+      longitude = this.state.longitude;
+      latitude = this.state.latitude;
+    }
     this.props.actions.insertObservation({
       latinName: this.props.selectedSpecies.latinName,
       localName: this.props.selectedSpecies.localName,
       order: this.props.selectedSpecies.order,
       family: this.props.selectedSpecies.family,
       species_id: this.props.selectedSpecies.species_id,
-      latitude: this.state.latitude,
-      longitude: this.state.longitude,
+      latitude: latitude,
+      longitude: longitude,
       place: this.state.place,
       county: this.state.county,
       key_id: this.props.chosenKey,
@@ -149,8 +155,8 @@ class Species extends React.PureComponent {
           {
             text: this.props.strings.ok, onPress: () => {
               this.setState({
-                latitude: this.props.latitude,
-                longitude: this.props.longitude,
+                latitude: '',
+                longitude: '',
                 open: true,
                 missingText: false
               });
@@ -234,37 +240,7 @@ class Species extends React.PureComponent {
                   {this.state.obsDateTime}
                 </Text>
               </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.coordinate + ":   "}
-                </Text>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.state.latitude !== 'undefined' ? (
-                    this.state.latitude + ", " + this.state.longitude
-                  ) : (
-                      this.props.strings.notAvailable
-                    )}
-                </Text>
-              </View>
               <Form>
-                <TextInput
-                  placeholder={this.props.strings.place}
-                  style={[styles.textInput, this.state.missingText ? styles.missingText : undefined]}
-                  onChangeText={place => this.setState({ place: place })}
-                  value={this.state.place}
-                />
                 <Picker note
                   mode="dropdown"
                   selectedValue={this.state.county}
@@ -272,6 +248,24 @@ class Species extends React.PureComponent {
                 >
                   {countyItems}
                 </Picker>
+                <TextInput
+                  placeholder={this.props.strings.place}
+                  style={[styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  onChangeText={place => this.setState({ place: place })}
+                  value={this.state.place}
+                />
+                <TextInput
+                  placeholder={this.props.strings.latitude}
+                  style={styles.textInput}
+                  onChangeText={latitude => this.setState({ latitude: latitude })}
+                  value={this.state.latitude}
+                />
+                <TextInput
+                  placeholder={this.props.strings.longitude}
+                  style={styles.textInput}
+                  onChangeText={longitude => this.setState({ longitude: longitude })}
+                  value={this.state.longitude}
+                />
               </Form>
               <View
                 style={{
@@ -512,7 +506,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1,
     padding: 5,
-    marginTop: 20,
+    marginBottom: 10
   },
   missingText: {
     borderColor: "red",
