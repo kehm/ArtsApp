@@ -3,8 +3,8 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View, Alert, FlatList } from "react-native";
-import { StyleProvider, Container, Content } from "native-base";
+import { StyleSheet, Text, TextInput, View, Alert, FlatList, Modal } from "react-native";
+import { StyleProvider, Container, Content, Form, Button } from "native-base";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import ObservationElement from "../components/ObservationElement";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -47,6 +47,12 @@ class Observation extends React.PureComponent {
       fullList: [],
       filter: '',
       openFilter: false,
+      openCoordinates: false,
+      selected: undefined,
+      latitude: '',
+      longitude: '',
+      missingLatitude: false,
+      missingLongitude: false
     };
     this.props.actions.getObservations();
   }
@@ -108,6 +114,54 @@ class Observation extends React.PureComponent {
   };
 
   /**
+   * Show modal to select coordinates
+   */
+  onSelectCoordinates = (item) => {
+    let longitude = '';
+    let latitude = '';
+    if (item.longitude !== 'undefined' && item.latitude !== 'undefined') {
+      longitude = item.longitude;
+      latitude = item.latitude;
+    }
+    this.setState({ openCoordinates: true, selected: item, longitude: longitude, latitude: latitude, missingLatitude: false, missingLongitude: false });
+  }
+
+  /**
+   * Save new coordinates for selected observation
+   */
+  setCoordinates = () => {
+    if (this.state.latitude === '') {
+      this.setState({ missingLatitude: true });
+    } else if (this.state.longitude === '') {
+      this.setState({ missingLongitude: true });
+    } else {
+      this.props.actions.updateObservationCoordinates(this.state.selected.userObservation_id, this.state.latitude, this.state.longitude).then(() => {
+        this.props.actions.getObservations().then(() => {
+          this.setState({ openCoordinates: false });
+        })
+      });
+    }
+  }
+
+  /**
+   * Set current coordinates if location is available
+   */
+  getCoordinates = () => {
+    if (this.props.latitude === 'undefined') {
+      Alert.alert(
+        this.props.strings.noLocationHeader,
+        this.props.strings.noLocation + " ",
+        [
+          { text: this.props.strings.ok },
+        ],
+        { cancelable: true }
+      );
+    } else {
+      this.setState({ longitude: this.props.longitude, latitude: this.props.latitude });
+    }
+  }
+
+  /**
  * Filter observations list
  */
   filterList = (filter) => {
@@ -138,12 +192,157 @@ class Observation extends React.PureComponent {
     return list;
   }
 
+  /**
+   * Render if list is empty
+   */
   renderEmpty() {
     return (
       <View style={styles.topContainer}>
         <Text style={styles.topText}>{this.props.strings.noObservations}</Text>
       </View>
     );
+  }
+
+  /**
+   * Render observations list
+   */
+  renderObservations() {
+    return (
+      <FlatList
+        style={styles.list}
+        data={this.state.obsList}
+        extraData={this.state}
+        keyExtractor={item => item.userObservation_id.toString()}
+        renderItem={(item) =>
+          <ObservationElement
+            latinName={item.item.latinName}
+            localName={item.item.localName}
+            place={item.item.place}
+            county={item.item.county}
+            obsLatitude={item.item.latitude}
+            obsLongitude={item.item.longitude}
+            obsDateTime={item.item.obsDateTime}
+            obsItem={item.item}
+            onDelete={this.onClickDelete}
+            onSelectCoordinates={this.onSelectCoordinates}
+          />
+        }
+      />
+    )
+  }
+
+  /**
+   * Render modal dialog for saving new coordinates
+   */
+  renderModal() {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.openCoordinates}
+        onRequestClose={() => this.setState({ openCoordinates: false })}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <View>
+              <View>
+                <Text
+                  style={{
+                    fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
+                    textAlign: "center",
+                    color: 'black',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {this.state.selected !== undefined ? this.state.selected.localName : undefined}
+                </Text>
+                <Text style={{
+                  marginBottom: 20,
+                  color: 'black',
+                  textAlign: "center"
+                }}>
+                  {this.state.selected !== undefined ? this.state.selected.obsDateTime : undefined}
+                </Text>
+                <Text>{this.props.strings.saveCoordinates}</Text>
+                <Button
+                  iconLeft
+                  style={{ padding: 10 }}
+                  transparent
+                  onPress={this.getCoordinates}
+                >
+                  <Icon name="location-pin" size={26} />
+                  <Text
+                    style={
+                      this.props.deviceTypeAndroidTablet
+                        ? AndroidTabletStyles.text3
+                        : styles.text3
+                    }
+                  >
+                    {this.props.strings.curCoor}
+                  </Text>
+                </Button>
+              </View>
+              <Form>
+                <TextInput
+                  placeholder={this.props.strings.latitude}
+                  style={[styles.textInput, this.state.missingLatitude ? styles.missingText : undefined]}
+                  onChangeText={latitude => this.setState({ latitude: latitude })}
+                  value={this.state.latitude}
+                />
+                <TextInput
+                  placeholder={this.props.strings.longitude}
+                  style={[styles.textInput, this.state.missingLongitude ? styles.missingText : undefined]}
+                  onChangeText={longitude => this.setState({ longitude: longitude })}
+                  value={this.state.longitude}
+                />
+              </Form>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  padding: 10,
+                  marginTop: 20
+                }}
+              >
+                <Button
+                  iconLeft
+                  style={{ padding: 10 }}
+                  transparent
+                  onPress={() => this.setState({ openCoordinates: false })}
+                >
+                  <Icon name="chevron-left" size={26} />
+                  <Text
+                    style={
+                      this.props.deviceTypeAndroidTablet
+                        ? AndroidTabletStyles.text3
+                        : styles.text3
+                    }
+                  >
+                    {this.props.strings.cancel}
+                  </Text>
+                </Button>
+                <Button
+                  transparent
+                  iconLeft
+                  onPress={this.setCoordinates}
+                >
+                  <Icon name="cycle" size={26} />
+                  <Text
+                    style={
+                      this.props.deviceTypeAndroidTablet
+                        ? AndroidTabletStyles.text3
+                        : styles.text3
+                    }
+                  >
+                    {this.props.strings.update}
+                  </Text>
+                </Button>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal >
+    )
   }
 
   render() {
@@ -177,25 +376,9 @@ class Observation extends React.PureComponent {
           {this.state.obsList.length === 0 ? (
             this.renderEmpty()
           ) : (
-              <FlatList
-                style={styles.list}
-                data={this.state.obsList}
-                keyExtractor={item => item.userObservation_id.toString()}
-                renderItem={(item) =>
-                  <ObservationElement
-                    latinName={item.item.latinName}
-                    localName={item.item.localName}
-                    place={item.item.place}
-                    county={item.item.county}
-                    latitude={item.item.latitude}
-                    longitude={item.item.longitude}
-                    obsDateTime={item.item.obsDateTime}
-                    obsId={item.item.userObservation_id}
-                    onDelete={this.onClickDelete}
-                  />
-                }
-              />
+              this.renderObservations()
             )}
+          {this.renderModal()}
         </Container>
       </StyleProvider>
     );
@@ -263,7 +446,40 @@ const styles = StyleSheet.create({
   list: {
     backgroundColor: '#65C86012',
     zIndex: 2000
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  textInput: {
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 5,
+    marginTop: 20,
+  },
+  missingText: {
+    borderColor: "red",
+  },
+  text3: {
+    color: 'black',
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({

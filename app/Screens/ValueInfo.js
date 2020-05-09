@@ -4,33 +4,8 @@
  */
 
 import React, { Component } from "react";
-import {
-    View,
-    StyleSheet,
-    Image,
-    TouchableHighlight,
-    Text,
-    Dimensions,
-} from "react-native";
-import {
-    Container,
-    StyleProvider,
-    Header,
-    Footer,
-    FooterTab,
-    Title,
-    Spinner,
-    Content,
-    Button,
-    Left,
-    Right,
-    Body,
-    Icon,
-    H2,
-    Grid,
-    Col,
-    Row
-} from "native-base";
+import { View, StyleSheet, Image, TouchableHighlight, Dimensions } from "react-native";
+import { Container, StyleProvider, Content, Col, Row } from "native-base";
 import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
 

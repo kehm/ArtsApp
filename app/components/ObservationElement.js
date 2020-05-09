@@ -70,8 +70,8 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.latitude !== 'undefined' ? (
-                "(" + this.props.latitude + ", ") : (
+              {this.props.obsLatitude !== 'undefined' ? (
+                "(" + this.props.obsLatitude + ", ") : (
                   ""
                 )}
             </Text>
@@ -82,8 +82,8 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.longitude !== 'undefined' ? (
-                this.props.longitude + ")") : (
+              {this.props.obsLongitude !== 'undefined' ? (
+                this.props.obsLongitude + ")") : (
                   ""
                 )}
             </Text>
@@ -101,7 +101,10 @@ class ObservationElement extends React.PureComponent {
             <Menu ref={c => (this.menu = c)}>
               <MenuTrigger />
               <MenuOptions style={styles.dotMenu}>
-                <MenuOption onSelect={() => { this.props.onDelete(this.props.obsId) }} >
+                <MenuOption onSelect={() => { this.props.onSelectCoordinates(this.props.obsItem) }} >
+                  <Text style={styles.dotMenuTxt}>{this.props.strings.setCoordinates}</Text>
+                </MenuOption>
+                <MenuOption onSelect={() => { this.props.onDelete(this.props.obsItem.userObservation_id) }} >
                   <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
                 </MenuOption>
               </MenuOptions>

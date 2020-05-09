@@ -39,8 +39,6 @@ class MenuContent extends React.PureComponent {
     this.state = {
       frontSelect: true,
       obsSelect: false,
-      locSelect: false,
-      keysSelect: false,
     };
   }
 
@@ -50,13 +48,10 @@ class MenuContent extends React.PureComponent {
   componentDidUpdate() {
     switch (Actions.currentScene) {
       case (Actions.Frontpage.name):
-        this.setState({ frontSelect: true, obsSelect: false, locSelect: false, keysSelect: false });
+        this.setState({ frontSelect: true, obsSelect: false });
         break;
       case (Actions.Observation.name):
-        this.setState({ frontSelect: false, obsSelect: true, locSelect: false, keysSelect: false });
-        break;
-      case (Actions.UpdateLocation.name):
-        this.setState({ frontSelect: false, obsSelect: false, locSelect: true, keysSelect: false });
+        this.setState({ frontSelect: false, obsSelect: true });
         break;
     }
   }
@@ -102,16 +97,6 @@ class MenuContent extends React.PureComponent {
   onClickObs = () => {
     this.props.actions.closeMenu();
     Actions.Observation();
-  };
-
-  /**
-   * closes menu and
-   * opens the observation by location page(UpdateLocation.js).
-   * @return {void} [description]
-   */
-  onClickLocation = () => {
-    this.props.actions.closeMenu();
-    Actions.UpdateLocation();
   };
 
   /**
@@ -181,20 +166,6 @@ class MenuContent extends React.PureComponent {
             }
           >
             {this.props.strings.myObs}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickLocation} style={this.state.locSelect ? styles.selectedElement : null}>
-          <Left style={styles.leftIcon}>
-            <Icon name="location" size={26} />
-          </Left>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.updateLocation}
           </Text>
         </ListItem>
       </List>

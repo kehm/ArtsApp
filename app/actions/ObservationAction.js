@@ -18,11 +18,21 @@ export function deleteObservation(obsId) {
     }
   };
 }
+
 export function insertObservation(observationId) {
   return {
     type: actionTypes.NEW_OBSERVATION,
     payload: {
       promise: new DB_helper().insertNewObservation(observationId)
+    }
+  };
+}
+
+export function updateObservationCoordinates(obsId, latitude, longitude) {
+  return {
+    type: actionTypes.UPDATE_OBSERVATION_COORDINATES,
+    payload: {
+      promise: new DB_helper().updateUserObservationCoordinates(obsId, latitude, longitude)
     }
   };
 }

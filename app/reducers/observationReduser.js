@@ -78,6 +78,18 @@ export default function (state = DEFAULT_STATE, actions) {
         insertObs: 'fail',
         insertObsError: actions.payload
       };
+    case `${actionTypes.UPDATE_OBSERVATION_COORDINATES}_LOADING`:
+      return {
+        ...state,
+      };
+    case `${actionTypes.UPDATE_OBSERVATION_COORDINATES}_SUCCESS`:
+      return {
+        ...state,
+      };
+    case `${actionTypes.UPDATE_OBSERVATION_COORDINATES}_ERROR`:
+      return {
+        ...state,
+      };
     case `${actionTypes.GET_OBSERVATION}_LOADING`:
       return {
         ...state,

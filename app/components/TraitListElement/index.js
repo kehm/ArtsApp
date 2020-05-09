@@ -30,7 +30,6 @@ class TraitListElement extends React.Component<Props> {
   render() {
     const { title, total, included, isActive } = this.props;
     const activeStyle = isActive ? included < total ? styles.reduced : styles.all : styles.empty;
-    console.log(title + ": " + isActive)
     let numberBadgeStyle = styles.numberBadgeFull;
     if(included === 0) numberBadgeStyle = styles.numberBadgeEmpty;
     else if(included < total) numberBadgeStyle = styles.numberBadgeReduced;

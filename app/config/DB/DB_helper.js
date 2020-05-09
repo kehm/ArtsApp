@@ -46,16 +46,16 @@ export default class DB_helper {
     return database_size;
   }
 
-  static closeCB() {}
+  static closeCB() { }
 
-  static openCB() {}
-  static closeCB() {}
+  static openCB() { }
+  static closeCB() { }
 
   static errorCB(err) {
     return false;
   }
 
-  dbDeleted() {}
+  dbDeleted() { }
 
   deleteDatabase() {
     SQLite.deleteDatabase(database_name, this.dbDeleted, this.errorCB);
@@ -127,13 +127,13 @@ export default class DB_helper {
       if (arg.old_version === 1 || arg.force) {
         this.db.executeSql(
           "CREATE TABLE IF NOT EXISTS traitHasSP( " +
-            "_id INTEGER PRIMARY KEY NOT NULL, " +
-            "trait_id INTEGER NOT NULL, " +
-            "species_id INTEGER NOT NULL, " +
-            "key_id INTEGER, " +
-            "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id ), " +
-            "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
-            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+          "_id INTEGER PRIMARY KEY NOT NULL, " +
+          "trait_id INTEGER NOT NULL, " +
+          "species_id INTEGER NOT NULL, " +
+          "key_id INTEGER, " +
+          "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id ), " +
+          "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
+          "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
           [],
           () => {
             resolve();
@@ -179,8 +179,8 @@ export default class DB_helper {
         () => {
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS Settings( " +
-              "version_id INTEGER PRIMARY KEY NOT NULL, " +
-              "lastUpdate DATETIME DEFAULT CURRENT_TIMESTAMP ); ",
+            "version_id INTEGER PRIMARY KEY NOT NULL, " +
+            "lastUpdate DATETIME DEFAULT CURRENT_TIMESTAMP ); ",
             [],
             successCB,
             errorCB
@@ -188,17 +188,17 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS Key( " +
-              "key_id INTEGER PRIMARY KEY NOT NULL, " +
-              "title TEXT, " +
-              "keyInfo TEXT, " +
-              "keyStatus TEXT, " +
-              "level TEXT, " +
-              "author TEXT, " +
-              "version INTEGER, " +
-              "image INTEGER DEFAULT 1," +
-              "keyDownloaded INTEGER DEFAULT 0, " +
-              "updateTrigger INTEGER DEFAULT 0, " +
-              "keyWeb TEXT ); ",
+            "key_id INTEGER PRIMARY KEY NOT NULL, " +
+            "title TEXT, " +
+            "keyInfo TEXT, " +
+            "keyStatus TEXT, " +
+            "level TEXT, " +
+            "author TEXT, " +
+            "version INTEGER, " +
+            "image INTEGER DEFAULT 1," +
+            "keyDownloaded INTEGER DEFAULT 0, " +
+            "updateTrigger INTEGER DEFAULT 0, " +
+            "keyWeb TEXT ); ",
             [],
             successCB,
             errorCB
@@ -206,17 +206,17 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS Species( " +
-              "species_id INTEGER PRIMARY KEY NOT NULL, " +
-              "latinName TEXT, " +
-              "localName TEXT, " +
-              "speciesText TEXT, " +
-              "spOrder TEXT, " +
-              "family TEXT, " +
-              "distributionLocal TEXT, " +
-              "distributionCountry TEXT, " +
-              "key_id INTEGER, " +
-              "spesialKey INTEGER DEFAULT 0); " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE; ",
+            "species_id INTEGER PRIMARY KEY NOT NULL, " +
+            "latinName TEXT, " +
+            "localName TEXT, " +
+            "speciesText TEXT, " +
+            "spOrder TEXT, " +
+            "family TEXT, " +
+            "distributionLocal TEXT, " +
+            "distributionCountry TEXT, " +
+            "key_id INTEGER, " +
+            "spesialKey INTEGER DEFAULT 0); " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE; ",
             [],
             successCB,
             errorCB
@@ -224,11 +224,11 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS Trait( " +
-              "trait_id INTEGER PRIMARY KEY NOT NULL, " +
-              "traitText TEXT, " +
-              "important INTEGER DEFAULT 0, " +
-              "key_id INTEGER, " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "trait_id INTEGER PRIMARY KEY NOT NULL, " +
+            "traitText TEXT, " +
+            "important INTEGER DEFAULT 0, " +
+            "key_id INTEGER, " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -236,13 +236,13 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS Value( " +
-              "value_id INTEGER PRIMARY KEY NOT NULL, " +
-              "valueText TEXT, " +
-              "valueInfo TEXT, " +
-              "trait_id INTEGER, " +
-              "key_id INTEGER, " +
-              "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "value_id INTEGER PRIMARY KEY NOT NULL, " +
+            "valueText TEXT, " +
+            "valueInfo TEXT, " +
+            "trait_id INTEGER, " +
+            "key_id INTEGER, " +
+            "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -250,13 +250,13 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS SpHasValue( " +
-              "spHasValue_id INTEGER PRIMARY KEY NOT NULL, " +
-              "species_id INTEGER, " +
-              "value_id INTEGER, " +
-              "key_id INTEGER, " +
-              "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id ), " +
-              "FOREIGN KEY ( value_id ) REFERENCES Value ( value_id ), " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "spHasValue_id INTEGER PRIMARY KEY NOT NULL, " +
+            "species_id INTEGER, " +
+            "value_id INTEGER, " +
+            "key_id INTEGER, " +
+            "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id ), " +
+            "FOREIGN KEY ( value_id ) REFERENCES Value ( value_id ), " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -264,12 +264,12 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS Image( " +
-              "image_id INTEGER PRIMARY KEY NOT NULL, " +
-              "type TEXT NOT NULL, " +
-              "typeId INTEGER, " +
-              "img TEXT NOT NULL, " +
-              "key_id INTEGER, " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "image_id INTEGER PRIMARY KEY NOT NULL, " +
+            "type TEXT NOT NULL, " +
+            "typeId INTEGER, " +
+            "img TEXT NOT NULL, " +
+            "key_id INTEGER, " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -277,13 +277,13 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS TraitEliminate( " +
-              "traitEliminate_id INTEGER PRIMARY KEY NOT NULL, " +
-              "trait_id INTEGER, " +
-              "value_Id TEXT NOT NULL, " +
-              "key_id INTEGER, " +
-              "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
-              "FOREIGN KEY ( value_id ) REFERENCES Value ( value_id ), " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "traitEliminate_id INTEGER PRIMARY KEY NOT NULL, " +
+            "trait_id INTEGER, " +
+            "value_Id TEXT NOT NULL, " +
+            "key_id INTEGER, " +
+            "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
+            "FOREIGN KEY ( value_id ) REFERENCES Value ( value_id ), " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -291,15 +291,15 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS NerbyObservation( " +
-              "nerbyObservation_id INTEGER PRIMARY KEY NOT NULL, " +
-              "species_id INTEGER NOT NULL, " +
-              "obsSmall INTEGER NOT NULL, " +
-              "obsMedium INTEGER NOT NULL, " +
-              "obsLarge INTEGER NOT NULL, " +
-              "obsCounty INTEGER NOT NULL, " +
-              "key_id INTEGER NOT NULL, " +
-              "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id )" +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "nerbyObservation_id INTEGER PRIMARY KEY NOT NULL, " +
+            "species_id INTEGER NOT NULL, " +
+            "obsSmall INTEGER NOT NULL, " +
+            "obsMedium INTEGER NOT NULL, " +
+            "obsLarge INTEGER NOT NULL, " +
+            "obsCounty INTEGER NOT NULL, " +
+            "key_id INTEGER NOT NULL, " +
+            "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id )" +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -307,13 +307,13 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS ObsUpdateLocation( " +
-              "obsUpdateLocation_id INTEGER PRIMARY KEY NOT NULL, " +
-              "locLat TEXT NOT NULL, " +
-              "locLong TEXT NOT NULL, " +
-              "place TEXT, " +
-              "county TEXT, " +
-              "municipality TEXT, " +
-              "dateTime DATETIME DEFAULT CURRENT_TIMESTAMP) ; ",
+            "obsUpdateLocation_id INTEGER PRIMARY KEY NOT NULL, " +
+            "locLat TEXT NOT NULL, " +
+            "locLong TEXT NOT NULL, " +
+            "place TEXT, " +
+            "county TEXT, " +
+            "municipality TEXT, " +
+            "dateTime DATETIME DEFAULT CURRENT_TIMESTAMP) ; ",
             [],
             successCB,
             errorCB
@@ -321,20 +321,20 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS UserObservation( " +
-              "userObservation_id INTEGER PRIMARY KEY NOT NULL, " +
-              "latinName TEXT, " +
-              "localName TEXT, " +
-              "spOrder TEXT, " +
-              "family TEXT, " +
-              "species_id TEXT, " +
-              "latitude TEXT NOT NULL, " +
-              "longitude TEXT NOT NULL, " +
-              "place TEXT, " +
-              "county TEXT, " +
-              "municipality TEXT, " +
-              "key_id INTEGER NOT NULL, " +
-              "obsDateTime DATETIME DEFAULT CURRENT_TIMESTAMP) ; " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id )) ; ",
+            "userObservation_id INTEGER PRIMARY KEY NOT NULL, " +
+            "latinName TEXT, " +
+            "localName TEXT, " +
+            "spOrder TEXT, " +
+            "family TEXT, " +
+            "species_id TEXT, " +
+            "latitude TEXT NOT NULL, " +
+            "longitude TEXT NOT NULL, " +
+            "place TEXT, " +
+            "county TEXT, " +
+            "municipality TEXT, " +
+            "key_id INTEGER NOT NULL, " +
+            "obsDateTime DATETIME DEFAULT CURRENT_TIMESTAMP) ; " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id )) ; ",
             [],
             successCB,
             errorCB
@@ -342,13 +342,13 @@ export default class DB_helper {
 
           this.db.executeSql(
             "CREATE TABLE IF NOT EXISTS traitHasSP( " +
-              "_id INTEGER PRIMARY KEY NOT NULL, " +
-              "trait_id INTEGER NOT NULL, " +
-              "species_id INTEGER NOT NULL, " +
-              "key_id INTEGER, " +
-              "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id ), " +
-              "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
-              "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
+            "_id INTEGER PRIMARY KEY NOT NULL, " +
+            "trait_id INTEGER NOT NULL, " +
+            "species_id INTEGER NOT NULL, " +
+            "key_id INTEGER, " +
+            "FOREIGN KEY ( species_id ) REFERENCES Species ( species_id ), " +
+            "FOREIGN KEY ( trait_id ) REFERENCES Trait ( trait_id ), " +
+            "FOREIGN KEY ( key_id ) REFERENCES Key ( key_id ) ON DELETE CASCADE ) ; ",
             [],
             successCB,
             errorCB
@@ -356,11 +356,11 @@ export default class DB_helper {
 
           this.db.executeSql(
             "INSERT INTO Settings VALUES (" +
-              database_version +
-              ", CURRENT_TIMESTAMP );",
+            database_version +
+            ", CURRENT_TIMESTAMP );",
             [],
-            () => {},
-            e => {}
+            () => { },
+            e => { }
           );
         },
         err => {
@@ -460,7 +460,7 @@ export default class DB_helper {
       }
       this.db.executeSql(
         "UPDATE Key SET title = ?, keyInfo = ?, keyStatus = ?, level = ?, author = ?, version = ?, keyDownloaded = ?, keyWeb = ? " +
-          "WHERE key_id = ? ",
+        "WHERE key_id = ? ",
         [
           key.title,
           key.description,
@@ -495,11 +495,11 @@ export default class DB_helper {
       return new Promise((res, rej) => {
         fetch(
           URLs.OCCURENCE_BASE +
-            key.keyWeb +
-            "?lon=" +
-            longitude +
-            "&lat=" +
-            latitude
+          key.keyWeb +
+          "?lon=" +
+          longitude +
+          "&lat=" +
+          latitude
         )
           .then(response => response.json())
           .then(responseJson => {
@@ -549,7 +549,7 @@ export default class DB_helper {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
         "INSERT INTO NerbyObservation (species_id, obsSmall, obsMedium, obsLarge, obsCounty, key_id ) " +
-          "VALUES (?,?,?,?,?,?);",
+        "VALUES (?,?,?,?,?,?);",
         [
           nerbyObservation.species_id,
           nerbyObservation.obsSmall,
@@ -651,7 +651,7 @@ export default class DB_helper {
             () => {
               this.db.executeSql(
                 "UPDATE Key SET key_id = ?, title = ?, keyInfo = ?, keyStatus = ?, level = ?, author = ?, version = ?, keyDownloaded = ?  " +
-                  "WHERE keyWeb = ? ",
+                "WHERE keyWeb = ? ",
                 [
                   key.id,
                   key.title,
@@ -685,7 +685,7 @@ export default class DB_helper {
   insertSpecies(sp) {
     this.db.executeSql(
       "INSERT INTO Species (species_id, latinName, localName, speciesText, spOrder, family, distributionLocal, distributionCountry, key_id, spesialKey) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?);",
+      "VALUES (?,?,?,?,?,?,?,?,?,?);",
       [
         sp.speciesId,
         sp.latinName,
@@ -698,8 +698,8 @@ export default class DB_helper {
         sp.keyId,
         sp.spesialKey
       ],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -711,10 +711,10 @@ export default class DB_helper {
   insertTrait(trait) {
     this.db.executeSql(
       "INSERT INTO Trait (trait_id, traitText, important, key_id) " +
-        "VALUES (?,?,?,?);",
+      "VALUES (?,?,?,?);",
       [trait.traitId, trait.traitText, trait.important, trait.keyId],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -726,7 +726,7 @@ export default class DB_helper {
   insertValue(value) {
     this.db.executeSql(
       "INSERT INTO Value (value_id, valueText, valueInfo, trait_id, key_id) " +
-        "VALUES (?,?,?,?,?);",
+      "VALUES (?,?,?,?,?);",
       [
         value.valueId,
         value.valueText,
@@ -734,8 +734,8 @@ export default class DB_helper {
         value.traitId,
         value.keyId
       ],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -747,10 +747,10 @@ export default class DB_helper {
   spHasValue(spHV) {
     this.db.executeSql(
       "INSERT INTO SpHasValue (spHasValue_id, species_id, value_id, key_id) " +
-        "VALUES (?,?,?,?);",
+      "VALUES (?,?,?,?);",
       [spHV.spHasValueId, spHV.spId, spHV.valueId, spHV.keyId],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -762,10 +762,10 @@ export default class DB_helper {
   insertImage(image) {
     this.db.executeSql(
       "INSERT INTO Image (image_id, type, typeId, img, key_id ) " +
-        "VALUES (?,?,?,?,?);",
+      "VALUES (?,?,?,?,?);",
       [image.imageId, image.type, image.typeId, image.image, image.keyId],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -777,10 +777,10 @@ export default class DB_helper {
   insertTraitEliminate(trEl) {
     this.db.executeSql(
       "INSERT INTO TraitEliminate (trait_id, value_Id, key_id) " +
-        "VALUES (?,?,?);",
+      "VALUES (?,?,?);",
       [trEl.traitId, trEl.valueId, trEl.keyId],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -792,10 +792,10 @@ export default class DB_helper {
   insertTraitHasSP(trSP) {
     this.db.executeSql(
       "INSERT INTO traitHasSP (trait_id, species_id, key_id) " +
-        "VALUES (?,?,?);",
+      "VALUES (?,?,?);",
       [trSP.traitId, trSP.species_id, trSP.keyId],
-      () => {},
-      e => {}
+      () => { },
+      e => { }
     );
   }
 
@@ -812,7 +812,7 @@ export default class DB_helper {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
         "INSERT INTO UserObservation ( latinName, localName, spOrder, family, species_id, latitude, longitude, place, county, key_id, obsDateTime) " +
-          "VALUES (?,?,?,?,?,?,?,?,?,?,? )",
+        "VALUES (?,?,?,?,?,?,?,?,?,?,? )",
         [
           observation.latinName,
           observation.localName,
@@ -837,6 +837,33 @@ export default class DB_helper {
   }
 
   /**
+   * Update observation coordinates
+   * 
+   * @param {*} obsId Observation ID
+   * @param {*} latitude Latitude
+   * @param {*} longitude  Longitude
+   */
+  updateUserObservationCoordinates(obsId, latitude, longitude) {
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "UPDATE UserObservation SET latitude = ?, longitude = ? " +
+        "WHERE userObservation_id = ? ",
+        [
+          latitude,
+          longitude,
+          obsId,
+        ],
+        () => {
+          resolve();
+        },
+        e => {
+          reject();
+        }
+      );
+    });
+  }
+
+  /**
                     Functions for getting data from DB.
                     ####################################
   */
@@ -850,9 +877,9 @@ export default class DB_helper {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
         "SELECT * FROM Image " +
-          "WHERE key_id = ? " +
-          "AND type =? " +
-          "ORDER BY typeId ",
+        "WHERE key_id = ? " +
+        "AND type =? " +
+        "ORDER BY typeId ",
         [keyId, "v"],
         result => {
           templist = result.rows.raw().map((ele, index) => {
@@ -903,9 +930,9 @@ export default class DB_helper {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
         "SELECT * FROM Image " +
-          "WHERE key_id = ? " +
-          "AND type =? " +
-          "ORDER BY typeId ",
+        "WHERE key_id = ? " +
+        "AND type =? " +
+        "ORDER BY typeId ",
         [keyId, "s"],
         result => {
           templist = result.rows.raw().map((ele, index) => {
@@ -1139,11 +1166,11 @@ export default class DB_helper {
               for (let i = 0; i < res.length; i++) {
                 this.db.executeSql(
                   " SELECT trait_id " +
-                    " FROM Value AS v" +
-                    " WHERE v.value_id IN (" +
-                    " SELECT sv.value_id" +
-                    " FROM SpHasValue AS sv" +
-                    " WHERE sv.species_id = ? AND key_id = ?)",
+                  " FROM Value AS v" +
+                  " WHERE v.value_id IN (" +
+                  " SELECT sv.value_id" +
+                  " FROM SpHasValue AS sv" +
+                  " WHERE sv.species_id = ? AND key_id = ?)",
                   [res[i].species_id, keyId],
                   tr => {
                     res[i].traits = Array.from(
@@ -1157,8 +1184,8 @@ export default class DB_helper {
                 );
                 this.db.executeSql(
                   " SELECT value_id" +
-                    " FROM SpHasValue " +
-                    " WHERE species_id = ? ",
+                  " FROM SpHasValue " +
+                  " WHERE species_id = ? ",
                   [res[i].species_id],
                   ve => {
                     res[i].values = ve.rows.raw().map(item => {
@@ -1194,17 +1221,17 @@ export default class DB_helper {
       qString = "(" + values.join(",") + ")";
       this.db.executeSql(
         "SELECT s.species_id, s.latinName, s.localName, s.speciesText, s.spOrder, s.family, s.distributionLocal, s.distributionCountry,s.key_id, s.spesialKey" +
-          " FROM Species AS s" +
-          " WHERE s.species_id IN (" +
-          " SELECT sv.species_id" +
-          " FROM SpHasValue AS sv" +
-          " WHERE sv.value_id IN " +
-          qString +
-          " AND sv.key_id = ?" +
-          " GROUP BY species_id" +
-          " HAVING count(species_id) = " +
-          values.length +
-          " ) ",
+        " FROM Species AS s" +
+        " WHERE s.species_id IN (" +
+        " SELECT sv.species_id" +
+        " FROM SpHasValue AS sv" +
+        " WHERE sv.value_id IN " +
+        qString +
+        " AND sv.key_id = ?" +
+        " GROUP BY species_id" +
+        " HAVING count(species_id) = " +
+        values.length +
+        " ) ",
         [keyId],
         result => {
           resolve(result.rows.raw());

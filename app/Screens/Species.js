@@ -3,28 +3,7 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import {
-  StyleProvider,
-  Button,
-  Container,
-  Header,
-  Title,
-  Subtitle,
-  Content,
-  Footer,
-  FooterTab,
-  Tabs,
-  Tab,
-  TabHeading,
-  Grid,
-  Row,
-  Col,
-  Left,
-  Right,
-  Body,
-  Form,
-  Picker
-} from "native-base";
+import { StyleProvider, Button, Container, Header, Content, Tabs, Tab, Row, Col, Left, Form, Picker } from "native-base";
 import { Alert, StyleSheet, Text, View, TextInput, TouchableHighlight, Image, Modal } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
@@ -283,7 +262,7 @@ class Species extends React.PureComponent {
                 <TextInput
                   placeholder={this.props.strings.place}
                   style={[styles.textInput, this.state.missingText ? styles.missingText : undefined]}
-                  onChangeText={place => this.setState({ place })}
+                  onChangeText={place => this.setState({ place: place })}
                   value={this.state.place}
                 />
                 <Picker note

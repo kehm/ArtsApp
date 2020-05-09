@@ -6,7 +6,7 @@ import React, { Component } from "react";
 import { SectionList, Text, View } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { List, ListItem } from "native-base";
-import { Button, Icon, Container, StyleProvider, Header, Footer, FooterTab, Title, Content, Left, Right } from "native-base";
+import { Button, Icon, Container, StyleProvider, Header, Title, Content, Left, Right } from "native-base";
 import SpeciesElement from "../components/SpeciesElement";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { findIndex } from "lodash";

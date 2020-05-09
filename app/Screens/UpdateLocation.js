@@ -3,41 +3,8 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  TextInput,
-  Dimensions,
-  Text,
-  Modal,
-  Alert
-} from "react-native";
-import {
-  StyleProvider,
-  Container,
-  Header,
-  FooterTab,
-  Footer,
-  List,
-  Input,
-  Spinner,
-  CheckBox,
-  Body,
-  InputGroup,
-  Left,
-  Right,
-  ListItem,
-  Title,
-  Content,
-  Button,
-  H1,
-  H2,
-  H3,
-  Grid,
-  Col,
-  Row
-} from "native-base";
+import { View, StyleSheet, TextInput, Dimensions, Text, Modal, Alert } from "react-native";
+import { StyleProvider, Container, Header, List, Input, Spinner, Left, Right, ListItem, Content, Button, Col, Row } from "native-base";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { Actions } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/Entypo";
