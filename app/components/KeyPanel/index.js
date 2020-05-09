@@ -25,7 +25,7 @@ class KeyPanel extends React.PureComponent<Props, State> {
       currentIndex: 0,
       prevIndex: 0,
       currentKey: undefined,
-    })
+    });
   }
 
   /**

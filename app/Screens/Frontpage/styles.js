@@ -68,9 +68,6 @@ export default StyleSheet.create({
     right: 12,
     bottom: 8
   },
-  hide: {
-    display: 'none'
-  },
   search: {
     maxWidth: '80%',
     marginTop: 6,

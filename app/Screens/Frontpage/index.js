@@ -165,21 +165,25 @@ class Frontpage extends React.PureComponent<Props, State> {
             }
           />
           <View style={styles.container}>
-            <View style={this.state.openFilter ? styles.hide : undefined}>
-              <KeyPanel
-                keys={this.state.keyList}
-                index={0}
-                selected={this.state.selected}
-                strings={strings}
-                onPress={this.handleOnPressKey}
-                onInfo={this.handleOnInfoClick}
-                onUpdate={this.updateIndex}
-              />
-              <View style={[styles.headerContainer]}>
-                <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
-                <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} />
+            {!this.state.openFilter ? (
+              <View >
+                <KeyPanel
+                  keys={this.props.keys}
+                  index={0}
+                  selected={this.state.selected}
+                  strings={strings}
+                  onPress={this.handleOnPressKey}
+                  onInfo={this.handleOnInfoClick}
+                  onUpdate={this.updateIndex}
+                />
+                <View style={[styles.headerContainer]}>
+                  <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
+                  <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} />
+                </View>
               </View>
-            </View>
+            ) : (
+                <View />
+              )}
             <SwipeListView
               style={[styles.list, this.state.openFilter ? styles.filteredList : undefined]}
               useFlatList={true}
@@ -188,8 +192,8 @@ class Frontpage extends React.PureComponent<Props, State> {
               renderItem={(item) =>
                 <TouchableOpacity style={[styles.listItem, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selected : undefined)]} onPress={() => this.state.openFilter ? undefined : this.updateIndex(item.item)}>
                   {item.item.keyDownloaded > 0 ? (
-                      <Icon style={styles.icon} name='align-bottom' size={26} color={'black'} />
-                      ) : (
+                    <Icon style={styles.icon} name='align-bottom' size={26} color={'black'} />
+                  ) : (
                       <View />
                     )}
                   <Text style={[styles.listText, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selectedText : undefined)]} >{item.item.title}</Text>

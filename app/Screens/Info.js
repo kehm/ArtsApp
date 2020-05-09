@@ -231,7 +231,7 @@ class Info extends React.PureComponent {
             </Grid>
           </Content>
           {!this.state.isDownloaded ? (
-            <TouchableOpacity style={styles.downloadBtn} onPress={() => { this.onClickUse(); }}>
+            <TouchableOpacity style={[styles.downloadBtn, this.props.keyDownloaded_LOADING ? styles.loading : undefined]} onPress={() => { this.onClickUse(); }}>
               <Text
                 style={[
                   this.props.deviceTypeAndroidTablet
@@ -366,6 +366,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 10,
   },
+  loading: {
+    backgroundColor: '#ccc'
+  }
 });
 
 const htmlstyles = StyleSheet.create({
