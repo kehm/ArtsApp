@@ -398,7 +398,7 @@ class Species extends React.PureComponent {
                   <InfoTab
                     tablet={this.props.deviceTypeAndroidTablet}
                     style={styles.container}
-                    info={this.props.selectedSpecies.speciesText}
+                    info={this.props.selectedSpecies.speciesText !== 'NA' ? this.props.selectedSpecies.speciesText : this.props.strings.noSpInfo}
                   />
                 </View>
               </Tab>

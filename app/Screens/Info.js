@@ -86,6 +86,7 @@ class Info extends React.PureComponent {
     const { isDownloaded, isDownloading } = prevState;
     if (isDownloaded !== this.state.isDownloaded) {
       this.setState({ isDownloaded: isDownloaded });
+      this.props.onKeyUpdate();
       Actions.pop();
     }
     if (isDownloading !== this.state.isDownloading) {

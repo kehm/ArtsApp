@@ -42,7 +42,7 @@ class Frontpage extends React.PureComponent<Props, State> {
       keyList: [],
       selected: undefined,
       filter: '',
-      openFilter: false
+      openFilter: false,
     }
   }
 
@@ -87,7 +87,7 @@ class Frontpage extends React.PureComponent<Props, State> {
           if (key.keyDownloaded > 0) {
             Actions.Key();
           } else {
-            Actions.Info({ selectedKey: key });
+            Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate });
           }
         }
       });
@@ -96,7 +96,7 @@ class Frontpage extends React.PureComponent<Props, State> {
       if (key.keyDownloaded > 0) {
         Actions.Key();
       } else {
-        Actions.Info({ selectedKey: key });
+        Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate });
       }
     }
   };
@@ -119,6 +119,13 @@ class Frontpage extends React.PureComponent<Props, State> {
     if (key.key_id !== this.state.selected) {
       this.setState({ selected: key.key_id })
     }
+  }
+
+  /**
+   * Trigger list re-render after key download
+   */
+  onKeyUpdate = () => {
+    this.filterList('');
   }
 
   /**

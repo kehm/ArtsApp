@@ -33,6 +33,14 @@ class SpeciesPanel extends React.Component<Props, State> {
     onSpeciesClick && onSpeciesClick(species);
   };
 
+  getStatusText = (foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies) => {
+    if (foundSpecies === 0) {
+      return (this.props.strings.noArtsLeft + ", " + totalSpecies + " " + this.props.strings.artsTotal);
+    } else {
+      return (foundSpecies + " " + this.props.strings.artsPossible + " " + totalSpecies + " " + this.props.strings.artsTotal);
+    }
+  };
+
   renderItem = item => {
     const {
       onViewAllClick,
@@ -116,13 +124,7 @@ class SpeciesPanel extends React.Component<Props, State> {
       numberOfObservedSpecies = observationsNearby.length;
       numberOfFoundSpecies = totalSpecies - numberOfObservedSpecies;
     }
-
-    const statusText = getStatusText(
-      foundSpecies,
-      totalSpecies,
-      numberOfObservedSpecies,
-      numberOfFoundSpecies
-    );
+    const statusText = this.getStatusText(foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies);
 
     return (
       <View style={styles.container}>
@@ -157,27 +159,5 @@ class SpeciesPanel extends React.Component<Props, State> {
     );
   }
 }
-
-const getStatusText = (
-  foundSpecies,
-  totalSpecies,
-  numberOfObservedSpecies,
-  numberOfFoundSpecies
-) => {
-  const observedCountText =
-    numberOfObservedSpecies > 0 ? numberOfObservedSpecies.toString() : "Ingen";
-  if (foundSpecies === 0) {
-    return observedCountText + " i nærheten, " + totalSpecies + " arter totalt";
-  }
-
-  return (
-    observedCountText +
-    " i nærheten av " +
-    foundSpecies +
-    " mulige - totalt " +
-    totalSpecies +
-    " arter."
-  );
-};
 
 export default SpeciesPanel;

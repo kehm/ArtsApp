@@ -53,7 +53,7 @@ class KeyPanelElement extends React.Component<Props> {
     const imageSize = { height: size - 2 * imageMarginV, width: size - 2 * imageMarginH };
 
     return (
-      <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(keyObject)}>
+      <TouchableOpacity activeOpacity={0.6} onLongPress={() => onPress(keyObject)}>
         <View style={[styles.outerContainer, containerSize]}>
           <View style={[styles.innerContainer, containerSize]}>
             {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
