@@ -445,7 +445,6 @@ const styles = StyleSheet.create({
   },
   list: {
     backgroundColor: '#65C86012',
-    zIndex: 2000
   },
   centeredView: {
     flex: 1,

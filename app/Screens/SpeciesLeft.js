@@ -1,12 +1,11 @@
 /**
- * @file Display list of species left after selection of trat values. Sorts the species(SP) into three categories, SP left, SP left locally, SP eliminated
+ * @file Display list of species left after selection of traits. Sorts species into three categories: species left, species eliminated, species nearby
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { Actions } from "react-native-router-flux";
-import { List, ListItem } from "native-base";
-import { Button, Icon, Container, StyleProvider, Header, Title, Content, Left, Right, Tabs, Tab } from "native-base";
+import { Container, StyleProvider, Content, Tabs, Tab } from "native-base";
 import SpeciesElement from "../components/SpeciesElement";
 import Toast, { DURATION } from "react-native-easy-toast";
 import ImageView from "react-native-image-viewing";
@@ -60,70 +59,7 @@ class SpeciesLeft extends React.PureComponent {
         };
     }
 
-    /**
-     * componentWillReceiveProps monitors the nextProps and nextState for updates.
-     * Handles updates of the nearby observed list, and sorts species thereafter. Also handles update errors.
-     * @param {Object} nextProps
-     * @param {Object} nextState
-     * @return {void}
-     */
-    componentWillReceiveProps(nextProps, nextState) {
-        if (
-            nextProps.getGerbyList &&
-            nextProps.nerbyList.length !== this.props.nerbyList.length
-        ) {
-            l = [];
-            if (nextProps.nerbyList.length !== 0) {
-                if (nextProps.speciesLeft.length !== 0) {
-                    for (let i = 0; i < nextProps.nerbyList.length; i++) {
-                        k = findIndex(nextProps.speciesLeft, {
-                            species_id: nextProps.nerbyList[i].species_id
-                        });
-                        if (k !== -1) {
-                            l.push(nextProps.speciesLeft[k]);
-                        }
-                    }
-                } else if (nextProps.chosenValues.length === 0) {
-                    for (let i = 0; i < nextProps.nerbyList.length; i++) {
-                        k = findIndex(nextProps.fullSpList, {
-                            species_id: nextProps.nerbyList[i].species_id
-                        });
-                        if (k !== -1) {
-                            l.push(nextProps.fullSpList[k]);
-                        }
-                    }
-                }
-            }
-            this.setState({
-                leftNerbyList: l ? l : [],
-                leftNotGeo: this.setNotNerby(nextProps.nerbyList)
-            });
-        }
-
-        if (nextProps.nerby_updated) {
-            if (nextProps.modalOpen) {
-                this.props.actions.changeModal();
-            }
-            this.refs.toast.show(this.props.strings.updateSuccess, 1500);
-            this.props.actions.changeUpdateSuccess();
-            this.props.actions.setSpNerby(this.props.chosenKey);
-        } else if (nextProps.nerby_updatedErrorBool) {
-            this.props.actions.updateReset();
-            alert(this.props.strings.updateUnavailableError);
-        }
-    }
-
-    onClickMenu = () => {
-        this.props.actions.openMenu();
-    };
-
-    onClickHome = () => {
-        Actions.popTo("Frontpage");
-    };
-
     onClickBack = () => {
-        this.getSections();
-
         Actions.pop();
     };
 
@@ -195,24 +131,6 @@ class SpeciesLeft extends React.PureComponent {
     };
 
     /**
-     * set selections lists with data
-     * @return {void}
-     */
-    getSections() {
-        let ret = [];
-        if (this.state.leftNerbyList.length !== 0) {
-            ret.push({ data: this.state.leftNerbyList, key: "geo" });
-        }
-        if (this.state.leftNotGeo.length !== 0) {
-            ret.push({ data: this.state.leftNotGeo, key: "left" });
-        }
-        if (this.state.spElim.length !== 0) {
-            ret.push({ data: this.state.spElim, key: "elim" });
-        }
-        return ret;
-    }
-
-    /**
      * Open image gallery on image click
      */
     onClickImage = (imageList) => {
@@ -228,140 +146,6 @@ class SpeciesLeft extends React.PureComponent {
                 openImages: true
             });
         }
-    };
-
-    renderSectionHeader = ({ section }) => {
-        switch (section.key) {
-            case "geo":
-                return (
-                    <View
-                        style={{
-                            padding: this.props.deviceTypeAndroidTablet ? 10 : 5,
-                            backgroundColor: "#c9c9c9"
-                        }}
-                    >
-                        <Text
-                            style={{ fontSize: this.props.deviceTypeAndroidTablet ? 26 : 13 }}
-                        >
-                            {this.props.strings.leftGeo}
-                        </Text>
-                    </View>
-                );
-                break;
-            case "left":
-                if (this.props.nerbyList.length === 0) {
-                    return (
-                        <View
-                            style={{
-                                padding: this.props.deviceTypeAndroidTablet ? 4 : 2,
-                                marginTop: -1,
-                                backgroundColor: "#c9c9c9"
-                            }}
-                        />
-                    );
-                }
-                return (
-                    <View
-                        style={{
-                            padding: this.props.deviceTypeAndroidTablet ? 10 : 5,
-                            marginTop: -1,
-                            backgroundColor: "#c9c9c9"
-                        }}
-                    >
-                        <Text
-                            style={{ fontSize: this.props.deviceTypeAndroidTablet ? 26 : 13 }}
-                        >
-                            {this.props.strings.leftNotGeo}
-                        </Text>
-                    </View>
-                );
-                break;
-            case "elim":
-                return (
-                    <View>
-                        <Title
-                            style={{
-                                color: "#F8F8F8",
-                                backgroundColor: "#F0A00C",
-                                padding: this.props.deviceTypeAndroidTablet ? 20 : 10
-                            }}
-                        >
-                            {this.props.strings.eliminated}
-                        </Title>
-                    </View>
-                );
-                break;
-            default:
-                return (
-                    <View>
-                        <Title
-                            style={{ padding: this.props.deviceTypeAndroidTablet ? 20 : 10 }}
-                        >
-                            {this.props.strings.eliminated}
-                        </Title>
-                        <ListItem itemDivider style={{ marginTop: -1 }}>
-                            <Text
-                                style={{
-                                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
-                                }}
-                            >
-                                {this.props.strings.eliminated}
-                            </Text>
-                        </ListItem>
-                    </View>
-                );
-        }
-    };
-
-    /**
-     * renders item, sorts after if locally found.
-     * @param {Object} item Secies object
-     * @return {View} Species list item view
-     */
-    renderItem = ({ item }) => {
-        let t = this.props.nerbyList[
-            findIndex(this.props.nerbyList, { species_id: item.species_id })
-        ];
-        if (this.props.nerbyList.length !== 0 && typeof t !== "undefined") {
-            return (
-                <ListItem
-                    button
-                    key={item.species_id}
-                    onPress={this.onClickSP.bind(this, item, t.obsSmall)}
-                >
-                    <SpeciesElement
-                        key={item.species_id}
-                        species_id={item.species_id}
-                        latinName={item.latinName}
-                        localName={item.localName}
-                        obsSmall={t.obsSmall}
-                        obsMedium={t.obsMedium}
-                        obsLarge={t.obsLarge}
-                        isAndroidTablet={this.props.deviceTypeAndroidTablet}
-                        noObs={this.props.nerbyList.length === 0 ? false : true}
-                    />
-                </ListItem>
-            );
-        }
-        return (
-            <ListItem
-                button
-                key={item.species_id}
-                onPress={this.onClickSP.bind(this, item, 0)}
-            >
-                <SpeciesElement
-                    key={item.species_id}
-                    species_id={item.species_id}
-                    latinName={item.latinName}
-                    localName={item.localName}
-                    obsSmall={0}
-                    obsMedium={0}
-                    obsLarge={0}
-                    isAndroidTablet={this.props.deviceTypeAndroidTablet}
-                    noObs={this.props.nerbyList.length === 0 ? false : true}
-                />
-            </ListItem>
-        );
     };
 
     render() {
@@ -419,7 +203,7 @@ const styles = StyleSheet.create({
     },
     tabStyle: {
         top: 56,
-        marginBottom: 50
+        marginBottom: 50,
     },
     topContainer: {
         backgroundColor: '#E1ECDF',

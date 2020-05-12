@@ -2,7 +2,7 @@
  * Tab for displaying list of possible species after traits selection
  */
 import React, { Component } from 'react';
-import { Text, View, FlatList, StyleSheet } from 'react-native';
+import { FlatList } from 'react-native';
 import SpeciesElement from "./SpeciesElement";
 
 class SpeciesLeftTab extends React.PureComponent {
@@ -14,7 +14,6 @@ class SpeciesLeftTab extends React.PureComponent {
     render() {
         return (
             <FlatList
-                style={styles.list}
                 data={this.props.list}
                 keyExtractor={item => item.species_id.toString()}
                 renderItem={(item) =>
@@ -36,9 +35,5 @@ class SpeciesLeftTab extends React.PureComponent {
         );
     }
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default SpeciesLeftTab;
