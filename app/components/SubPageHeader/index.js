@@ -24,7 +24,7 @@ class SubPageHeader extends React.Component<Props> {
                         <Icon style={styles.icon} name="arrow-back" />
                     </TouchableOpacity>
                 </Left>
-                <Body>
+                <Body style={styles.body}>
                     <Title style={styles.title}>{title}</Title>
                     {subtitle !== undefined ? (
                         <Subtitle>{subtitle}</Subtitle>

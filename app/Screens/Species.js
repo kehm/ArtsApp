@@ -3,7 +3,7 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleProvider, Button, Container, Header, Content, Tabs, Tab, Row, Col, Left, Form, Picker } from "native-base";
+import { StyleProvider, Button, Container, Content, Tabs, Tab, Row, Col, Left, Form, Picker } from "native-base";
 import { Alert, StyleSheet, Text, View, TextInput, TouchableHighlight, Image, Modal } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";

@@ -3,11 +3,7 @@
  */
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import {
-  Container, StyleProvider, Header, Footer, Subtitle,
-  FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem,
-  Left, Body, Right
-} from 'native-base';
+import { Container, StyleProvider, Header, Title, Icon, Left, Right } from 'native-base';
 import ImageView from "react-native-image-viewing";
 
 import { connect } from 'react-redux';

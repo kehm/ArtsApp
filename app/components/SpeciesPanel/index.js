@@ -112,11 +112,13 @@ class SpeciesPanel extends React.Component<Props, State> {
         return obsa < obsb;
       });
 
-    mappedElements.push({
+    const left = [{
       type: "button",
       title: strings.seeAllSpecies,
-      icon: "chevron-right"
-    });
+      icon: "chevron-left"
+    }];
+
+    const arr = [...left, ...mappedElements];
 
     let numberOfObservedSpecies = observationsNearby.length;
     let numberOfFoundSpecies = foundSpecies - numberOfObservedSpecies;
@@ -138,7 +140,7 @@ class SpeciesPanel extends React.Component<Props, State> {
         </TouchableOpacity>
         {!isCollapsed && species.length > 0 && (
           <HorizontalList
-            data={mappedElements}
+            data={arr}
             keyExtractor={item =>
               item.species ? item.species.species_id.toString() : item.title
             }

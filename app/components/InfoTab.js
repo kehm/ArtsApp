@@ -3,12 +3,7 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  ScrollView,
-  View,
-} from 'react-native';
+import { Text, ScrollView, View } from 'react-native';
 
 export default class InfoTab extends Component {
   render() {

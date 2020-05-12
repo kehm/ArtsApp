@@ -3,13 +3,16 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { SectionList, Text, View } from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { Actions } from "react-native-router-flux";
 import { List, ListItem } from "native-base";
-import { Button, Icon, Container, StyleProvider, Header, Title, Content, Left, Right } from "native-base";
+import { Button, Icon, Container, StyleProvider, Header, Title, Content, Left, Right, Tabs, Tab } from "native-base";
 import SpeciesElement from "../components/SpeciesElement";
 import Toast, { DURATION } from "react-native-easy-toast";
+import ImageView from "react-native-image-viewing";
 import { findIndex } from "lodash";
+import SpeciesLeftTab from "../components/SpeciesLeftTab";
+import SpeciesEliminatedTab from "../components/SpeciesEliminatedTab";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -52,7 +55,8 @@ class SpeciesLeft extends React.PureComponent {
             loading: false,
             spElim: this.setElimList(),
             leftNerbyList: props.navigation.getParam("leftNerbyList", []),
-            leftNotGeo: this.setNotNerby(props.nerbyList)
+            leftNotGeo: this.setNotNerby(props.nerbyList),
+            openImages: false
         };
     }
 
@@ -118,12 +122,21 @@ class SpeciesLeft extends React.PureComponent {
     };
 
     onClickBack = () => {
+        this.getSections();
+
         Actions.pop();
     };
 
     onClickSP = (sp, nerBy) => {
         Actions.Species({ nerby: nerBy, selectedSpecies: sp });
     };
+
+    /**
+     * Handle on species selected
+     */
+    onSpeciesSelected = (species) => {
+        Actions.Species({ nerby: 0, selectedSpecies: species });
+    }
 
     /**
      * used for setting the state of the list of all species that is left in collection, but not have any observations locally.
@@ -198,6 +211,24 @@ class SpeciesLeft extends React.PureComponent {
         }
         return ret;
     }
+
+    /**
+     * Open image gallery on image click
+     */
+    onClickImage = (imageList) => {
+        if (imageList.length !== 0) {
+            this.setState({
+                images: imageList.map(image => {
+                    if (this.props.platform === "ios") {
+                        return { uri: image };
+                    } else {
+                        return { uri: "file://" + image };
+                    }
+                }),
+                openImages: true
+            });
+        }
+    };
 
     renderSectionHeader = ({ section }) => {
         switch (section.key) {
@@ -333,16 +364,6 @@ class SpeciesLeft extends React.PureComponent {
         );
     };
 
-    /**
-     * Extracts key for species item.
-     * @param {Object} item  species object
-     * @param {Integer} index position of item
-     * @return {Integer} id of species
-     */
-    keyExtractor = (item, index) => {
-        return item.species_id.toString();
-    };
-
     render() {
         return (
             <StyleProvider
@@ -353,35 +374,70 @@ class SpeciesLeft extends React.PureComponent {
                 }
             >
                 <Container>
-                    <SubPageHeader title={this.props.strings.left} onClick={this.onClickBack} />
-                    <Content>
-                        <Right>
-                            <Button transparent>
-                                <Icon name="ios-pin" onPress={this.geoOnPress} />
-                            </Button>
-                        </Right>
-                        {this.state.leftNotGeo.length === 0 &&
-                            this.props.speciesLeft.length === 0 && (
-                                <View
-                                    style={{
-                                        height: this.props.deviceTypeAndroidTablet ? 100 : 50,
-                                        backgroundColor: "#FFF"
-                                    }}
-                                />
-                            )}
-                        <SectionList
-                            renderItem={this.renderItem}
-                            initialNumToRender={11}
-                            keyExtractor={this.keyExtractor}
-                            renderSectionHeader={this.renderSectionHeader}
-                            sections={this.getSections()}
-                        />
+                    <SubPageHeader title={this.props.strings.seeAllSpecies} onClick={this.onClickBack} />
+                    <ImageView
+                        images={this.state.images}
+                        imageIndex={0}
+                        visible={this.state.openImages}
+                        onRequestClose={() => this.setState({ openImages: false })}
+                    />
+                    <View style={styles.topContainer}>
+                        <Text style={styles.topText}>{this.props.strings.speciesViewAll} {this.props.strings.imageClickable}.</Text>
+                    </View>
+                    <Content style={styles.tabStyle}>
+                        <Tabs>
+                            <Tab heading={this.props.strings.possible} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
+                                activeTabStyle={styles.activeTabStyle}>
+                                {this.state.leftNotGeo.length !== 0 ? (
+                                    <SpeciesLeftTab list={this.state.leftNotGeo} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                ) : (
+                                        <View />
+                                    )}
+                            </Tab>
+                            <Tab heading={this.props.strings.eliminated} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
+                                activeTabStyle={styles.activeTabStyle}>
+                                {this.state.spElim.length !== 0 ? (
+                                    <SpeciesEliminatedTab list={this.state.spElim} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                ) : (
+                                        <View />
+                                    )}
+                            </Tab>
+                        </Tabs>
                     </Content>
                 </Container>
             </StyleProvider>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    activeTabStyle: {
+        backgroundColor: '#f0a00c'
+    },
+    tabTextStyle: {
+        color: 'black'
+    },
+    tabStyle: {
+        top: 56,
+        marginBottom: 50
+    },
+    topContainer: {
+        backgroundColor: '#E1ECDF',
+        position: 'absolute',
+        top: 56,
+        borderBottomWidth: 1,
+        borderColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 2,
+        width: '100%'
+    },
+    topText: {
+        fontSize: 14,
+        textAlign: 'center',
+        padding: 10
+    },
+});
 
 export default connect(
     mapStateToProps,

@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/Entypo";
+import { Actions } from "react-native-router-flux";
 
 import HorizontalList from "../HorizontalList";
 import TraitPanelElement from "../TraitPanelElement";
@@ -79,7 +80,7 @@ class TraitPanel extends React.Component<Props> {
       {
         type: "button",
         title: resetTitle,
-        icon: "refresh"
+        icon: "ccw"
       },
       ...mappedElements.slice().reverse()
     ];
@@ -88,13 +89,13 @@ class TraitPanel extends React.Component<Props> {
       <View style={styles.container}>
         {traits.length === 0 && (
           <View style={styles.emptyContainer}>
-            <Text style={styles.header}>{emptyHeader}</Text>
+            <Text style={styles.header}>{emptyHeader} <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} /></Text>
             <Text style={styles.description}>{emptyDescription}</Text>
           </View>
         )}
         {traits.length > 0 && header && (
           <View style={styles.headerContainer}>
-            <Text style={styles.label}>{header}</Text>
+            <Text style={styles.label}>{header} <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} /></Text>
           </View>
         )}
         {traits.length > 0 && (

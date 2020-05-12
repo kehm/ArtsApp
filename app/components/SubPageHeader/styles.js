@@ -15,5 +15,8 @@ export default StyleSheet.create({
     },
     rightCol: {
         marginRight: 5
+    },
+    body: {
+        minWidth: 40
     }
 });

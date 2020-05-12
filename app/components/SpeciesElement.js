@@ -1,25 +1,19 @@
 /**
- * @file SpeciesElement.js
+ * @file List element for species in the species lists in SpeciesLeft.js
  * @author Kjetil Fossheim
- *
- * List element for species in the species lists in SpeciesLeft.js
  */
 
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Platform,
-  Image
-} from "react-native";
+import { StyleSheet, Text, View, Dimensions, Platform, Image, TouchableOpacity } from "react-native";
 import { Grid, Row, Col } from "native-base";
+import ImageView from "react-native-image-viewing";
 
 // redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
 const mapStateToProps = state => ({
+  ...state.settings,
   ...state.nav,
   ...state.key
 });
@@ -39,10 +33,7 @@ class SpeciesElement extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (
-      typeof this.props.speciesImageList.get(this.props.species_id) !==
-      "undefined"
-    ) {
+    if (typeof this.props.speciesImageList.get(this.props.species_id) !== "undefined") {
       this.setState({
         images: this.props.speciesImageList.get(this.props.species_id)
       });
@@ -126,57 +117,68 @@ class SpeciesElement extends React.PureComponent {
           </Row>
         </Col>
       );
+    } else {
+      return <Col><Text style={styles.rightColTxt}>{this.props.strings.noObsAvailable}</Text></Col>;
     }
-    return <Col />;
   }
 
   render() {
     return (
       <View>
         <Grid style={{ width: Dimensions.get("window").width }}>
-          <Image
-            source={
-              Platform.OS === "ios"
-                ? { uri: this.state.images[0] }
-                : { uri: "file://" + this.state.images[0] }
-            }
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? {
+          <ImageView
+            images={this.state.selectedSpeciesImages}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+          />
+          <TouchableOpacity onPress={() => this.props.onClickImage(this.state.images)}>
+            <Image
+              source={
+                Platform.OS === "ios"
+                  ? { uri: this.state.images[0] }
+                  : { uri: "file://" + this.state.images[0] }
+              }
+              style={
+                this.props.deviceTypeAndroidTablet
+                  ? {
                     resizeMode: "contain",
                     height: 120,
                     width: 120,
                     marginRight: 5,
                     margin: 5
                   }
-                : {
+                  : {
                     resizeMode: "contain",
                     height: 70,
                     width: 70,
                     marginRight: 5,
                     margin: 5
                   }
-            }
-          />
+              }
+            />
+          </TouchableOpacity>
           <Col size={1}>
-            <Text
-              style={
-                this.props.isAndroidTablet
-                  ? AndroidTabletStyles.text1
-                  : styles.text1
-              }
-            >
-              {this.props.latinName}
-            </Text>
-            <Text
-              style={
-                this.props.isAndroidTablet
-                  ? AndroidTabletStyles.text2
-                  : styles.text2
-              }
-            >
-              {this.props.localName}
-            </Text>
+            <TouchableOpacity onPress={() => this.props.onPress()}>
+              <Text
+                style={
+                  this.props.isAndroidTablet
+                    ? AndroidTabletStyles.text1
+                    : styles.text1
+                }
+              >
+                {this.props.localName}
+              </Text>
+              <Text
+                style={
+                  this.props.isAndroidTablet
+                    ? AndroidTabletStyles.text2
+                    : styles.text2
+                }
+              >
+                {this.props.latinName}
+              </Text>
+            </TouchableOpacity>
           </Col>
           {this.renderNerbyObservation()}
         </Grid>
@@ -214,6 +216,9 @@ const styles = StyleSheet.create({
     margin: 5,
     textAlign: "center",
     color: "#000000"
+  },
+  rightColTxt: {
+    marginTop: 10,
   },
   image: {
     width: 20,
