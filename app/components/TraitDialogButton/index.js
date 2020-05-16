@@ -6,8 +6,14 @@ import ImageButton from '../ImageButton';
 
 import { mapToImageSource } from '../../utilities/image';
 
-import styles from './styles.js';
+import { styles, androidTabletStyles } from './styles.js';
 import { Button } from 'native-base';
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   value: Object,
@@ -67,22 +73,22 @@ class TraitDialogButton extends React.Component {
     const containerStyle = [styles.container];
     if (selected) containerStyle.push(styles.selected);
     if (!isActive) containerStyle.push(styles.inactive);
-    const imageContainerStyle = [styles.imageContainer];
+    const imageContainerStyle = [this.props.deviceTypeAndroidTablet ? androidTabletStyles.imageContainer : styles.imageContainer];
     if (selected) imageContainerStyle.push(styles.selectedImage);
     if (!isActive) imageContainerStyle.push(styles.inactiveImage);
     return (
       <View style={containerStyle} >
         <TouchableOpacity onPress={() => this.onClickImage()} style={imageContainerStyle}>
           {source && source.uri ? (
-            <Image source={source} style={styles.image} />
+            <Image source={source} style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.image : styles.image} />
           ) : (
               <View />
             )}
         </TouchableOpacity>
         <TouchableOpacity style={styles.titleIconContainer} onPress={this.onClick}>
-          <Text style={styles.title}>{value.valueText}</Text>
+          <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.title : styles.title}>{value.valueText}</Text>
           <TouchableOpacity onPress={this.onInfoPress}>
-            <Icon style={styles.icon} name='info-outline' size={30} />
+            <Icon style={styles.icon} name='info-outline' size={this.props.deviceTypeAndroidTablet ? 38 : 30} />
           </TouchableOpacity>
         </TouchableOpacity>
       </View>
@@ -91,4 +97,4 @@ class TraitDialogButton extends React.Component {
 
 }
 
-export default TraitDialogButton;
+export default connect(mapStateToProps)(TraitDialogButton);

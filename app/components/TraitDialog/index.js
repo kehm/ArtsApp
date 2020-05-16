@@ -3,7 +3,13 @@ import { TouchableOpacity, View, Text, FlatList } from "react-native";
 
 import TraitDialogButton from "../TraitDialogButton";
 
-import styles from "./styles.js";
+import { styles, androidTabletStyles } from "./styles.js";
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   isVisible: Boolean,
@@ -77,7 +83,7 @@ class TraitDialog extends React.Component<Props> {
         >
           <TouchableOpacity style={styles.dialogBorder} activeOpacity={1}>
             <View style={styles.dialogHeaderContainer}>
-              <Text style={styles.dialogHeader}>{title}</Text>
+              <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.dialogHeader : styles.dialogHeader}>{title}</Text>
             </View>
             <View style={styles.valuesContainer}>
               <FlatList
@@ -95,4 +101,4 @@ class TraitDialog extends React.Component<Props> {
   }
 }
 
-export default TraitDialog;
+export default connect(mapStateToProps)(TraitDialog);

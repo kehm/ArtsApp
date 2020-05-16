@@ -4,8 +4,15 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Header, Title, Icon, Left, Body, Right, Subtitle } from 'native-base';
-import styles from './styles.js';
+import { Header, Title, Left, Body, Right, Subtitle } from 'native-base';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { connect } from "react-redux";
+import { styles, androidTabletStyles } from './styles.js';
+
+const mapStateToProps = state => ({
+    ...state.settings,
+    ...state.nav
+});
 
 type Props = {
     title: String,
@@ -21,13 +28,13 @@ class SubPageHeader extends React.Component<Props> {
             <Header style={styles.headerContainer}>
                 <Left style={styles.left}>
                     <TouchableOpacity onPress={onClick}>
-                        <Icon style={styles.icon} name="arrow-back" />
+                        <Icon style={styles.icon} name="arrowleft" size={this.props.deviceTypeAndroidTablet ? 38 : 28} />
                     </TouchableOpacity>
                 </Left>
-                <Body style={styles.body}>
-                    <Title style={styles.title}>{title}</Title>
+                <Body style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.body : styles.body}>
+                    <Title style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.title : styles.title}>{title}</Title>
                     {subtitle !== undefined ? (
-                        <Subtitle>{subtitle}</Subtitle>
+                        <Subtitle style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.subTitle : undefined} >{subtitle}</Subtitle>
                     ) : (
                             <View />
                         )}
@@ -40,4 +47,4 @@ class SubPageHeader extends React.Component<Props> {
     }
 }
 
-export default SubPageHeader;
+export default connect(mapStateToProps)(SubPageHeader);

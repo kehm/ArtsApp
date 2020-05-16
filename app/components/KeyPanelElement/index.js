@@ -1,8 +1,9 @@
 import React from 'react';
 import { TouchableOpacity, View, Text, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import { connect } from "react-redux";
 
-import styles from './styles.js';
+import { styles, androidTabletStyles } from './styles.js';
 import TraitImageButton from '../TraitImageButton';
 import { setContentStrings } from '../../actions/SettingsAction.js';
 
@@ -10,6 +11,11 @@ import {
   getKeyThumbImageSource,
   getKeyInfoImageSource
 } from '../../utilities/image';
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   size: Number,
@@ -57,7 +63,7 @@ class KeyPanelElement extends React.Component<Props> {
         <View style={[styles.outerContainer, containerSize]}>
           <View style={[styles.innerContainer, containerSize]}>
             {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
-            <Text style={styles.title}>{title}</Text>
+            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.title : styles.title}>{title}</Text>
             <View style={styles.imageContainer}>
               <Image source={this.state.defaultImage ? this.state.defaultImagePath : imageSource}
                 resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }) }} />
@@ -76,4 +82,4 @@ class KeyPanelElement extends React.Component<Props> {
   }
 }
 
-export default KeyPanelElement;
+export default connect(mapStateToProps)(KeyPanelElement);

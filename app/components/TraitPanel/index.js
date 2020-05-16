@@ -6,8 +6,15 @@ import { Actions } from "react-native-router-flux";
 import HorizontalList from "../HorizontalList";
 import TraitPanelElement from "../TraitPanelElement";
 
-import styles from "./styles.js";
+import { styles, androidTabletStyles } from "./styles.js";
 import ImageButton from "../ImageButton";
+
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   traits: Array,
@@ -33,11 +40,11 @@ class TraitPanel extends React.Component<Props> {
 
     if (item.type === "button") {
       return (
-        <TouchableOpacity style={styles.resetButton} onPress={onReset}>
-          <View style={styles.resetButtonImage}>
-            <Icon name={item.icon} size={21} color="#AAA" />
+        <TouchableOpacity style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.resetButton : styles.resetButton} onPress={onReset}>
+          <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.resetButtonImage : styles.resetButtonImage}>
+            <Icon name={item.icon} size={this.props.deviceTypeAndroidTablet ? 32 : 21} color="#AAA" />
           </View>
-          <Text style={styles.resetButtonText}>{item.title}</Text>
+          <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.resetButtonText : styles.resetButtonText}>{item.title}</Text>
         </TouchableOpacity>
       );
     }
@@ -84,18 +91,17 @@ class TraitPanel extends React.Component<Props> {
       },
       ...mappedElements.slice().reverse()
     ];
-
     return (
       <View style={styles.container}>
         {traits.length === 0 && (
           <View style={styles.emptyContainer}>
-            <Text style={styles.header}>{emptyHeader} <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} /></Text>
-            <Text style={styles.description}>{emptyDescription}</Text>
+            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.header : styles.header}>{emptyHeader} <Icon name="help-with-circle" size={this.props.deviceTypeAndroidTablet ? 28 : 16} onPress={() => { Actions.Help() }} /></Text>
+            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.description : styles.description}>{emptyDescription}</Text>
           </View>
         )}
         {traits.length > 0 && header && (
           <View style={styles.headerContainer}>
-            <Text style={styles.label}>{header} <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} /></Text>
+            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.label : styles.label}>{header} <Icon name="help-with-circle" size={this.props.deviceTypeAndroidTablet ? 28 : 16} onPress={() => { Actions.Help() }} /></Text>
           </View>
         )}
         {traits.length > 0 && (
@@ -114,4 +120,4 @@ class TraitPanel extends React.Component<Props> {
   }
 }
 
-export default TraitPanel;
+export default connect(mapStateToProps)(TraitPanel);

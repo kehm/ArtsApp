@@ -197,8 +197,8 @@ class Observation extends React.PureComponent {
    */
   renderEmpty() {
     return (
-      <View style={styles.topContainer}>
-        <Text style={styles.topText}>{this.props.strings.noObservations}</Text>
+      <View style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topContainer : styles.topContainer}>
+        <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topText : styles.topText}>{this.props.strings.noObservations}</Text>
       </View>
     );
   }
@@ -248,7 +248,7 @@ class Observation extends React.PureComponent {
               <View>
                 <Text
                   style={{
-                    fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
+                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 20,
                     textAlign: "center",
                     color: 'black',
                     fontWeight: 'bold'
@@ -285,13 +285,13 @@ class Observation extends React.PureComponent {
               <Form>
                 <TextInput
                   placeholder={this.props.strings.latitude}
-                  style={[styles.textInput, this.state.missingLatitude ? styles.missingText : undefined]}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingLatitude ? styles.missingText : undefined]}
                   onChangeText={latitude => this.setState({ latitude: latitude })}
                   value={this.state.latitude}
                 />
                 <TextInput
                   placeholder={this.props.strings.longitude}
-                  style={[styles.textInput, this.state.missingLongitude ? styles.missingText : undefined]}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingLongitude ? styles.missingText : undefined]}
                   onChangeText={longitude => this.setState({ longitude: longitude })}
                   value={this.state.longitude}
                 />
@@ -361,15 +361,15 @@ class Observation extends React.PureComponent {
               <TextInput
                 placeholder={this.props.strings.search}
                 autoFocus={true}
-                style={styles.search}
+                style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.search : styles.search}
                 onChangeText={(input) => this.filterList(input)}
                 value={this.state.filter} />
             }
             onMenu={this.handleOnMenuClick}
             rightIcon={!this.state.openFilter ? (
-              <Icon name='magnifying-glass' size={26} color={'black'} onPress={() => { this.setState({ openFilter: true }) }} />
+              <Icon name='magnifying-glass' size={this.props.deviceTypeAndroidTablet ? 38 : 26} color={'black'} onPress={() => { this.setState({ openFilter: true }) }} />
             ) : (
-                <Icon name='circle-with-cross' size={26} color={'black'} onPress={() => { this.setState({ openFilter: false }); this.filterList(''); }} />
+                <Icon name='circle-with-cross' size={this.props.deviceTypeAndroidTablet ? 38 : 26} color={'black'} onPress={() => { this.setState({ openFilter: false }); this.filterList(''); }} />
               )
             }
           />
@@ -504,7 +504,41 @@ const AndroidTabletStyles = StyleSheet.create({
     marginTop: 50,
     left: 0,
     top: 0
-  }
+  },
+  textInput: {
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 5,
+    marginBottom: 10,
+    fontSize: 20,
+  },
+  topContainer: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 80,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    width: '100%'
+  },
+  topText: {
+    fontSize: 22,
+    textAlign: 'center',
+    padding: 10
+  },
+  search: {
+    maxWidth: '80%',
+    marginTop: 6,
+    paddingRight: 20,
+    color: 'black',
+    height: 60,
+    width: '100%',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    fontSize: 30,
+  },
 });
 export default connect(
   mapStateToProps,

@@ -161,7 +161,7 @@ const AndroidTabletStyles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 30,
     padding: 10,
-    fontSize: 30,
+    fontSize: 20,
     alignSelf: "center"
   }
 });

@@ -11,9 +11,10 @@ type Props = {
 class SelectionProgressBar extends React.Component<Props> {
   constructor(props) {
     super(props);
-    const { totalCount, matchingCount, notInRangeCount } = props;
     this.state = {
-      totalCount, matchingCount, notInRangeCount
+      totalCount: this.props.totalCount,
+      matchingCount: this.props.matchingCount,
+      notInRangeCount: this.props.notInRangeCount
     };
   }
 
@@ -22,7 +23,7 @@ class SelectionProgressBar extends React.Component<Props> {
    */
   static getDerivedStateFromProps(nextProps, prevState) {
     const { totalCount, matchingCount, notInRangeCount } = nextProps;
-    if (totalCount !== prevState.totalCount && matchingCount !== prevState.matchingCount && notInRangeCount !== prevState.notInRangeCount) {
+    if (totalCount !== prevState.totalCount || matchingCount !== prevState.matchingCount || notInRangeCount !== prevState.notInRangeCount) {
       return {
         totalCount: totalCount,
         matchingCount: matchingCount,
@@ -36,17 +37,14 @@ class SelectionProgressBar extends React.Component<Props> {
    */
   componentDidUpdate(prevProps, prevState) {
     const { totalCount, matchingCount, notInRangeCount } = prevState;
-    if (totalCount !== this.state.totalCount && matchingCount !== this.state.matchingCount && notInRangeCount !== this.state.notInRangeCount) {
-      this.setStateAnimated((prevState) => ({
-        ...prevState,
-        totalCount, matchingCount, notInRangeCount
-      }));
+    if (totalCount !== this.state.totalCount || matchingCount !== this.state.matchingCount || notInRangeCount !== this.state.notInRangeCount) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      this.setState({
+        totalCount: totalCount,
+        matchingCount: matchingCount,
+        notInRangeCount: notInRangeCount
+      });
     }
-  }
-
-  setStateAnimated(callback: (state: State) => void) {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    this.setState(callback);
   }
 
   render() {

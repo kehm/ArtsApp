@@ -61,7 +61,7 @@ class SpeciesElement extends React.PureComponent {
           <Row>
             <Image
               style={
-                this.props.isAndroidTablet
+                this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.image
                   : styles.image
               }
@@ -69,7 +69,7 @@ class SpeciesElement extends React.PureComponent {
             />
             <Text
               style={
-                this.props.isAndroidTablet
+                this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.text3
                   : styles.text3
               }
@@ -80,7 +80,7 @@ class SpeciesElement extends React.PureComponent {
           <Row>
             <Image
               style={
-                this.props.isAndroidTablet
+                this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.image
                   : styles.image
               }
@@ -88,7 +88,7 @@ class SpeciesElement extends React.PureComponent {
             />
             <Text
               style={
-                this.props.isAndroidTablet
+                this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.text3
                   : styles.text3
               }
@@ -99,7 +99,7 @@ class SpeciesElement extends React.PureComponent {
           <Row>
             <Image
               style={
-                this.props.isAndroidTablet
+                this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.image
                   : styles.image
               }
@@ -107,7 +107,7 @@ class SpeciesElement extends React.PureComponent {
             />
             <Text
               style={
-                this.props.isAndroidTablet
+                this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.text3
                   : styles.text3
               }
@@ -118,7 +118,11 @@ class SpeciesElement extends React.PureComponent {
         </Col>
       );
     } else {
-      return <Col><Text style={styles.rightColTxt}>{this.props.strings.noObsAvailable}</Text></Col>;
+      return <Col>
+        <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.rightColTxt : styles.rightColTxt}>
+          {this.props.strings.noObsAvailable}
+        </Text>
+      </Col>;
     }
   }
 
@@ -162,7 +166,7 @@ class SpeciesElement extends React.PureComponent {
             <TouchableOpacity onPress={() => this.props.onPress()}>
               <Text
                 style={
-                  this.props.isAndroidTablet
+                  this.props.deviceTypeAndroidTablet
                     ? AndroidTabletStyles.text1
                     : styles.text1
                 }
@@ -171,7 +175,7 @@ class SpeciesElement extends React.PureComponent {
               </Text>
               <Text
                 style={
-                  this.props.isAndroidTablet
+                  this.props.deviceTypeAndroidTablet
                     ? AndroidTabletStyles.text2
                     : styles.text2
                 }
@@ -233,17 +237,17 @@ const AndroidTabletStyles = StyleSheet.create({
     alignItems: "flex-start"
   },
   text1: {
-    fontSize: 30,
+    fontSize: 22,
     margin: 5,
     color: "#000000"
   },
   text2: {
-    fontSize: 23,
-    marginLeft: 10,
+    fontSize: 18,
+    marginLeft: 6,
     color: "#000000"
   },
   text3: {
-    fontSize: 20,
+    fontSize: 18,
     margin: 10,
     textAlign: "center",
     color: "#000000"
@@ -252,7 +256,11 @@ const AndroidTabletStyles = StyleSheet.create({
     width: 40,
     height: 40,
     margin: 6
-  }
+  },
+  rightColTxt: {
+    marginTop: 10,
+    fontSize: 18
+  },
 });
 
 export default connect(

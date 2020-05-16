@@ -163,13 +163,14 @@ class ArtsApp extends Component {
           onClose={() => this.closeDrawer()}
           openDrawerOffset={0.35}
           panCloseMask={0.35}
+          panOpenMask={0.35}
           styles={{
             drawer: {
               marginTop: Platform.OS === "ios" ? 20 : 0,
               marginBottom: 20,
               shadowColor: "#000000",
               shadowOpacity: 0.8,
-              shadowRadius: 3
+              shadowRadius: 3,
             }
           }}
         >

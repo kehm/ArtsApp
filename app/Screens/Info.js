@@ -187,10 +187,10 @@ class Info extends React.PureComponent {
                 </MenuTrigger>
                 <MenuOptions style={styles.dotMenu}>
                   <MenuOption onSelect={() => { this.onClickUse() }} >
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt :styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
                   </MenuOption>
                   <MenuOption onSelect={() => { this.onClickDelete() }}>
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt :styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
                   </MenuOption>
                 </MenuOptions>
               </Menu>
@@ -198,8 +198,16 @@ class Info extends React.PureComponent {
           {this.state.isDownloaded ? (
             <View />
           ) : (
-              <View style={styles.topContainer}>
-                <Text style={styles.topText}>{this.props.strings.downloadHeader}</Text>
+              <View style={
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.topContainer
+                  : styles.topContainer
+              }>
+                <Text style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.topText
+                    : styles.topText
+                }>{this.props.strings.downloadHeader}</Text>
               </View>
             )}
           <Content>
@@ -232,13 +240,12 @@ class Info extends React.PureComponent {
             </Grid>
           </Content>
           {!this.state.isDownloaded ? (
-            <TouchableOpacity style={[styles.downloadBtn, this.props.keyDownloaded_LOADING ? styles.loading : undefined]} onPress={() => { this.onClickUse(); }}>
+            <TouchableOpacity style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.downloadBtn : styles.downloadBtn, this.props.keyDownloaded_LOADING ? styles.loading : undefined]} onPress={() => { this.onClickUse(); }}>
               <Text
                 style={[
-                  this.props.deviceTypeAndroidTablet
-                    ? AndroidTabletStyles.text3
-                    : styles.text3,
-                  styles.btnText
+                  this.props.deviceTypeAndroidTablet ?
+                    AndroidTabletStyles.btnText :
+                    styles.btnText
                 ]}
               >
                 {this.props.strings.download}
@@ -255,7 +262,7 @@ class Info extends React.PureComponent {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <Text style={styles.modalText}>{this.props.strings.downloading}</Text>
+                <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.downloading}</Text>
                 <Spinner color="green" />
               </View>
             </View>
@@ -356,7 +363,8 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#000',
     fontSize: 18,
-    marginTop: 16
+    marginTop: 16,
+    marginBottom: 5,
   },
   download: {
     color: '#000',
@@ -388,7 +396,10 @@ const htmlstylesAndroidTablet = StyleSheet.create({
     padding: 0
   },
   p: {
-    fontSize: 30
+    fontSize: 22
+  },
+  i: {
+    fontSize: 20
   }
 });
 
@@ -425,7 +436,49 @@ const AndroidTabletStyles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#000000"
-  }
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 22
+  },
+  topContainer: {
+    backgroundColor: '#E1ECDF',
+    position: 'absolute',
+    top: 80,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    width: '100%'
+  },
+  topText: {
+    fontSize: 22,
+    textAlign: 'center',
+    padding: 10
+  },
+  downloadBtn: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#f0a00c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    height: 60
+  },
+  btnText: {
+    color: '#000',
+    fontSize: 28,
+    marginTop: 14,
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 20,
+    padding: 10,
+  },
 });
 
 export default connect(

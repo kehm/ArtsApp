@@ -1,9 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Header, Title, Left, Body, Right } from 'native-base';
 import Icon from 'react-native-vector-icons/Entypo';
-import styles from './styles.js';
 import { TextInput } from 'react-native-gesture-handler';
+import { connect } from "react-redux";
+import { styles, androidTabletStyles } from './styles.js';
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   title: String,
@@ -20,12 +26,12 @@ class FrontpageHeader extends React.Component<Props> {
       <Header style={styles.headerContainer}>
         <Left style={styles.left}>
           <TouchableOpacity onPress={onMenu}>
-            <Icon size={28} name='menu' />
+            <Icon size={this.props.deviceTypeAndroidTablet ? 38 : 28} name='menu' />
           </TouchableOpacity>
         </Left>
-        <Body style={styles.body}>
+        <Body style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.body : styles.body}>
           {title !== undefined ? (
-            <Title style={styles.title}>{title}</Title>
+            <Title style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.title : styles.title}>{title}</Title>
           ) : (
               body
             )}
@@ -38,4 +44,4 @@ class FrontpageHeader extends React.Component<Props> {
   }
 }
 
-export default FrontpageHeader;
+export default connect(mapStateToProps)(FrontpageHeader);

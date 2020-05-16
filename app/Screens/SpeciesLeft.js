@@ -165,23 +165,31 @@ class SpeciesLeft extends React.PureComponent {
                         visible={this.state.openImages}
                         onRequestClose={() => this.setState({ openImages: false })}
                     />
-                    <View style={styles.topContainer}>
-                        <Text style={styles.topText}>{this.props.strings.speciesViewAll} {this.props.strings.imageClickable}.</Text>
+                    <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topContainer : styles.topContainer}>
+                        <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topText : styles.topText}>{this.props.strings.speciesViewAll} {this.props.strings.imageClickable}.</Text>
                     </View>
-                    <Content style={styles.tabStyle}>
+                    <Content style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabStyle : styles.tabStyle}>
                         <Tabs>
-                            <Tab heading={this.props.strings.possible} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
-                                activeTabStyle={styles.activeTabStyle}>
+                            <Tab heading={this.props.strings.possible} textStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                                activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                                activeTabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.activeTabStyle : styles.activeTabStyle}
+                                tabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tab : undefined}>
                                 {this.state.leftNotGeo.length !== 0 ? (
-                                    <SpeciesLeftTab list={this.state.leftNotGeo} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                    <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
+                                        <SpeciesLeftTab list={this.state.leftNotGeo} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                    </View>
                                 ) : (
                                         <View />
                                     )}
                             </Tab>
-                            <Tab heading={this.props.strings.eliminated} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
-                                activeTabStyle={styles.activeTabStyle}>
+                            <Tab heading={this.props.strings.eliminated} textStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                                activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                                activeTabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.activeTabStyle : styles.activeTabStyle}
+                                tabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tab : undefined}>
                                 {this.state.spElim.length !== 0 ? (
-                                    <SpeciesEliminatedTab list={this.state.spElim} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                    <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
+                                        <SpeciesEliminatedTab list={this.state.spElim} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                    </View>
                                 ) : (
                                         <View />
                                     )}
@@ -196,7 +204,7 @@ class SpeciesLeft extends React.PureComponent {
 
 const styles = StyleSheet.create({
     activeTabStyle: {
-        backgroundColor: '#f0a00c'
+        backgroundColor: '#f0a00c',
     },
     tabTextStyle: {
         color: 'black'
@@ -221,6 +229,44 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 10
     },
+});
+
+const androidTabletStyles = StyleSheet.create({
+    tabStyle: {
+        top: 70,
+        marginBottom: 50,
+    },
+    activeTabStyle: {
+        backgroundColor: '#f0a00c',
+        height: 80,
+    },
+    tab: {
+        height: 80
+    },
+    tabTextStyle: {
+        color: 'black',
+        fontSize: 24
+    },
+    topContainer: {
+        backgroundColor: '#E1ECDF',
+        position: 'absolute',
+        top: 80,
+        borderBottomWidth: 1,
+        borderColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 2,
+        width: '100%'
+    },
+    topText: {
+        fontSize: 20,
+        textAlign: 'center',
+        padding: 10
+    },
+    tabContainer: {
+        marginTop: 50,
+        marginBottom:50
+    }
 });
 
 export default connect(

@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     right: 0,
@@ -38,4 +38,12 @@ export default StyleSheet.create({
   valuesContainer: {
     flex: 1,
   }
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  dialogHeader: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 20
+  },
 });

@@ -28,7 +28,7 @@ class ObservationElement extends React.PureComponent {
             <Text
               style={
                 this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
+                  ? AndroidTabletStyles.headerTxt
                   : styles.headerTxt
               }
             >
@@ -37,7 +37,7 @@ class ObservationElement extends React.PureComponent {
             <Text
               style={
                 this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
+                  ? AndroidTabletStyles.headerTxt
                   : styles.headerTxt
               }
             >
@@ -102,10 +102,10 @@ class ObservationElement extends React.PureComponent {
               <MenuTrigger />
               <MenuOptions style={styles.dotMenu}>
                 <MenuOption onSelect={() => { this.props.onSelectCoordinates(this.props.obsItem) }} >
-                  <Text style={styles.dotMenuTxt}>{this.props.strings.setCoordinates}</Text>
+                  <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.setCoordinates}</Text>
                 </MenuOption>
                 <MenuOption onSelect={() => { this.props.onDelete(this.props.obsItem.userObservation_id) }} >
-                  <Text style={styles.dotMenuTxt}>{this.props.strings.delete}</Text>
+                  <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.delete}</Text>
                 </MenuOption>
               </MenuOptions>
             </Menu>
@@ -142,10 +142,22 @@ const styles = StyleSheet.create({
 
 const AndroidTabletStyles = StyleSheet.create({
   text3: {
-    fontSize: 24,
-    marginBottom: 5,
+    fontSize: 22,
+    paddingLeft: 10,
     color: "black"
-  }
+  },
+  headerTxt: {
+    fontSize: 22,
+    color: "black",
+    fontWeight: 'bold',
+    paddingLeft: 10,
+    paddingTop: 10
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 20,
+    padding: 10,
+  },
 });
 
 export default connect(mapStateToProps)(ObservationElement);

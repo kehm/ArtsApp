@@ -112,10 +112,10 @@ class About extends React.PureComponent {
                 </MenuTrigger>
                 <MenuOptions style={styles.dotMenu}>
                   <MenuOption onSelect={() => { this.setState({ openModal: true }); this.handleOnPressUpdate() }} >
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
                   </MenuOption>
                   <MenuOption onSelect={() => { Actions.Help() }} >
-                    <Text style={styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt :styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
                   </MenuOption>
                 </MenuOptions>
               </Menu>
@@ -149,7 +149,7 @@ class About extends React.PureComponent {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <Text style={styles.modalText}>{this.props.strings.lookingForUpdates}</Text>
+                <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.lookingForUpdates}</Text>
                 <Spinner color="green" />
               </View>
             </View>
@@ -221,7 +221,18 @@ const AndroidTabletStyles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 0,
     justifyContent: "center"
-  }
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 20,
+    padding: 10,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 22
+  },
 });
 
 const htmlstyles = StyleSheet.create({
@@ -240,12 +251,12 @@ const htmlstylesAndroidTablet = StyleSheet.create({
     padding: 0
   },
   p: {
-    fontSize: 30
+    fontSize: 22
   },
-  li: { fontSize: 30, margin: 10 },
-  h5: { marginBottom: 10, marginTop: 50, fontSize: 40 },
-  h6: { marginBottom: 10, marginTop: 30, fontSize: 35 },
-  div: { fontSize: 30 }
+  li: { fontSize: 22, margin: 10 },
+  h5: { marginBottom: 10, marginTop: 50, fontSize: 28 },
+  h6: { marginBottom: 10, marginTop: 30, fontSize: 24 },
+  div: { fontSize: 22 }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(About);

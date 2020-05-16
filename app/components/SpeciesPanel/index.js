@@ -2,10 +2,16 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 
-import styles from "./styles.js";
+import { styles, androidTabletStyles } from "./styles.js";
 import HorizontalList from "../HorizontalList";
 import SpeciesPanelElement from "../SpeciesPanelElement";
 import SelectionProgressBar from "../SelectionProgressBar";
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {};
 type State = {
@@ -60,7 +66,7 @@ class SpeciesPanel extends React.Component<Props, State> {
             size={30}
             color="#AAA"
           />
-          <Text style={styles.viewAllText}>{item.title}</Text>
+          <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.viewAllText : styles.viewAllText}>{item.title}</Text>
         </TouchableOpacity>
       );
     }
@@ -127,16 +133,15 @@ class SpeciesPanel extends React.Component<Props, State> {
       numberOfFoundSpecies = totalSpecies - numberOfObservedSpecies;
     }
     const statusText = this.getStatusText(foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies);
-
     return (
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.panelHeader}
           onPress={this.handleToggleCollapsed}
         >
-          <Text>{statusText}</Text>
-          {isCollapsed && <Icon name="chevron-small-up" size={30} />}
-          {!isCollapsed && <Icon name="chevron-small-down" size={30} />}
+          <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.statusText : undefined} >{statusText}</Text>
+          {isCollapsed && <Icon name="chevron-small-up" size={this.props.deviceTypeAndroidTablet ? 38 : 30} />}
+          {!isCollapsed && <Icon name="chevron-small-down" size={this.props.deviceTypeAndroidTablet ? 38 : 30} />}
         </TouchableOpacity>
         {!isCollapsed && species.length > 0 && (
           <HorizontalList
@@ -162,4 +167,4 @@ class SpeciesPanel extends React.Component<Props, State> {
   }
 }
 
-export default SpeciesPanel;
+export default connect(mapStateToProps)(SpeciesPanel);

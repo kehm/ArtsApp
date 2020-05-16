@@ -141,8 +141,8 @@ class MenuContent extends React.PureComponent {
     return (
       <List keyi={this.props.debugMode}>
         <ListItem button noBorder onPress={this.onClickKeys} style={this.state.frontSelect ? styles.selectedElement : null}>
-          <Left style={styles.leftIcon}>
-            <Icon name="map" size={26} />
+          <Left style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.leftIcon : styles.leftIcon}>
+            <Icon name="map" size={this.props.deviceTypeAndroidTablet ? 36:  26} />
           </Left>
           <Text
             style={
@@ -155,8 +155,8 @@ class MenuContent extends React.PureComponent {
           </Text>
         </ListItem>
         <ListItem button noBorder onPress={this.onClickObs} style={this.state.obsSelect ? styles.selectedElement : null}>
-          <Left style={styles.leftIcon}>
-            <Icon name="drive" size={26} />
+          <Left style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.leftIcon : styles.leftIcon}>
+            <Icon name="drive" size={this.props.deviceTypeAndroidTablet ? 36:  26} />
           </Left>
           <Text
             style={
@@ -214,18 +214,11 @@ class MenuContent extends React.PureComponent {
               </Text>
             </Button>
             <Button transparent style={styles.lang} onPress={this.onClickLang} >
-              <Text
-                style={
-                  [this.props.deviceTypeAndroidTablet
-                    ? stylesAndroidTablet.text
-                    : styles.text,
-                  styles.langTxt]
-                }
-              >
+              <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.langTxt : styles.langTxt}>
                 {this.props.strings.language + ":"}
               </Text>
               {this.props.language === 'no' ? (
-                <Flag style={styles.flag} code="GB" type="flat" size={32} />
+                <Flag style={styles.flag} code="GB" type="flat" size={this.props.deviceTypeAndroidTablet ? 48 : 32} />
               ) : (
                   <Flag style={styles.flag} code="NO" type="flat" size={32} />
                 )}
@@ -334,7 +327,8 @@ const stylesAndroidTablet = {
   logoImg: {
     resizeMode: "contain",
     width: 76,
-    height: 76
+    height: 76,
+    marginBottom: 100
   },
   drawerCover: {
     backgroundColor: "#553917",
@@ -353,14 +347,14 @@ const stylesAndroidTablet = {
   },
   text: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
-    fontSize: 32,
+    fontSize: 26,
     marginLeft: 20
   },
   textAbout: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
-    fontSize: 40,
+    fontSize: 26,
     marginLeft: 20,
-    paddingBottom: 40 - 40 * 0.75,
+    paddingBottom: 80,
     color: '#553917'
   },
   textKeyInfo: {
@@ -368,7 +362,16 @@ const stylesAndroidTablet = {
     fontSize: 32,
     marginLeft: 20,
     color: "#ababab"
-  }
+  },
+  leftIcon: {
+    maxWidth: 40,
+    marginLeft: 20
+  },
+  langTxt: {
+    marginTop: 10,
+    color: 'black',
+    fontSize: 24
+  },
 };
 
 export default connect(

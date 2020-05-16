@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     height: 120,
@@ -16,5 +16,13 @@ export default StyleSheet.create({
     maxWidth: 120,
     paddingTop: 2,
     fontSize: 11,
+  },
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  name: {
+    maxWidth: 120,
+    paddingTop: 2,
+    fontSize: 18
   },
 });

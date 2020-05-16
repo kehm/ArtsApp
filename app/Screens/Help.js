@@ -2,16 +2,10 @@
  * Screen for showing step-by-step instructions on how to use the app
  */
 import React, { Component } from "react";
-import { View, StyleSheet, Image, Text } from "react-native";
-import {
-    StyleProvider,
-    Container,
-    Content,
-    Button,
-} from "native-base";
+import { View, StyleSheet, Text } from "react-native";
+import { StyleProvider, Container, Content } from "native-base";
 import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
-import { aboutNO, aboutEN } from "../config/aboutText";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -50,9 +44,15 @@ class Help extends React.PureComponent {
                     <SubPageHeader title={this.props.strings.helpHeader} onClick={this.onClickBack} />
                     <Content>
                         <View style={styles.container}>
-                            <Text>{this.props.strings.frontpageTopDescription + " " + this.props.strings.frontpageBottomDescription} </Text>
-                            <Text>{this.props.strings.keyAbout} </Text>
-                            <Text>{this.props.strings.help}</Text>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
+                                {this.props.strings.frontpageTopDescription + " " + this.props.strings.frontpageBottomDescription}
+                            </Text>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
+                                {this.props.strings.keyAbout}
+                            </Text>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
+                                {this.props.strings.help}
+                            </Text>
                         </View>
                     </Content>
                 </Container>
@@ -68,6 +68,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10
     },
+});
+
+const androidTabletStyles = StyleSheet.create({
+    text: {
+        fontSize: 20
+    }
 });
 
 export default connect(mapStateToProps)(Help);

@@ -248,7 +248,7 @@ const htmlstylesAndroidTablet = StyleSheet.create({
         padding: 0
     },
     p: {
-        fontSize: 30
+        fontSize: 22
     }
 });
 

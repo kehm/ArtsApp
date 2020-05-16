@@ -1,7 +1,14 @@
 import React from 'react';
 import { Platform, Dimensions, Easing, Animated, View, Text } from 'react-native';
 
-import styles  from './styles.js';
+import { styles, androidTabletStyles } from './styles.js';
+
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   title: String,
@@ -31,34 +38,34 @@ class TraitListElement extends React.Component<Props> {
     const { title, total, included, isActive } = this.props;
     const activeStyle = isActive ? included < total ? styles.reduced : styles.all : styles.empty;
     let numberBadgeStyle = styles.numberBadgeFull;
-    if(included === 0) numberBadgeStyle = styles.numberBadgeEmpty;
-    else if(included < total) numberBadgeStyle = styles.numberBadgeReduced;
+    if (included === 0) numberBadgeStyle = styles.numberBadgeEmpty;
+    else if (included < total) numberBadgeStyle = styles.numberBadgeReduced;
 
-    const transformStyle = Platform.OS === 'ios' ? { transform: [{ scale: this._animation }]} : {};
+    const transformStyle = Platform.OS === 'ios' ? { transform: [{ scale: this._animation }] } : {};
 
     return (
       <Animated.View style={[styles.container, transformStyle]}>
         <View style={[styles.elementContainer, activeStyle]}>
           <Text
-            style={styles.text}
+            style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}
             numberOfLines={2}
             ellipsizeMode={'tail'}
           >
             {title}
           </Text>
         </View>
-        <View style={[styles.numberBadge, numberBadgeStyle]}>
-          <Text
-            style={styles.numbers}
-            numberOfLines={1}
-          >
-            {included}/{total}
-          </Text>
+        <View style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.numberBadge : styles.numberBadge, numberBadgeStyle]}>
+        <Text
+          style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.numbers : styles.numbers}
+          numberOfLines={1}
+        >
+          {included}/{total}
+        </Text>
         </View>
-      </Animated.View>
+      </Animated.View >
     );
   }
 
 }
 
-export default TraitListElement;
+export default connect(mapStateToProps)(TraitListElement);

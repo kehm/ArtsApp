@@ -3,8 +3,9 @@
  */
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import { Container, StyleProvider, Header, Title, Icon, Left, Right } from 'native-base';
+import { Container, StyleProvider, Header, Title, Left, Right } from 'native-base';
 import ImageView from "react-native-image-viewing";
+import Icon from 'react-native-vector-icons/Entypo';
 
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -139,7 +140,7 @@ class Key extends React.Component<Props, State> {
             backgroundColor='white'
           />
           <SubPageHeader title={title} onClick={this.onClickBack}
-            rightIcon={<Icon name='close' onPress={this.onClickClose} />} />
+            rightIcon={<Icon name='cross' size={this.props.deviceTypeAndroidTablet ? 38 : 28} color='black' onPress={this.onClickClose} />} />
           <View style={styles.container} >
             <TraitPanel
               traits={usedTraits}
@@ -208,6 +209,7 @@ function mapStateToProps({ key, settings, observations }) {
     activeTraits: isUnfiltered ? key.traitValueCombo : key.relevant,
     activeValues: key.spValues,
     strings: settings.strings,
+    deviceTypeAndroidTablet: settings.deviceTypeAndroidTablet,
     isFiltered: !isUnfiltered,
     observationsNearby: observations.nerbyList
       .filter(obs => isUnfiltered ?

@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     borderBottomColor: "#CCC",
@@ -45,4 +45,41 @@ export default StyleSheet.create({
     paddingLeft: 8,
     paddingRight: 10
   }
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  header: {
+    fontWeight: "bold",
+    fontSize: 20
+  },
+  description: {
+    fontSize: 18
+  },
+  label: {
+    fontWeight: "bold",
+    fontSize: 18
+  },
+  resetButtonText: {
+    paddingLeft: 8,
+    paddingRight: 10,
+    fontSize: 18
+  },
+  resetButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 12,
+    marginBottom: 12,
+    minWidth: 40
+  },
+  resetButtonImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 26,
+    borderWidth: 2,
+    borderColor: "#BBB",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden"
+  },
 });

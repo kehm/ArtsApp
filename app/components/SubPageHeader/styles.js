@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
     headerContainer: {
         backgroundColor: '#f0a00c'
     },
@@ -18,5 +18,19 @@ export default StyleSheet.create({
     },
     body: {
         minWidth: 40
+    }
+});
+
+export const androidTabletStyles = StyleSheet.create({
+    title: {
+        color: '#000',
+        fontSize: 26
+    },
+    body: {
+        minWidth: 40,
+        marginLeft: 20
+    },
+    subTitle: {
+        fontSize: 20
     }
 });

@@ -14,7 +14,7 @@ import getTheme from "../../native-base-theme/components";
 import common from "../../native-base-theme/variables/commonColor";
 import androidTablet from "../../native-base-theme/variables/androidTablet";
 
-import styles from "./styles.js";
+import { styles, androidTabletStyles } from "./styles.js";
 
 import * as KeyAction from "../../actions/KeyAction";
 import * as MenuAction from "../../actions/MenuAction";
@@ -159,15 +159,15 @@ class Frontpage extends React.PureComponent<Props, State> {
               <TextInput
                 placeholder={this.props.strings.search}
                 autoFocus={true}
-                style={styles.search}
+                style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.search : styles.search}
                 onChangeText={(input) => this.filterList(input)}
                 value={this.state.filter} />
             }
             onMenu={this.handleOnMenuClick}
             rightIcon={!this.state.openFilter ? (
-              <Icon name='magnifying-glass' size={26} color={'black'} onPress={() => { this.setState({ openFilter: true, selected: this.props.keys[0].key_id }); }} />
+              <Icon name='magnifying-glass' size={this.props.deviceTypeAndroidTablet ? 34 : 26} color={'black'} onPress={() => { this.setState({ openFilter: true, selected: this.props.keys[0].key_id }); }} />
             ) : (
-                <Icon name='circle-with-cross' size={26} color={'black'} onPress={() => { this.setState({ openFilter: false, selected: this.props.keys[0].key_id }); this.filterList(''); }} />
+                <Icon name='circle-with-cross' size={this.props.deviceTypeAndroidTablet ? 34 : 26} color={'black'} onPress={() => { this.setState({ openFilter: false, selected: this.props.keys[0].key_id }); this.filterList(''); }} />
               )
             }
           />
@@ -183,9 +183,9 @@ class Frontpage extends React.PureComponent<Props, State> {
                   onInfo={this.handleOnInfoClick}
                   onUpdate={this.updateIndex}
                 />
-                <View style={[styles.headerContainer]}>
-                  <Text style={styles.listHeader}>{this.props.strings.selectKey}</Text>
-                  <Icon name="help-with-circle" size={16} onPress={() => { Actions.Help() }} />
+                <View style={styles.headerContainer}>
+                  <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.listHeader : styles.listHeader}>{this.props.strings.selectKey}</Text>
+                  <Icon name="help-with-circle" size={this.props.deviceTypeAndroidTablet ? 28 : 16} onPress={() => { Actions.Help() }} />
                 </View>
               </View>
             ) : (
@@ -197,16 +197,19 @@ class Frontpage extends React.PureComponent<Props, State> {
               data={this.state.keyList}
               extraData={this.state}
               renderItem={(item) =>
-                <TouchableOpacity style={[styles.listItem, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selected : undefined)]} onPress={() => this.state.openFilter ? undefined : this.updateIndex(item.item)}>
+                <TouchableOpacity
+                  style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.listItem : styles.listItem,
+                  this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selected : undefined)]}
+                  onPress={() => this.state.openFilter ? undefined : this.updateIndex(item.item)}>
                   {item.item.keyDownloaded > 0 ? (
-                    <Icon style={styles.icon} name='align-bottom' size={26} color={'black'} />
+                    <Icon style={styles.icon} name='align-bottom' size={this.props.deviceTypeAndroidTablet ? 42 : 26} color={'black'} />
                   ) : (
                       <View />
                     )}
-                  <Text style={[styles.listText, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selectedText : undefined)]} >{item.item.title}</Text>
+                  <Text style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.listText : styles.listText, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selectedText : undefined)]} >{item.item.title}</Text>
                   <Right>
                     <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.item); this.handleOnPressKey(item.item) }}>
-                      <Icon style={styles.icon} name='chevron-right' size={28} color={'black'} />
+                      <Icon style={styles.icon} name='chevron-right' size={this.props.deviceTypeAndroidTablet ? 42 : 28} color={'black'} />
                     </TouchableOpacity>
                   </Right>
                 </TouchableOpacity>

@@ -187,7 +187,7 @@ class Species extends React.PureComponent {
             <View>
               <Text
                 style={{
-                  fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
+                  fontSize: this.props.deviceTypeAndroidTablet ? 30 : 20,
                   marginBottom: 10,
                   textAlign: "center",
                   color: 'black',
@@ -242,6 +242,7 @@ class Species extends React.PureComponent {
               </View>
               <Form>
                 <Picker note
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.picker : undefined}
                   mode="dropdown"
                   selectedValue={this.state.county}
                   onValueChange={(value) => { this.setState({ county: value }) }}
@@ -250,19 +251,19 @@ class Species extends React.PureComponent {
                 </Picker>
                 <TextInput
                   placeholder={this.props.strings.place}
-                  style={[styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
                   onChangeText={place => this.setState({ place: place })}
                   value={this.state.place}
                 />
                 <TextInput
                   placeholder={this.props.strings.latitude}
-                  style={styles.textInput}
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
                   onChangeText={latitude => this.setState({ latitude: latitude })}
                   value={this.state.latitude}
                 />
                 <TextInput
                   placeholder={this.props.strings.longitude}
-                  style={styles.textInput}
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
                   onChangeText={longitude => this.setState({ longitude: longitude })}
                   value={this.state.longitude}
                 />
@@ -362,9 +363,9 @@ class Species extends React.PureComponent {
             subtitle={this.props.selectedSpecies.latinName}
             onClick={this.onClickBack}
             rightIcon={!this.state.saved ? (
-              <Icon name="drive" style={styles.icon} size={28} onPress={this.getCoordinate} />
+              <Icon name="drive" style={styles.icon} size={this.props.deviceTypeAndroidTablet ? 34 : 28} onPress={this.getCoordinate} />
             ) : (
-                <Icon name="home" style={styles.icon} size={28} onPress={() => Actions.Frontpage()} />
+                <Icon name="home" style={styles.icon} size={this.props.deviceTypeAndroidTablet ? 34 : 28} onPress={() => Actions.Frontpage()} />
               )} />
           <Content scrollEnabled={false}>
             <TouchableHighlight
@@ -383,16 +384,19 @@ class Species extends React.PureComponent {
               </View>
             </TouchableHighlight>
             <View style={styles.topContainer} onPress={this.onClickImage}>
-              <Text style={styles.topText}>{this.props.strings.imageClickable}</Text>
+              <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topText : styles.topText}>{this.props.strings.imageClickable}</Text>
             </View>
             {this.renderNearby()}
             <Tabs>
-              <Tab heading={this.props.strings.spInfo} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
-                activeTabStyle={styles.activeTabStyle}>
+              <Tab heading={this.props.strings.spInfo} textStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTextStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.activeTabStyle : styles.activeTabStyle}
+                tabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tab : undefined}>
                 <View
                   style={{
                     height: this.props.deviceTypeAndroidTablet ? 670 : 335,
                     margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
+                    marginTop: this.props.deviceTypeAndroidTablet ? 50 : undefined
                   }}
                 >
                   <InfoTab
@@ -402,12 +406,15 @@ class Species extends React.PureComponent {
                   />
                 </View>
               </Tab>
-              <Tab heading={this.props.strings.distribution} textStyle={styles.tabTextStyle} activeTextStyle={styles.tabTextStyle}
-                activeTabStyle={styles.activeTabStyle}>
+              <Tab heading={this.props.strings.distribution} textStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTextStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.activeTabStyle : styles.activeTabStyle}
+                tabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tab : undefined}>
                 <View
                   style={{
                     height: this.props.deviceTypeAndroidTablet ? 670 : 335,
-                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5
+                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
+                    marginTop: this.props.deviceTypeAndroidTablet ? 50 : undefined
                   }}
                 >
                   <DistributionTab
@@ -473,7 +480,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0a00c'
   },
   tabTextStyle: {
-    color: 'black'
+    color: 'black',
   },
   icon: {
     color: 'black'
@@ -515,7 +522,7 @@ const styles = StyleSheet.create({
 
 const AndroidTabletStyles = StyleSheet.create({
   text3: {
-    fontSize: 30,
+    fontSize: 22,
     marginBottom: 5,
     textAlign: "center",
     color: 'black'
@@ -529,7 +536,43 @@ const AndroidTabletStyles = StyleSheet.create({
     alignSelf: "center",
     width: '100%',
     height: 180,
-  }
+  },
+  topText: {
+    fontSize: 20,
+    textAlign: 'center',
+    padding: 10,
+    color: 'white'
+  },
+  tabTextStyle: {
+    color: 'black',
+    fontSize: 22
+  },
+  textInput: {
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 5,
+    marginBottom: 10,
+    fontSize: 20,
+  },
+  picker: {
+    fontSize: 22,
+    height: 30
+  },
+  tabStyle: {
+    top: 70,
+    marginBottom: 50,
+  },
+  activeTabStyle: {
+    backgroundColor: '#f0a00c',
+    height: 80,
+  },
+  tab: {
+    height: 80
+  },
+  tabTextStyle: {
+    color: 'black',
+    fontSize: 24
+  },
 });
 
 export default connect(

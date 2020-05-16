@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
-
+export const styles = StyleSheet.create({
   outerContainer: {
     borderRadius: 16,
     shadowColor: 'black',
@@ -53,5 +52,13 @@ export default StyleSheet.create({
     bottom: 6,
     width: 32,
     height: 32,
+  },
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  title: {
+    position: 'absolute',
+    top: 16,
+    fontSize: 22
   },
 });

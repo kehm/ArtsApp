@@ -9,7 +9,7 @@ export default class InfoTab extends Component {
   render() {
     return (
       <ScrollView>
-        <Text style={{ fontSize: (this.props.tablet ? 30 : 15) }}> {this.props.info}
+        <Text style={{ fontSize: (this.props.tablet ? 20 : 15) }}> {this.props.info}
         </Text>
         <View style={{ height: 100 }} />
       </ScrollView>
