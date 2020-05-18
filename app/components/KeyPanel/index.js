@@ -95,6 +95,7 @@ class KeyPanel extends React.PureComponent<Props, State> {
           ref={swiper => {
             this._swiper = swiper;
           }}
+          loop={false}
         >
           {this.props.keys.map(k => this.renderItem(k, size))}
         </Swiper>

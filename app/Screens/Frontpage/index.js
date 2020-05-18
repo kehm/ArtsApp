@@ -61,7 +61,7 @@ class Frontpage extends React.PureComponent<Props, State> {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!prevState.init && nextProps.keys !== prevState.keyList) {
       return {
-        keyList: nextProps.keys
+        list: nextProps.keys
       }
     } else return null;
   }
@@ -81,7 +81,7 @@ class Frontpage extends React.PureComponent<Props, State> {
       this.setState({ openFilter: false });
     }
     if (key === undefined) {
-      key = this.state.keyList.filter(key => {
+      this.state.keyList.filter(key => {
         if (key.key_id === this.state.selected) {
           this.props.setKey(key.key_id, key.title);
           if (key.keyDownloaded > 0) {
@@ -132,14 +132,15 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Filter key list
    */
   filterList = (filter) => {
+    let list = this.props.keys.filter(key => {
+      if (key.title.toUpperCase().includes(filter.toUpperCase())) {
+        return key;
+      }
+    });
     this.setState({
       filter: filter,
-      keyList: this.props.keys.filter(key => {
-        if (key.title.toUpperCase().includes(filter.toUpperCase())) {
-          return key;
-        }
-      })
-    })
+      keyList: list
+    });
   }
 
   render() {
