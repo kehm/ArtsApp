@@ -32,7 +32,6 @@ const mapKey = key => {
   const imageSource = (key.image === 1)
     ? getKeyInfoImageSource(key.key_id)
     : getKeyThumbImageSource(key.key_id);
-
   return {
     isBeta: key.keyStatus === 'beta',
     isDownloaded: key.keyDownloaded > 0,
@@ -66,7 +65,7 @@ class KeyPanelElement extends React.Component<Props> {
             <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.title : styles.title}>{title}</Text>
             <View style={styles.imageContainer}>
               <Image source={this.state.defaultImage ? this.state.defaultImagePath : imageSource}
-                resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }) }} />
+                resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }); }} />
             </View>
             {isDownloaded ? (
               <TouchableOpacity style={styles.downloadContainer}>

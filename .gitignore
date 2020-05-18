@@ -59,3 +59,7 @@ fastlane/screenshots
 
 # EXPO
 .expo/
+
+# Cocoapods
+Pods/
+*.xcworkspace

@@ -300,10 +300,17 @@ const styles = {
   },
   lang: {
     position: "absolute",
-    bottom: 5,
     right: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    ...Platform.select({
+      ios: {
+        bottom: 15,
+      },
+      android: {
+        bottom: 5,
+      }
+    })
   },
   langTxt: {
     marginTop: 10,

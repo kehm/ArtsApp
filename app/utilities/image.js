@@ -3,9 +3,14 @@ import { Platform } from 'react-native';
 import ImageConfig from '../config/network/ImageConfig';
 
 export function mapToImageSource(imagePath) {
-  return Platform.OS === 'ios'
-    ? { uri: imagePath}
-    : { uri: 'file://' + imagePath };
+  return Platform.select({
+    ios: {
+      uri: imagePath
+    },
+    android: {
+      uri: 'file://' + imagePath
+    }
+  })
 }
 
 export function getKeyThumbImageSource(id) {

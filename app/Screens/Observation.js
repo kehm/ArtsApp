@@ -3,7 +3,7 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View, Alert, FlatList, Modal } from "react-native";
+import { StyleSheet, Text, TextInput, View, Alert, FlatList, Modal, Platform } from "react-native";
 import { StyleProvider, Container, Content, Form, Button } from "native-base";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import ObservationElement from "../components/ObservationElement";
@@ -412,13 +412,20 @@ const styles = StyleSheet.create({
   topContainer: {
     backgroundColor: 'white',
     position: 'absolute',
-    top: 56,
     borderBottomWidth: 1,
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
-    width: '100%'
+    width: '100%',
+    ...Platform.select({
+      ios: {
+        top: 84,
+      },
+      android: {
+        top: 56,
+      }
+    })
   },
   topText: {
     fontSize: 14,

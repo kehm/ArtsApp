@@ -84,14 +84,14 @@ class SpeciesLeft extends React.PureComponent {
             this.props.chosenValues.length === 0
                 ? this.props.fullSpList
                 : this.props.speciesLeft;
-        l = [];
+        let list = [];
         for (let i = 0; i < spList.length; i++) {
-            k = findIndex(nerbyList, { species_id: spList[i].species_id });
+            let k = findIndex(nerbyList, { species_id: spList[i].species_id });
             if (k === -1) {
-                l.push(spList[i]);
+                list.push(spList[i]);
             }
         }
-        return l;
+        return list;
     }
 
     /**
@@ -174,7 +174,7 @@ class SpeciesLeft extends React.PureComponent {
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.activeTabStyle : styles.activeTabStyle}
                                 tabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tab : undefined}>
-                                {this.state.leftNotGeo.length !== 0 ? (
+                                {this.state.leftNotGeo !== undefined && this.state.leftNotGeo.length !== 0 ? (
                                     <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
                                         <SpeciesLeftTab list={this.state.leftNotGeo} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
                                     </View>
@@ -186,7 +186,7 @@ class SpeciesLeft extends React.PureComponent {
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.activeTabStyle : styles.activeTabStyle}
                                 tabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tab : undefined}>
-                                {this.state.spElim.length !== 0 ? (
+                                {this.state.spElim !== undefined && this.state.spElim.length !== 0 ? (
                                     <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
                                         <SpeciesEliminatedTab list={this.state.spElim} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
                                     </View>
@@ -216,13 +216,20 @@ const styles = StyleSheet.create({
     topContainer: {
         backgroundColor: '#E1ECDF',
         position: 'absolute',
-        top: 56,
         borderBottomWidth: 1,
         borderColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 2,
-        width: '100%'
+        width: '100%',
+        ...Platform.select({
+            ios: {
+                top: 84,
+            },
+            android: {
+                top: 56,
+            }
+        })
     },
     topText: {
         fontSize: 14,
@@ -265,7 +272,7 @@ const androidTabletStyles = StyleSheet.create({
     },
     tabContainer: {
         marginTop: 50,
-        marginBottom:50
+        marginBottom: 50
     }
 });
 

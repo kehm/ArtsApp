@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
   },
   missingText: {
     borderColor: "red",
-  }
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({
@@ -556,7 +556,7 @@ const AndroidTabletStyles = StyleSheet.create({
   },
   picker: {
     fontSize: 22,
-    height: 30
+    height: 30,
   },
   tabStyle: {
     top: 70,

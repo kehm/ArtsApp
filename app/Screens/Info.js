@@ -187,10 +187,10 @@ class Info extends React.PureComponent {
                 </MenuTrigger>
                 <MenuOptions style={styles.dotMenu}>
                   <MenuOption onSelect={() => { this.onClickUse() }} >
-                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt :styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
                   </MenuOption>
                   <MenuOption onSelect={() => { this.onClickDelete() }}>
-                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt :styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
                   </MenuOption>
                 </MenuOptions>
               </Menu>
@@ -337,13 +337,20 @@ const styles = StyleSheet.create({
   topContainer: {
     backgroundColor: '#E1ECDF',
     position: 'absolute',
-    top: 56,
     borderBottomWidth: 1,
     borderColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
-    width: '100%'
+    width: '100%',
+    ...Platform.select({
+      ios: {
+        top: 84,
+      },
+      android: {
+        top: 56,
+      }
+    })
   },
   topText: {
     fontSize: 14,

@@ -6,7 +6,6 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Dimensions, Platform, Image, TouchableOpacity } from "react-native";
 import { Grid, Row, Col } from "native-base";
-import ImageView from "react-native-image-viewing";
 
 // redux
 import { connect } from "react-redux";
@@ -130,12 +129,6 @@ class SpeciesElement extends React.PureComponent {
     return (
       <View>
         <Grid style={{ width: Dimensions.get("window").width }}>
-          <ImageView
-            images={this.state.selectedSpeciesImages}
-            imageIndex={0}
-            visible={this.state.openImages}
-            onRequestClose={() => this.setState({ openImages: false })}
-          />
           <TouchableOpacity onPress={() => this.props.onClickImage(this.state.images)}>
             <Image
               source={
