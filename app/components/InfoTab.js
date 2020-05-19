@@ -3,13 +3,13 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import HTMLView from "react-native-htmlview";
 
 export default class InfoTab extends Component {
   render() {
     return (
-      <ScrollView>
+      <View>
         <HTMLView
           value={this.props.info !== null ? this.props.info.replace(/(\n|<br>)/gm, "") : ""}
           stylesheet={
@@ -18,8 +18,7 @@ export default class InfoTab extends Component {
               : htmlstyles
           }
         />
-        <View style={{ height: 100 }} />
-      </ScrollView>
+      </View>
     );
   }
 }

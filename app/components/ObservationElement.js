@@ -37,11 +37,11 @@ class ObservationElement extends React.PureComponent {
             <Text
               style={
                 this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.headerTxt
-                  : styles.headerTxt
+                  ? AndroidTabletStyles.subHeaderTxt
+                  : styles.subHeaderTxt
               }
             >
-              {"(" + this.props.latinName + ")"}
+              {" (" + this.props.latinName + ")"}
             </Text>
           </Row>
           <Row>
@@ -129,6 +129,11 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 10
   },
+  subHeaderTxt: {
+    fontSize: 14,
+    color: "black",
+    paddingTop: 10
+  },
   itemContainer: {
     borderBottomColor: 'white',
     borderBottomWidth: 1,
@@ -150,6 +155,11 @@ const AndroidTabletStyles = StyleSheet.create({
     fontSize: 22,
     color: "black",
     fontWeight: 'bold',
+    paddingTop: 10
+  },
+  subHeaderTxt: {
+    fontSize: 22,
+    color: "black",
     paddingLeft: 10,
     paddingTop: 10
   },

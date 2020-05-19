@@ -259,13 +259,13 @@ class Species extends React.PureComponent {
                   placeholder={this.props.strings.latitude}
                   style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
                   onChangeText={latitude => this.setState({ latitude: latitude })}
-                  value={this.state.latitude}
+                  value={this.state.latitude.toString()}
                 />
                 <TextInput
                   placeholder={this.props.strings.longitude}
                   style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
                   onChangeText={longitude => this.setState({ longitude: longitude })}
-                  value={this.state.longitude}
+                  value={this.state.longitude.toString()}
                 />
               </Form>
               <View
@@ -367,7 +367,7 @@ class Species extends React.PureComponent {
             ) : (
                 <Icon name="home" style={styles.icon} size={this.props.deviceTypeAndroidTablet ? 34 : 28} onPress={() => Actions.Frontpage()} />
               )} />
-          <Content scrollEnabled={false}>
+          <Content>
             <TouchableHighlight
               underlayColor={"rgba(223, 223, 223, 0.14)"}
               onPress={this.onClickImage}
@@ -394,13 +394,11 @@ class Species extends React.PureComponent {
                 tabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tab : undefined}>
                 <View
                   style={{
-                    height: this.props.deviceTypeAndroidTablet ? 670 : 335,
                     margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
                     marginTop: this.props.deviceTypeAndroidTablet ? 50 : undefined
                   }}
                 >
                   <InfoTab
-                    tablet={this.props.deviceTypeAndroidTablet}
                     style={styles.container}
                     info={this.props.selectedSpecies.speciesText !== 'NA' ? this.props.selectedSpecies.speciesText : this.props.strings.noSpInfo}
                   />
@@ -412,7 +410,6 @@ class Species extends React.PureComponent {
                 tabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tab : undefined}>
                 <View
                   style={{
-                    height: this.props.deviceTypeAndroidTablet ? 670 : 335,
                     margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
                     marginTop: this.props.deviceTypeAndroidTablet ? 50 : undefined
                   }}

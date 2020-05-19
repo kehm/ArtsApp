@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
         marginRight: 5
     },
     body: {
-        minWidth: 40
-    }
+        minWidth: 65
+    },
 });
 
 export const androidTabletStyles = StyleSheet.create({
@@ -27,10 +27,10 @@ export const androidTabletStyles = StyleSheet.create({
         fontSize: 26
     },
     body: {
-        minWidth: 40,
+        minWidth: 65,
         marginLeft: 20
     },
     subTitle: {
-        fontSize: 20
+        fontSize: 20,
     }
 });
