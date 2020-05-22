@@ -31,6 +31,7 @@ local.properties
 *.iml
 android/.project
 android/.settings/
+android/app/release/
 
 # node.js
 #

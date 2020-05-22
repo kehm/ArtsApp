@@ -53,6 +53,9 @@ class Help extends React.PureComponent {
                             <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
                                 {this.props.strings.help}
                             </Text>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
+                                {this.props.strings.goToUpdate}
+                            </Text>
                         </View>
                     </Content>
                 </Container>

@@ -1,4 +1,4 @@
-package com.artsapp;
+package com.bioceed.artsapp;
 
 import android.app.Application;
 

@@ -1,4 +1,4 @@
-package com.artsapp;
+package com.bioceed.artsapp;
 
 import com.facebook.react.ReactActivity;
 
