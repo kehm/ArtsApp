@@ -3,8 +3,8 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, Alert } from "react-native";
-import { Spinner } from "native-base";
+import { StyleSheet, Text, View, Image, Modal, TouchableOpacity } from "react-native";
+import { Spinner, Button } from "native-base";
 import { Actions } from "react-native-router-flux";
 import DbHelper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
@@ -44,7 +44,8 @@ class Splash extends React.PureComponent {
     this.KeyDownload = new KeyDownload();
     this.state = {
       progress: [],
-      text: introstrings["a" + this.getRandomInt()]
+      text: introstrings["a" + this.getRandomInt()],
+      openModal: false
     };
   }
 
@@ -52,6 +53,13 @@ class Splash extends React.PureComponent {
    * Download list of available keys if app is started for the first time. Requires network.
    */
   componentDidMount() {
+    this.initialize();
+  }
+
+  /**
+   * Initialize key list and set last download timestamp
+   */
+  initialize() {
     this.DbHelper.testDatabase().then(() => {
       this.props.actions.getLastDownload().then((date) => {
         if (date.value === null) {
@@ -69,11 +77,7 @@ class Splash extends React.PureComponent {
               Actions.Frontpage(); // Redirect to frontpage
             });
           } else {
-            Alert.alert(
-              this.props.strings.noNetWorkTitle,
-              this.props.strings.firstNoNett + " ",
-              [{ text: this.props.strings.ok, onPress: () => BackHandler.exitApp() }]
-            );
+            this.setState({ openModal: true });
           }
         } else {
           Actions.Frontpage();
@@ -129,6 +133,21 @@ class Splash extends React.PureComponent {
             </Text>
           </View>
         )}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.openModal}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.noNetWorkTitle}</Text>
+              <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.firstNoNett}</Text>
+              <TouchableOpacity style={styles.modalBtn} onPress={() => { this.setState({ openModal: false }, this.initialize()) }} >
+                <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.tryAgain}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -160,6 +179,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#ffffff",
     marginBottom: 5
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  modalBtn: {
+    backgroundColor: '#f0a00c',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    borderRadius: 16,
   }
 });
 
@@ -183,7 +235,13 @@ const AndroidTabletStyles = StyleSheet.create({
     textAlign: "center",
     color: "#ffffff",
     marginBottom: 5
-  }
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 22
+  },
 });
 
 export default connect(

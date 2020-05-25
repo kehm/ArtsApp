@@ -174,7 +174,7 @@ class Frontpage extends React.PureComponent<Props, State> {
           />
           <View style={styles.container}>
             {!this.state.openFilter ? (
-              <View >
+              <View>
                 <KeyPanel
                   keys={this.props.keys}
                   index={0}

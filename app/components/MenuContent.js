@@ -296,7 +296,7 @@ const styles = {
   },
   leftIcon: {
     maxWidth: 30,
-    marginLeft: 20
+    marginLeft: 10
   },
   lang: {
     position: "absolute",

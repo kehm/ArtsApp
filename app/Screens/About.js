@@ -67,12 +67,12 @@ class About extends React.PureComponent {
         this.props.setLastDownload(
           date.getFullYear() + "" + month + "" + date.getDate()
         );
-        this.setState({ openModal: false });
         this.refs.toast.show(this.props.strings.updateSuccess);
       });
     } else {
       this.refs.toast.show(this.props.strings.disNoNetwork);
     }
+    this.setState({ openModal: false });
   }
 
   /**
