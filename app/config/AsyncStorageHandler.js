@@ -38,7 +38,7 @@ class AsyncStorageHandler {
             await AsyncStorage.setItem(this.LANGUAGE, lang);
             return lang;
         } catch (err) {
-            console.log(err);
+            //console.log(err);
         }
     }
 
@@ -52,7 +52,7 @@ class AsyncStorageHandler {
             await AsyncStorage.setItem(this.LASTDOWNLOAD, date);
             return date;
         } catch (err) {
-            console.log(err);
+            //console.log(err);
         }
     }
 }

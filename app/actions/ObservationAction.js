@@ -37,38 +37,20 @@ export function updateObservationCoordinates(obsId, latitude, longitude) {
   };
 }
 
-export function setSpNerby(key) {
+export function getNearbyObservations(key) {
   return {
-    type: actionTypes.GET_OBSERVATION,
+    type: actionTypes.GET_NEARBY_OBSERVATIONS,
     payload: {
-      promise: new DB_helper().getNerbyObservation(key)
+      promise: new DB_helper().getNearbyObservations(key)
     }
   };
 }
 
-export function updateNerbyList(keys, latitude, longitude) {
+export function updateNearbyList(keys, latitude, longitude) {
   return {
-    type: actionTypes.UPDATE_NERBY,
+    type: actionTypes.UPDATE_NEARBY,
     payload: {
       promise: new DB_helper().fethObservationNumbers(keys, latitude, longitude)
     }
-  };
-}
-
-export function changeModal() {
-  return {
-    type: actionTypes.UPDATE_MODAL_OPEN
-  };
-}
-
-export function changeUpdateSuccess() {
-  return {
-    type: actionTypes.UPDATE_SUCCESS
-  };
-}
-
-export function updateReset() {
-  return {
-    type: actionTypes.UPDATE_RESET
   };
 }

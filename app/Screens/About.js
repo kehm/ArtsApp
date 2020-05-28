@@ -68,11 +68,15 @@ class About extends React.PureComponent {
           date.getFullYear() + "" + month + "" + date.getDate()
         );
         this.refs.toast.show(this.props.strings.updateSuccess);
+        this.setState({ openModal: false });
+      }).catch(err => {
+        this.refs.toast.show(this.props.strings.disNoNetwork);
+        this.setState({ openModal: false });
       });
     } else {
       this.refs.toast.show(this.props.strings.disNoNetwork);
+      this.setState({ openModal: false });
     }
-    this.setState({ openModal: false });
   }
 
   /**
@@ -115,7 +119,7 @@ class About extends React.PureComponent {
                     <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
                   </MenuOption>
                   <MenuOption onSelect={() => { Actions.Help() }} >
-                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt :styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.helpHeader}</Text>
                   </MenuOption>
                 </MenuOptions>
               </Menu>

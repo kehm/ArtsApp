@@ -85,7 +85,7 @@ class MenuContent extends React.PureComponent {
  */
   onClickKeys = () => {
     this.props.actions.closeMenu();
-    Actions.Frontpage();
+    Actions.pop();
   };
 
 

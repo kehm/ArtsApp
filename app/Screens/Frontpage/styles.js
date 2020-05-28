@@ -6,7 +6,6 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     paddingTop: 10,
-    marginTop: 10
   },
   dotMenu: {
     backgroundColor: '#eee',
@@ -22,12 +21,10 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   list: {
-    minHeight: 200,
     color: 'black',
     borderTopColor: 'black',
     borderTopWidth: 1,
     backgroundColor: '#65C86012',
-    marginTop: 30
   },
   filteredList: {
     borderTopWidth: 0,

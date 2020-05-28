@@ -58,6 +58,13 @@ export function isOnline(isConnected) {
   };
 }
 
+export function useLocation(useLocation) {
+  return {
+    type: actionTypes.USE_LOCATION,
+    useLocation: useLocation
+  };
+}
+
 export function debugMode(bool) {
   return {
     type: actionTypes.DEBUG_MODE,

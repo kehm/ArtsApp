@@ -21,9 +21,9 @@ import ImageConfig from "../config/network/ImageConfig";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
+import * as SettingsAction from "../actions/SettingsAction";
 
 import SubPageHeader from "../components/SubPageHeader";
-import * as SettingsAction from "../actions/SettingsAction";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -129,10 +129,20 @@ class Info extends React.PureComponent {
       this.props.strings.deleteKey,
       [
         { text: this.props.strings.cancel, style: "cancel" },
-        { text: this.props.strings.ok, onPress: () => { this.props.actions.deletedata(this.props.selectedKey.key_id); Actions.Frontpage(); } }
+        { text: this.props.strings.ok, onPress: () => { this.deleteKey() } }
       ],
       { cancelable: true }
     );
+  }
+
+  /**
+   * Delete key from device and refresh frontpage
+   */
+  deleteKey = () => {
+    this.props.actions.deletedata(this.props.selectedKey.key_id).then(() => {
+      this.props.onKeyDelete();
+      Actions.pop();
+    });
   }
 
   /**
@@ -141,8 +151,8 @@ class Info extends React.PureComponent {
   downloadKey = () => {
     if (this.props.isConnected === false) {
       new Alert.alert(
-        this.props.strings.noNetwork,
         "",
+        this.props.strings.noNetwork,
         [
           { text: this.props.strings.ok, onPress: () => { } }
         ],
@@ -227,14 +237,7 @@ class Info extends React.PureComponent {
                 )}
                 <View style={styles.separator} />
                 <View style={styles.textBox}>
-                  <HTMLView
-                    value={this.removeHtmlBr()}
-                    stylesheet={
-                      this.props.deviceTypeAndroidTablet
-                        ? htmlstylesAndroidTablet
-                        : htmlstyles
-                    }
-                  />
+                  <HTMLView value={this.removeHtmlBr()} stylesheet={this.props.deviceTypeAndroidTablet ? htmlstylesAndroidTablet : htmlstyles} />
                 </View>
               </Col>
             </Grid>
@@ -407,7 +410,7 @@ const htmlstylesAndroidTablet = StyleSheet.create({
   },
   i: {
     fontSize: 20
-  }
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({

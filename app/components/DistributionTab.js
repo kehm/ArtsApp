@@ -3,7 +3,7 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleSheet, Text, View, ScrollView, Image } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 
 // redux
 import { connect } from "react-redux";
@@ -23,99 +23,103 @@ function mapDispatchToProps(dispatch) {
 class DistributionTab extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      latitude: "",
-      longitude: "",
-      noDistribution: false
-    };
-  }
-
-  componentDidMount() {
-    if (this.props.distributionLocal === "undefined" || this.props.longitude === "undefined" || this.props.latitude === "undefined") {
-      this.setState({ noDistribution: true });
+    let local = true;
+    let country = true;
+    if (this.props.distributionLocal === "undefined" || this.props.distributionLocal === null || this.props.distributionLocal === undefined) {
+      local = false;
+    } else if (this.props.longitude === "undefined" || this.props.latitude === "undefined") {
+      local = false;
     }
+    if (this.props.distributionCountry === "undefined" || this.props.distributionCountry === null || this.props.distributionCountry === undefined) {
+      country = false;
+    }
+    this.state = {
+      showLocal: local,
+      showCountry: country,
+      localImg: this.props.distributionLocal + "&lon=" + this.props.longitude + "&lat=" + this.props.latitude,
+      countryImg: this.props.distributionCountry + "&lon=" + this.props.longitude + "&lat=" + this.props.latitude,
+    };
   }
 
   render() {
     return (
-      <View>
-        {this.props.isConnected ? (
-          <ScrollView>
-            {!this.state.noDistribution ? (
-              <View>
-                <Image
-                  source={{
-                    uri:
-                      this.props.distributionCountry +
-                      "&lon=" +
-                      this.props.longitude +
-                      "&lat=" +
-                      this.props.latitude
-                  }}
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.image
-                      : styles.image
-                  }
-                />
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text
-                      : null
-                  }
-                >
-                  {this.props.strings.nationalDistrubution +
-                    this.state.latitude}
-                </Text>
-                <Image
-                  source={{
-                    uri:
-                      this.props.distributionLocal +
-                      "&lon=" +
-                      this.props.longitude +
-                      "&lat=" +
-                      this.props.latitude
-                  }}
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.image
-                      : styles.image
-                  }
-                />
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text
-                      : null
-                  }
-                >
-                  {this.props.strings.regonalDistrubution}
-                </Text>
-                <View
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 100 : 50
-                  }}
-                />
-              </View>
-            ) : (
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text
-                      : null
-                  }
-                >
-                  {this.props.strings.noDistribution}
-                </Text>
-              )}
-          </ScrollView>
-        ) : (
-            <Text style={{ margin: 10, textAlign: "center" }}>
-              {this.props.strings.disNoNetwork}
+      <ScrollView>
+        {this.state.showCountry && (
+          <View>
+            <TouchableOpacity onPress={() => this.props.onClickMap(this.state.countryImg)}>
+              <Image
+                source={{
+                  uri:
+                    this.state.countryImg
+                }}
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.image
+                    : styles.image
+                }
+              />
+            </TouchableOpacity>
+            <Text
+              style={
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.text
+                  : styles.text
+              }
+            >
+              {this.props.strings.nationalDistribution}
             </Text>
-          )}
-      </View>
+          </View>
+        )}
+
+        {this.state.showLocal && (
+          <View>
+            <TouchableOpacity onPress={() => this.props.onClickMap(this.state.localImg)}>
+              <Image
+                source={{
+                  uri:
+                    this.state.localImg
+                }}
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.image
+                    : styles.image
+                }
+              />
+            </TouchableOpacity>
+            <Text
+              style={
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.text
+                  : styles.text
+              }
+            >
+              {this.props.strings.regionalDistribution}
+            </Text>
+          </View>
+        )}
+        {!this.state.showCountry && !this.state.showLocal && (
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? AndroidTabletStyles.text
+                : styles.text
+            }
+          >
+            {this.props.strings.noDistribution}
+          </Text>
+        )}
+        {this.state.showCountry && !this.state.showLocal && (
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? AndroidTabletStyles.text
+                : styles.text
+            }
+          >
+            {this.props.strings.regionalPosition}
+          </Text>
+        )}
+      </ScrollView>
     );
   }
 }
@@ -135,6 +139,9 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     resizeMode: "stretch",
     alignSelf: "center"
+  },
+  text: {
+    marginBottom: 10
   }
 });
 

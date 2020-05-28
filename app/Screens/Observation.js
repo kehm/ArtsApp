@@ -288,12 +288,14 @@ class Observation extends React.PureComponent {
                   style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingLatitude ? styles.missingText : undefined]}
                   onChangeText={latitude => this.setState({ latitude: latitude })}
                   value={this.state.latitude.toString()}
+                  keyboardType='numeric'
                 />
                 <TextInput
                   placeholder={this.props.strings.longitude}
                   style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingLongitude ? styles.missingText : undefined]}
                   onChangeText={longitude => this.setState({ longitude: longitude })}
                   value={this.state.longitude.toString()}
+                  keyboardType='numeric'
                 />
               </Form>
               <View

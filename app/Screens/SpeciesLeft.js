@@ -3,12 +3,12 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import { Actions } from "react-native-router-flux";
-import { Container, StyleProvider, Content, Tabs, Tab } from "native-base";
-import SpeciesElement from "../components/SpeciesElement";
+import { Container, StyleProvider, Content, Tabs, Tab, Spinner } from "native-base";
 import Toast, { DURATION } from "react-native-easy-toast";
 import ImageView from "react-native-image-viewing";
+import Icon from 'react-native-vector-icons/Entypo';
 import { findIndex } from "lodash";
 import SpeciesLeftTab from "../components/SpeciesLeftTab";
 import SpeciesEliminatedTab from "../components/SpeciesEliminatedTab";
@@ -24,6 +24,7 @@ import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 import * as MenuAction from "../actions/MenuAction";
 import * as ObservationAction from "../actions/ObservationAction";
+import * as SettingsAction from "../actions/SettingsAction";
 
 import SubPageHeader from "../components/SubPageHeader";
 
@@ -38,7 +39,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators(
-            { ...KeyAction, ...MenuAction, ...ObservationAction },
+            { ...KeyAction, ...MenuAction, ...ObservationAction, ...SettingsAction },
             dispatch
         )
     };
@@ -54,8 +55,9 @@ class SpeciesLeft extends React.PureComponent {
             loading: false,
             spElim: this.setElimList(),
             leftNerbyList: props.navigation.getParam("leftNerbyList", []),
-            leftNotGeo: this.setNotNerby(props.nerbyList),
-            openImages: false
+            leftNotGeo: this.setNotNearby(props.nearbyList),
+            openImages: false,
+            openModal: false
         };
     }
 
@@ -79,14 +81,10 @@ class SpeciesLeft extends React.PureComponent {
      * @param {array} nerbyList list of species that has observations locally
      * @return {array}
      */
-    setNotNerby(nerbyList) {
-        let spList =
-            this.props.chosenValues.length === 0
-                ? this.props.fullSpList
-                : this.props.speciesLeft;
-        let list = [];
+    setNotNearby(nearbyList) {
+        let spList = this.props.chosenValues.length === 0 ? this.props.fullSpList : this.props.speciesLeft; let list = [];
         for (let i = 0; i < spList.length; i++) {
-            let k = findIndex(nerbyList, { species_id: spList[i].species_id });
+            let k = findIndex(nearbyList, { species_id: spList[i].species_id });
             if (k === -1) {
                 list.push(spList[i]);
             }
@@ -108,25 +106,25 @@ class SpeciesLeft extends React.PureComponent {
     }
 
     /**
-     * if connected to internett will it update the list of locally observed species to current location.
-     * @return {void}
+     * Update list of locally observed species (based on current location)
      */
-    geoOnPress = () => {
+    updateObservedNearby = async () => {
         if (this.props.isConnected) {
-            if (this.props.latitude !== "undefined") {
-                k = this.props.keys[
-                    findIndex(this.props.keys, { key_id: this.props.chosenKey })
-                ];
-                this.props.actions.updateNerbyList(
-                    [k],
-                    this.props.latitude,
-                    this.props.longitude
-                );
-            } else if (this.props.latitude === "undefined") {
-                alert(this.props.strings.noLocation);
-            } else if (!this.props.isConnected) {
-                this.refs.toast.show(this.props.strings.noNetwork, 1500);
+            if (this.props.useLocation && this.props.latitude !== "undefined") {
+                let k = this.props.keys[findIndex(this.props.keys, { key_id: this.props.chosenKey })];
+                this.props.actions.updateNearbyList([k], this.props.latitude, this.props.longitude).then(() => {
+                    this.props.actions.getNearbyObservations(k.key_id);
+                    this.refs.toast.show(this.props.strings.updateSuccess);
+                }).catch(() => {
+                    this.refs.toast.show(this.props.strings.obsUpdateError);
+                }).finally(() => {
+                    this.setState({ openModal: false });
+                });
+            } else {
+                this.refs.toast.show(this.props.strings.noLocation);
             }
+        } else {
+            this.refs.toast.show(this.props.strings.noNetwork);
         }
     };
 
@@ -158,7 +156,12 @@ class SpeciesLeft extends React.PureComponent {
                 }
             >
                 <Container>
-                    <SubPageHeader title={this.props.strings.seeAllSpecies} onClick={this.onClickBack} />
+                    <SubPageHeader title={this.props.strings.seeAllSpecies} onClick={this.onClickBack}
+                        rightIcon={
+                            <TouchableOpacity onPress={() => { this.setState({ openModal: true }); this.updateObservedNearby() }}>
+                                <Icon name='cw' size={this.props.deviceTypeAndroidTablet ? 36 : 26} color='black' />
+                            </TouchableOpacity>
+                        } />
                     <ImageView
                         images={this.state.images}
                         imageIndex={0}
@@ -174,28 +177,42 @@ class SpeciesLeft extends React.PureComponent {
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.activeTabStyle : styles.activeTabStyle}
                                 tabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tab : undefined}>
-                                {this.state.leftNotGeo !== undefined && this.state.leftNotGeo.length !== 0 ? (
-                                    <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
-                                        <SpeciesLeftTab list={this.state.leftNotGeo} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
-                                    </View>
-                                ) : (
-                                        <View />
-                                    )}
+                                <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
+                                    {this.state.leftNotGeo !== undefined && this.state.leftNotGeo.length !== 0 ? (
+                                        <SpeciesLeftTab list={this.state.leftNotGeo} observations={this.props.nearbyList} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                    ) : (
+                                            <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.text : styles.text} >{this.props.strings.noPossible}</Text>
+                                        )}
+                                </View>
                             </Tab>
                             <Tab heading={this.props.strings.eliminated} textStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.activeTabStyle : styles.activeTabStyle}
                                 tabStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tab : undefined}>
-                                {this.state.spElim !== undefined && this.state.spElim.length !== 0 ? (
-                                    <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
-                                        <SpeciesEliminatedTab list={this.state.spElim} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
-                                    </View>
-                                ) : (
-                                        <View />
-                                    )}
+                                <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabContainer : undefined}>
+
+                                    {this.state.spElim !== undefined && this.state.spElim.length !== 0 ? (
+                                        <SpeciesEliminatedTab list={this.state.spElim} observations={this.props.nearbyList} onPress={this.onSpeciesSelected} onClickImage={this.onClickImage} />
+                                    ) : (
+                                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text} >{this.props.strings.noElim}</Text>
+                                        )}
+                                </View>
                             </Tab>
                         </Tabs>
                     </Content>
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.openModal}
+                    >
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.modalText : styles.modalText}>{this.props.strings.updateNearby}</Text>
+                                <Spinner color="green" />
+                            </View>
+                        </View>
+                    </Modal>
+                    <Toast ref="toast" />
                 </Container>
             </StyleProvider>
         );
@@ -236,6 +253,36 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 10
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontWeight: "bold"
+    },
+    text: {
+        padding: 5,
+        fontSize: 15
+    }
 });
 
 const androidTabletStyles = StyleSheet.create({
@@ -273,6 +320,16 @@ const androidTabletStyles = StyleSheet.create({
     tabContainer: {
         marginTop: 50,
         marginBottom: 50
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        fontWeight: "bold",
+        fontSize: 22
+    },
+    text: {
+        padding: 5,
+        fontSize: 20
     }
 });
 

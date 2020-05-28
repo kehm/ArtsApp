@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import AppSetup from './AppSetup';
 import configureStore from './lib/configureStore';
-import MenuProvider from 'react-native-popup-menu';
 
 function Setup(): React.Component {
   class Root extends Component {

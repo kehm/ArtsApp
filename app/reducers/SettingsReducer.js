@@ -31,8 +31,9 @@ const DEFAULT_STATE = {
   language: "no",
   platform: Platform.OS,
   isConnected: false,
+  useLocation: undefined,
   debugMode: false,
-  lastDownloadDate: -1,
+  lastDownloadDate: undefined,
   keysUpdated: false,
   keyListUpdated: false,
   keysUpdated_loading: false,
@@ -78,6 +79,8 @@ export default function (state = DEFAULT_STATE, actions) {
       return { ...state, strings: actions.strings };
     case actionTypes.UPDATE_CONNECTIVITY:
       return { ...state, isConnected: actions.isConnected };
+    case actionTypes.USE_LOCATION:
+      return { ...state, useLocation: actions.useLocation };
     case actionTypes.DEBUG_MODE:
       return { ...state, debugMode: actions.debugMode };
     case `${actionTypes.UPDATE_KEYS}_LOADING`:

@@ -41,7 +41,7 @@ class SpeciesPanel extends React.Component<Props, State> {
 
   getStatusText = (foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies) => {
     if (foundSpecies === 0) {
-      return (this.props.strings.noArtsLeft + ", " + totalSpecies + " " + this.props.strings.artsTotal);
+      return (totalSpecies + " " + this.props.strings.artsTotal);
     } else {
       return (foundSpecies + " " + this.props.strings.artsPossible + " " + totalSpecies + " " + this.props.strings.artsTotal);
     }

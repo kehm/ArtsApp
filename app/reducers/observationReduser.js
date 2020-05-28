@@ -12,7 +12,7 @@ import * as actionTypes from '../actions/actionTypes';
  * state:
  * -observationsList = list of user saved observations.
  * -deleteObs = delete user observation flag
- * -nerbyList = array of nearby observation for species in currant key.
+ * -nearbyList = array of nearby observation for species in currant key.
  * -nerby_updated_loading = loading flag
  * -modalOpen = open and close update nearby observation modal
  * -getGerbyList = retrive nearbylist from DB flag
@@ -23,7 +23,7 @@ const DEFAULT_STATE = {
   onLogging: false,
   observationsList: [],
   deleteObs: -1,
-  nerbyList: [],
+  nearbyList: [],
   nerby_updated_loading: false,
   modalOpen: false,
   getGerbyList: false,
@@ -90,31 +90,31 @@ export default function (state = DEFAULT_STATE, actions) {
       return {
         ...state,
       };
-    case `${actionTypes.GET_OBSERVATION}_LOADING`:
+    case `${actionTypes.GET_NEARBY_OBSERVATIONS}_LOADING`:
       return {
         ...state,
         getGerbyList: false,
       };
-    case `${actionTypes.GET_OBSERVATION}_SUCCESS`:
+    case `${actionTypes.GET_NEARBY_OBSERVATIONS}_SUCCESS`:
       return {
         ...state,
-        nerbyList: actions.payload,
+        nearbyList: actions.payload,
         getGerbyList: true,
       };
-    case `${actionTypes.GET_OBSERVATION}_ERROR`:
+    case `${actionTypes.GET_NEARBY_OBSERVATIONS}_ERROR`:
       return {
         ...state,
         getGerbyList: false,
         getGerbyListError: actions.payload
       };
-    case `${actionTypes.UPDATE_NERBY}_LOADING`:
+    case `${actionTypes.UPDATE_NEARBY}_LOADING`:
       return {
         ...state,
         nerby_updated_loading: true,
         nerby_updated: false,
         nerby_updatedErrorBool: false,
       };
-    case `${actionTypes.UPDATE_NERBY}_SUCCESS`:
+    case `${actionTypes.UPDATE_NEARBY}_SUCCESS`:
       return {
         ...state,
         nerby_updated: true,
@@ -122,28 +122,12 @@ export default function (state = DEFAULT_STATE, actions) {
         nerby_updated_loading: false,
         modalOpen: !state.modalOpen,
       };
-    case `${actionTypes.UPDATE_NERBY}_ERROR`:
+    case `${actionTypes.UPDATE_NEARBY}_ERROR`:
       return {
         ...state,
         nerby_updated: false,
         nerby_updatedError: actions.payload,
         nerby_updatedErrorBool: true,
-        nerby_updated_loading: false,
-      };
-    case actionTypes.UPDATE_MODAL_OPEN:
-      return {
-        ...state,
-        modalOpen: !state.modalOpen,
-      };
-    case actionTypes.UPDATE_SUCCESS:
-      return {
-        ...state,
-        nerby_updated: false
-      };
-    case actionTypes.UPDATE_RESET:
-      return {
-        ...state,
-        nerby_updatedErrorBool: false,
         nerby_updated_loading: false,
       };
     default:

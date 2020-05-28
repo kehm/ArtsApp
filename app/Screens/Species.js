@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import InfoTab from "../components/InfoTab";
 import DistributionTab from "../components/DistributionTab";
 
+
 // theme
 import getTheme from "../native-base-theme/components";
 import common from "../native-base-theme/variables/commonColor";
@@ -22,6 +23,7 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 import * as ObservationAction from "../actions/ObservationAction";
+import * as SettingsAction from "../actions/SettingsAction";
 
 import SubPageHeader from "../components/SubPageHeader";
 import { county } from "../config/county";
@@ -36,7 +38,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { ...KeyAction, ...ObservationAction },
+      { ...KeyAction, ...ObservationAction, ...SettingsAction },
       dispatch
     )
   };
@@ -59,7 +61,9 @@ class Species extends React.PureComponent {
       defaultImage: require("../images/AA_logo.png"),
       saved: false,
       countyItems: undefined,
-      missingText: false
+      missingText: false,
+      openMap: false,
+      mapImg: undefined
     };
   }
 
@@ -107,6 +111,15 @@ class Species extends React.PureComponent {
       this.setState({ openImages: true });
     }
   };
+
+  /**
+   * Open image gallery on map click
+   */
+  onClickMap = (img) => {
+    let arr = [];
+    arr.push({ key: 0, uri: img });
+    this.setState({ mapImg: arr, openMap: true });
+  }
 
   /**
    * Create new observation object and save it to the DB
@@ -260,12 +273,14 @@ class Species extends React.PureComponent {
                   style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
                   onChangeText={latitude => this.setState({ latitude: latitude })}
                   value={this.state.latitude.toString()}
+                  keyboardType='numeric'
                 />
                 <TextInput
                   placeholder={this.props.strings.longitude}
                   style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
                   onChangeText={longitude => this.setState({ longitude: longitude })}
                   value={this.state.longitude.toString()}
+                  keyboardType='numeric'
                 />
               </Form>
               <View
@@ -358,6 +373,12 @@ class Species extends React.PureComponent {
             visible={this.state.openImages}
             onRequestClose={() => this.setState({ openImages: false })}
           />
+          <ImageView
+            images={this.state.mapImg}
+            imageIndex={0}
+            visible={this.state.openMap}
+            onRequestClose={() => this.setState({ openMap: false })}
+          />
           <SubPageHeader
             title={this.props.selectedSpecies.localName}
             subtitle={this.props.selectedSpecies.latinName}
@@ -421,6 +442,7 @@ class Species extends React.PureComponent {
                     distributionCountry={
                       this.props.selectedSpecies.distributionCountry
                     }
+                    onClickMap={(img) => this.onClickMap(img)}
                   />
                 </View>
               </Tab>

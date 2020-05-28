@@ -1,5 +1,5 @@
 import React from "react";
-import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, PermissionsAndroid, Platform } from "react-native";
 import { Container, StyleProvider, Item, Left, Right } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { FlatList } from "react-native-gesture-handler";
 import { SwipeListView } from 'react-native-swipe-list-view';
+import Geolocation from '@react-native-community/geolocation';
 
 // theme
 import getTheme from "../../native-base-theme/components";
@@ -47,10 +48,42 @@ class Frontpage extends React.PureComponent<Props, State> {
   }
 
   /**
+   * Get location permission and set current position
+   */
+  componentDidMount() {
+    if (this.props.isLocation === undefined) {
+      this.requestLocationPermission().then((granted) => {
+        if (granted) {
+          this.watchId = Geolocation.watchPosition(position => {
+            this.props.setLocation(
+              position.coords.latitude.toFixed(4),
+              position.coords.longitude.toFixed(4)
+            );
+          }, () => {
+          }, { timeout: 20000, maximumAge: 20000, enableHighAccuracy: true });
+        } else {
+          this.watchId = -1;
+        }
+        this.props.useLocation(granted);
+      });
+    }
+  }
+
+  /**
+   * Remove listener
+   */
+  componentWillUnmount() {
+    if (this.watchId !== -1) {
+      Geolocation.clearWatch(this.watchID);
+      Geolocation.stopObserving();
+    }
+  }
+
+  /**
    * Set initial keyList from props if empty
    */
   componentDidUpdate(prevProps, prevState) {
-    if (!prevState.init && this.props.keys.length !== 0) {
+    if (!this.state.init && this.props.keys.length !== 0) {
       this.setState({ init: true, keyList: this.props.keys, selected: this.props.keys[0].key_id })
     }
   }
@@ -59,7 +92,7 @@ class Frontpage extends React.PureComponent<Props, State> {
   * If new props, trigger state update
   */
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!prevState.init && nextProps.keys !== prevState.keyList) {
+    if (!prevState.init) {
       return {
         list: nextProps.keys
       }
@@ -85,18 +118,18 @@ class Frontpage extends React.PureComponent<Props, State> {
         if (key.key_id === this.state.selected) {
           this.props.setKey(key.key_id, key.title);
           if (key.keyDownloaded > 0) {
-            Actions.Key();
+            Actions.Key({selectedKey: key});
           } else {
-            Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate });
+            Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate, onKeyDelete: this.reInitKeyList });
           }
         }
       });
     } else {
       this.props.setKey(key.key_id, key.title);
       if (key.keyDownloaded > 0) {
-        Actions.Key();
+        Actions.Key({selectedKey: key});
       } else {
-        Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate });
+        Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate, onKeyDelete: this.reInitKeyList });
       }
     }
   };
@@ -106,7 +139,7 @@ class Frontpage extends React.PureComponent<Props, State> {
    */
   handleOnInfoClick = (key) => {
     this.props.setKey(key.key_id, key.title);
-    Actions.Info({ selectedKey: key });
+    Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate, onKeyDelete: this.reInitKeyList });
   }
 
   /**
@@ -119,6 +152,12 @@ class Frontpage extends React.PureComponent<Props, State> {
     if (key.key_id !== this.state.selected) {
       this.setState({ selected: key.key_id })
     }
+  }
+
+  reInitKeyList = () => {
+    this.props.setAllKeys().then(() => {
+      this.setState({ init: false });
+    });
   }
 
   /**
@@ -141,6 +180,32 @@ class Frontpage extends React.PureComponent<Props, State> {
       filter: filter,
       keyList: list
     });
+  }
+
+  /**
+ * Request Android/iOS location permissions
+ */
+  async requestLocationPermission() {
+    if (Platform.OS !== "android") return Promise.resolve();
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: "ArtsApp Location Permission",
+          message: "ArtsApp needs access to your location",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
   }
 
   render() {
@@ -236,17 +301,18 @@ class Frontpage extends React.PureComponent<Props, State> {
 }
 
 function mapStateToProps({ key, settings }) {
-  const { deviceTypeAndroidTablet, isConnected, strings } = settings;
+  const { deviceTypeAndroidTablet, isConnected, strings, useLocation } = settings;
   return {
     keys: sortKeys(key.keys),
     deviceTypeAndroidTablet,
     isConnected,
-    strings
+    strings,
+    isLocation: useLocation
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  const { setAllKeys, openMenu, setKey, downloadKey, getKeysFromAPI, setLastDownload } = bindActionCreators(
+  const { setAllKeys, openMenu, setKey, downloadKey, getKeysFromAPI, setLastDownload, useLocation, setLocation } = bindActionCreators(
     {
       ...KeyAction,
       ...MenuAction,
@@ -262,7 +328,9 @@ function mapDispatchToProps(dispatch) {
     downloadKey,
     openMenu,
     getKeysFromAPI,
-    setLastDownload
+    setLastDownload,
+    useLocation,
+    setLocation
   };
 }
 

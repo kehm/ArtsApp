@@ -484,7 +484,7 @@ export default class DB_helper {
 
   /**
    * Fetch numbers of nearby observations from api, and store them to DB.
-   * @see this.insertnerbyObservation
+   * @see this.insertNearbyObservation
    * @param {array} keys      keys to get observations for.
    * @param {double} latitude  latitude
    * @param {double} longitude longitude
@@ -493,14 +493,7 @@ export default class DB_helper {
   fethObservationNumbers(keys, latitude, longitude) {
     let promises = keys.map((key, index) => {
       return new Promise((res, rej) => {
-        fetch(
-          URLs.OCCURENCE_BASE +
-          key.keyWeb +
-          "?lon=" +
-          longitude +
-          "&lat=" +
-          latitude
-        )
+        fetch(URLs.OCCURENCE_BASE + key.keyWeb + "?lon=" + longitude + "&lat=" + latitude)
           .then(response => response.json())
           .then(responseJson => {
             this.deleteObservationNumbers(key.key_id).then(() => {
@@ -508,9 +501,9 @@ export default class DB_helper {
                 () => {
                   if (typeof responseJson.arter !== "undefined") {
                     for (let i = 0; i < responseJson.arter.length; i++) {
-                      if (responseJson.arter[i].speciesId !== null) {
-                        this.insertnerbyObservation({
-                          species_id: responseJson.arter[i].speciesId,
+                      if (responseJson.arter[i].ScientificName !== null || responseJson.arter[i].ScientificName !== undefined) {
+                        this.insertNearbyObservation({
+                          species_id: responseJson.arter[i].ScientificName,
                           obsSmall: responseJson.arter[i].Counts.small,
                           obsMedium: responseJson.arter[i].Counts.medium,
                           obsLarge: responseJson.arter[i].Counts.large,
@@ -542,21 +535,21 @@ export default class DB_helper {
 
   /**
    * Inserts nearby observation
-   * @param {Object} nerbyObservation observation to be inserted
+   * @param {Object} nearbyObservation observation to be inserted
    * @return {Promise}
    */
-  insertnerbyObservation(nerbyObservation) {
+  insertNearbyObservation(nearbyObservation) {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
         "INSERT INTO NerbyObservation (species_id, obsSmall, obsMedium, obsLarge, obsCounty, key_id ) " +
         "VALUES (?,?,?,?,?,?);",
         [
-          nerbyObservation.species_id,
-          nerbyObservation.obsSmall,
-          nerbyObservation.obsMedium,
-          nerbyObservation.obsLarge,
-          nerbyObservation.obsCounty,
-          nerbyObservation.key_id
+          nearbyObservation.species_id,
+          nearbyObservation.obsSmall,
+          nearbyObservation.obsMedium,
+          nearbyObservation.obsLarge,
+          nearbyObservation.obsCounty,
+          nearbyObservation.key_id
         ],
         () => {
           resolve();
@@ -1248,7 +1241,7 @@ export default class DB_helper {
    * @param {Integer} keyId id selected key
    * @return {Promise} resolves an array of NerbyObservation
    */
-  getNerbyObservation(keyId) {
+  getNearbyObservations(keyId) {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
         "SELECT * FROM NerbyObservation WHERE key_id=? ",

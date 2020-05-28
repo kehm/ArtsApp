@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { FlatList } from 'react-native';
 import SpeciesElement from "./SpeciesElement";
+import { findIndex } from "lodash";
 
 class SpeciesEliminatedTab extends React.PureComponent {
     constructor(props) {
@@ -16,20 +17,23 @@ class SpeciesEliminatedTab extends React.PureComponent {
             <FlatList
                 data={this.props.list}
                 keyExtractor={item => item.species_id.toString()}
-                renderItem={(item) =>
-                    <SpeciesElement
-                        key={item.item.species_id}
-                        species_id={item.item.species_id}
-                        latinName={item.item.latinName}
-                        localName={item.item.localName}
-                        obsSmall={0}
-                        obsMedium={0}
-                        obsLarge={0}
-                        isAndroidTablet={this.props.deviceTypeAndroidTablet}
-                        noObs={false}
-                        onPress={() => this.props.onPress(item.item)}
-                        onClickImage={(images) => this.props.onClickImage(images)}
-                    />
+                renderItem={(item) => {
+                    let obs = this.props.observations[findIndex(this.props.observations, { species_id: item.item.latinName })];
+                    return (
+                        <SpeciesElement
+                            key={item.item.species_id}
+                            species_id={item.item.species_id}
+                            latinName={item.item.latinName}
+                            localName={item.item.localName}
+                            obsSmall={obs === undefined ? 0 : obs.obsSmall}
+                            obsMedium={obs === undefined ? 0 : obs.obsMedium}
+                            obsLarge={obs === undefined ? 0 : obs.obsLarge}
+                            isAndroidTablet={this.props.deviceTypeAndroidTablet}
+                            noObs={obs === undefined ? false : true}
+                            onPress={() => this.props.onPress(item.item)}
+                            onClickImage={(images) => this.props.onClickImage(images)}
+                        />)
+                }
                 }
             />
         );

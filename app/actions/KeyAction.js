@@ -1,7 +1,7 @@
 import * as actionTypes from "./actionTypes";
 import DB_helper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
-import { setSpNerby } from "./ObservationAction";
+import { getNearbyObservations } from "./ObservationAction";
 
 export function setTest() {
   return {
@@ -25,7 +25,7 @@ export function setKey(keyId, title, force = false) {
       dispatch(resetKey(keyId));
       dispatch(setTraitValuecombo(keyId));
       dispatch(setAllSpToKEy(keyId));
-      dispatch(setSpNerby(keyId));
+      dispatch(getNearbyObservations(keyId));
       dispatch(getAllSpImages(keyId));
       dispatch(getValueImages(keyId));
       dispatch(setSpeciesLeft([], keyId));

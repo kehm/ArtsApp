@@ -64,6 +64,7 @@ class Splash extends React.PureComponent {
       this.props.actions.getLastDownload().then((date) => {
         if (date.value === null) {
           if (this.props.isConnected) {
+            this.setState({text: this.props.strings.firstStart});
             this.props.actions.getKeysFromAPI().then(() => {
               // Set last download timestamp after getting keys
               let date = new Date();
@@ -75,6 +76,8 @@ class Splash extends React.PureComponent {
                 date.getFullYear() + "" + month + "" + date.getDate()
               );
               Actions.Frontpage(); // Redirect to frontpage
+            }).catch(err => {
+              this.setState({ openModal: true });
             });
           } else {
             this.setState({ openModal: true });
@@ -117,13 +120,15 @@ class Splash extends React.PureComponent {
         >
           {this.props.strings.introText}
         </Text>
-        {this.props.lastDownloadDate === -1 && (
+        {this.props.lastDownloadDate === undefined && (
           <View>
             <Spinner color="green" />
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
               style={{
+                paddingLeft: 5,
+                paddingRight: 5,
                 textAlign: "center",
                 color: "#ffffff",
                 fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
@@ -170,7 +175,7 @@ const styles = StyleSheet.create({
     height: 350,
     width: 350,
     margin: 30,
-    marginTop: 70,
+    marginTop: 30,
     marginBottom: 0,
     justifyContent: "center"
   },

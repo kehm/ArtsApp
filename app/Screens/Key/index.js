@@ -6,6 +6,7 @@ import { View, LayoutAnimation } from 'react-native';
 import { Container, StyleProvider, Header, Title, Left, Right } from 'native-base';
 import ImageView from "react-native-image-viewing";
 import Icon from 'react-native-vector-icons/Entypo';
+import Geolocation from '@react-native-community/geolocation';
 
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -22,6 +23,8 @@ import TraitDialog from '../../components/TraitDialog';
 import SubPageHeader from "../../components/SubPageHeader";
 
 import * as KeyAction from '../../actions/KeyAction';
+import * as SettingsAction from '../../actions/SettingsAction';
+import * as ObservationAction from "../../actions/ObservationAction";
 
 import styles from './styles.js';
 
@@ -47,6 +50,17 @@ class Key extends React.Component<Props, State> {
     };
   }
 
+  /**
+   * Get nearby observations based on current position
+   */
+  componentDidMount() {
+    if (this.props.useLocation && this.props.latitude !== "undefined") {
+      this.props.actions.updateNearbyList([this.props.selectedKey], this.props.latitude, this.props.longitude).then(() => {
+        this.props.actions.getNearbyObservations(this.props.selectedKey.key_id);
+      });
+    }
+  }
+
   setStateAnimated(callback: (state: State) => void) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState(callback);
@@ -67,7 +81,7 @@ class Key extends React.Component<Props, State> {
   }
 
   onClickClose = () => {
-    Actions.Frontpage();
+    Actions.pop();
   }
 
   toggleSpeciesPanel = () => {
@@ -197,6 +211,9 @@ function mapStateToProps({ key, settings, observations }) {
   const isUnfiltered = key.speciesLeft.length === 0 && key.chosenValues.length === 0;
   return ({
     keyId: key.chosenKey,
+    useLocation: settings.useLocation,
+    latitude: settings.latitude,
+    longitude: settings.longitude,
     species: isUnfiltered ? key.fullSpList : key.speciesLeft,
     totalSpecies: key.fullSpList.length,
     foundSpecies: key.speciesLeft.length,
@@ -211,7 +228,7 @@ function mapStateToProps({ key, settings, observations }) {
     strings: settings.strings,
     deviceTypeAndroidTablet: settings.deviceTypeAndroidTablet,
     isFiltered: !isUnfiltered,
-    observationsNearby: observations.nerbyList
+    observationsNearby: observations.nearbyList
       .filter(obs => isUnfiltered ?
         key.fullSpList.find(s => obs.species_id === s.species_id) :
         key.speciesLeft.find(s => obs.species_id === s.species_id))
@@ -221,7 +238,7 @@ function mapStateToProps({ key, settings, observations }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...KeyAction }, dispatch)
+    actions: bindActionCreators({ ...KeyAction, ...SettingsAction, ...ObservationAction }, dispatch)
   };
 }
 
