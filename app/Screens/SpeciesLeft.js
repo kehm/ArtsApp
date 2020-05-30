@@ -8,6 +8,7 @@ import { Actions } from "react-native-router-flux";
 import { Container, StyleProvider, Content, Tabs, Tab, Spinner } from "native-base";
 import Toast, { DURATION } from "react-native-easy-toast";
 import ImageView from "react-native-image-viewing";
+import deviceInfoModule from "react-native-device-info";
 import Icon from 'react-native-vector-icons/Entypo';
 import { findIndex } from "lodash";
 import SpeciesLeftTab from "../components/SpeciesLeftTab";
@@ -119,12 +120,14 @@ class SpeciesLeft extends React.PureComponent {
                     this.refs.toast.show(this.props.strings.obsUpdateError);
                 }).finally(() => {
                     this.setState({ openModal: false });
-                });
+                })
             } else {
                 this.refs.toast.show(this.props.strings.noLocation);
+                this.setState({ openModal: false });
             }
         } else {
             this.refs.toast.show(this.props.strings.noNetwork);
+            this.setState({ openModal: false });
         }
     };
 
@@ -158,7 +161,7 @@ class SpeciesLeft extends React.PureComponent {
                 <Container>
                     <SubPageHeader title={this.props.strings.seeAllSpecies} onClick={this.onClickBack}
                         rightIcon={
-                            <TouchableOpacity onPress={() => { this.setState({ openModal: true }); this.updateObservedNearby() }}>
+                            <TouchableOpacity onPress={() => { this.setState({ openModal: true }, () => this.updateObservedNearby()); }}>
                                 <Icon name='cw' size={this.props.deviceTypeAndroidTablet ? 36 : 26} color='black' />
                             </TouchableOpacity>
                         } />
@@ -171,7 +174,8 @@ class SpeciesLeft extends React.PureComponent {
                     <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topContainer : styles.topContainer}>
                         <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topText : styles.topText}>{this.props.strings.speciesViewAll} {this.props.strings.imageClickable}.</Text>
                     </View>
-                    <Content style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabStyle : styles.tabStyle}>
+                    <Content style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabStyle : styles.tabStyle,
+                    deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 10} : undefined]}>
                         <Tabs>
                             <Tab heading={this.props.strings.possible} textStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}

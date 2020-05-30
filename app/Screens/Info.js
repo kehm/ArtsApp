@@ -10,6 +10,7 @@ import Icon from "react-native-vector-icons/Entypo";
 import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
 import ImageView from "react-native-image-viewing";
+import deviceInfoModule from "react-native-device-info";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -208,10 +209,11 @@ class Info extends React.PureComponent {
           {this.state.isDownloaded ? (
             <View />
           ) : (
-              <View style={
+              <View style={[
                 this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.topContainer
-                  : styles.topContainer
+                  : styles.topContainer,
+                  deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 128} : undefined]
               }>
                 <Text style={
                   this.props.deviceTypeAndroidTablet
@@ -243,7 +245,9 @@ class Info extends React.PureComponent {
             </Grid>
           </Content>
           {!this.state.isDownloaded ? (
-            <TouchableOpacity style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.downloadBtn : styles.downloadBtn, this.props.keyDownloaded_LOADING ? styles.loading : undefined]} onPress={() => { this.onClickUse(); }}>
+            <TouchableOpacity style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.downloadBtn : styles.downloadBtn, 
+            this.props.keyDownloaded_LOADING ? styles.loading : undefined,
+            deviceInfoModule.getModel().includes("iPhone 11") ? {"height" : 64} : undefined]} onPress={() => { this.onClickUse(); }}>
               <Text
                 style={[
                   this.props.deviceTypeAndroidTablet ?

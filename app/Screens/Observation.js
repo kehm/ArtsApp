@@ -21,6 +21,7 @@ import androidTablet from "../native-base-theme/variables/androidTablet";
 import FrontpageHeader from "../components/FrontpageHeader";
 import * as MenuAction from "../actions/MenuAction";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import deviceInfoModule from "react-native-device-info";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -197,7 +198,8 @@ class Observation extends React.PureComponent {
    */
   renderEmpty() {
     return (
-      <View style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topContainer : styles.topContainer}>
+      <View style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topContainer : styles.topContainer, 
+      deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 128} : undefined]}>
         <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topText : styles.topText}>{this.props.strings.noObservations}</Text>
       </View>
     );

@@ -115,7 +115,7 @@ class About extends React.PureComponent {
                   <Icon name='dots-three-vertical' size={28} color={'black'} />
                 </MenuTrigger>
                 <MenuOptions style={styles.dotMenu}>
-                  <MenuOption onSelect={() => { this.setState({ openModal: true }); this.handleOnPressUpdate() }} >
+                  <MenuOption onSelect={() => { this.setState({ openModal: true }, () => this.handleOnPressUpdate()); }} >
                     <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.lookForUpdate}</Text>
                   </MenuOption>
                   <MenuOption onSelect={() => { Actions.Help() }} >

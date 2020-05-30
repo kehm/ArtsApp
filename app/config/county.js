@@ -15,5 +15,6 @@ export const county = {
         { id: 8, name: "Vestfold og Telemark" },
         { id: 9, name: "Vestland" },
         { id: 10, name: "Viken" },
+        { id: 11, name: "Svalbard" },
     ],
 };

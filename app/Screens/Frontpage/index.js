@@ -186,7 +186,7 @@ class Frontpage extends React.PureComponent<Props, State> {
  * Request Android/iOS location permissions
  */
   async requestLocationPermission() {
-    if (Platform.OS !== "android") return Promise.resolve();
+    if (Platform.OS !== "android") return true;
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
