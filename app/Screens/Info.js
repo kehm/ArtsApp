@@ -160,7 +160,16 @@ class Info extends React.PureComponent {
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
-      this.props.actions.downloadKey(this.props.selectedKey.keyWeb);
+      this.props.actions.downloadKey(this.props.selectedKey.keyWeb).catch(() => {
+        new Alert.alert(
+          "",
+          this.props.strings.noNetwork,
+          [
+            { text: this.props.strings.ok, onPress: () => { } }
+          ],
+          { cancelable: false }
+        );
+      });
     }
   }
 
@@ -213,7 +222,7 @@ class Info extends React.PureComponent {
                 this.props.deviceTypeAndroidTablet
                   ? AndroidTabletStyles.topContainer
                   : styles.topContainer,
-                  deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 128} : undefined]
+                deviceInfoModule.getModel().includes("iPhone 11") ? { "top": 128 } : undefined]
               }>
                 <Text style={
                   this.props.deviceTypeAndroidTablet
@@ -245,9 +254,9 @@ class Info extends React.PureComponent {
             </Grid>
           </Content>
           {!this.state.isDownloaded ? (
-            <TouchableOpacity style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.downloadBtn : styles.downloadBtn, 
+            <TouchableOpacity style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.downloadBtn : styles.downloadBtn,
             this.props.keyDownloaded_LOADING ? styles.loading : undefined,
-            deviceInfoModule.getModel().includes("iPhone 11") ? {"height" : 64} : undefined]} onPress={() => { this.onClickUse(); }}>
+            deviceInfoModule.getModel().includes("iPhone 11") ? { "height": 64 } : undefined]} onPress={() => { this.onClickUse(); }}>
               <Text
                 style={[
                   this.props.deviceTypeAndroidTablet ?

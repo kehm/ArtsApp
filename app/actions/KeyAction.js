@@ -118,11 +118,10 @@ export function getAllSpImages(keyId) {
 }
 
 export function downloadKey(keyWebName) {
-  this.KeyDownload = new KeyDownload();
   return {
     type: actionTypes.DOWNLOAD_KEY,
     payload: {
-      promise: this.KeyDownload.downloadKey(keyWebName)
+      promise: new KeyDownload().downloadKey(keyWebName)
     },
     meta: { keyWeb: keyWebName }
   };

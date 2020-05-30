@@ -1,5 +1,5 @@
 import React from "react";
-import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, PermissionsAndroid, Platform } from "react-native";
+import { View, LayoutAnimation, Alert, Text, TouchableOpacity, TextInput, PermissionsAndroid, Platform, AppState } from "react-native";
 import { Container, StyleProvider, Item, Left, Right } from "native-base";
 import { Actions } from "react-native-router-flux";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -39,6 +39,7 @@ class Frontpage extends React.PureComponent<Props, State> {
     super(props);
     this.props.setAllKeys();
     this.state = {
+      appState: AppState.currentState,
       init: false,
       keyList: [],
       selected: undefined,
@@ -51,21 +52,9 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Get location permission and set current position
    */
   componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
     if (this.props.isLocation === undefined) {
-      this.requestLocationPermission().then((granted) => {
-        if (granted) {
-          this.watchId = Geolocation.watchPosition(position => {
-            this.props.setLocation(
-              position.coords.latitude.toFixed(4),
-              position.coords.longitude.toFixed(4)
-            );
-          }, () => {
-          }, { timeout: 20000, maximumAge: 20000, enableHighAccuracy: true });
-        } else {
-          this.watchId = -1;
-        }
-        this.props.useLocation(granted);
-      });
+      this.setGeolocationListener();
     }
   }
 
@@ -73,10 +62,9 @@ class Frontpage extends React.PureComponent<Props, State> {
    * Remove listener
    */
   componentWillUnmount() {
-    if (this.watchId !== -1) {
-      Geolocation.clearWatch(this.watchID);
-      Geolocation.stopObserving();
-    }
+    AppState.removeEventListener('change', this.handleAppStateChange);
+    this.watchId != null && Geolocation.clearWatch(this.watchId);
+    Geolocation.stopObserving();
   }
 
   /**
@@ -100,6 +88,21 @@ class Frontpage extends React.PureComponent<Props, State> {
   }
 
   /**
+   * Stop observing location if app is in the background
+   */
+  handleAppStateChange = (nextAppState) => {
+    if ((this.state.appState === 'inactive' || this.state.appState === 'background') && nextAppState === 'active') {
+      if (this.props.isLocation === true) {
+        this.setGeolocationListener();
+      }
+    } else if ((nextAppState === 'inactive' || nextAppState === 'background') && this.state.appState === 'active') {
+      this.watchId != null && Geolocation.clearWatch(this.watchId);
+      Geolocation.stopObserving();
+    }
+    this.setState({ appState: nextAppState })
+  }
+
+  /**
    * Handle menu icon click
    */
   handleOnMenuClick = () => {
@@ -118,7 +121,7 @@ class Frontpage extends React.PureComponent<Props, State> {
         if (key.key_id === this.state.selected) {
           this.props.setKey(key.key_id, key.title);
           if (key.keyDownloaded > 0) {
-            Actions.Key({selectedKey: key});
+            Actions.Key({ selectedKey: key });
           } else {
             Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate, onKeyDelete: this.reInitKeyList });
           }
@@ -127,7 +130,7 @@ class Frontpage extends React.PureComponent<Props, State> {
     } else {
       this.props.setKey(key.key_id, key.title);
       if (key.keyDownloaded > 0) {
-        Actions.Key({selectedKey: key});
+        Actions.Key({ selectedKey: key });
       } else {
         Actions.Info({ selectedKey: key, onKeyUpdate: this.onKeyUpdate, onKeyDelete: this.reInitKeyList });
       }
@@ -179,6 +182,26 @@ class Frontpage extends React.PureComponent<Props, State> {
     this.setState({
       filter: filter,
       keyList: list
+    });
+  }
+
+  /**
+   * Set geolocation listener if permission is granted
+   */
+  setGeolocationListener = async () => {
+    this.requestLocationPermission().then((granted) => {
+      if (granted) {
+        this.watchId = Geolocation.watchPosition(position => {
+          this.props.setLocation(
+            position.coords.latitude.toFixed(4),
+            position.coords.longitude.toFixed(4)
+          );
+        }, () => {
+        }, { timeout: 20000, maximumAge: 20000, enableHighAccuracy: true });
+      } else {
+        this.watchId = -1;
+      }
+      this.props.useLocation(granted);
     });
   }
 
