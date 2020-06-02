@@ -1,23 +1,13 @@
 /**
- * @file MenuContent.js
+ * @file Content render for the drawer menu
  * @author Kjetil Fossheim
- *
- * a content render for the drawer menu.
  */
-
 import React, { Component } from "react";
 import { Image, Platform, Dimensions, Alert } from "react-native";
-import {
-  StyleProvider,
-  Text,
-  List,
-  ListItem,
-  View,
-  Container,
-  Button
-} from "native-base";
+import { StyleProvider, Text, List, ListItem, View, Container, Button, Left, Content } from "native-base";
 import { Actions } from "react-native-router-flux";
-import Toast, { DURATION } from "react-native-easy-toast";
+import Icon from 'react-native-vector-icons/Entypo';
+import Flag from 'react-native-flags-typescript';
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -46,31 +36,58 @@ const drawerImage = require("../images/AA_logo.png");
 class MenuContent extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      frontSelect: true,
+      obsSelect: false,
+    };
   }
 
   /**
-   * handles on language click, changes language to selected language
-   * @param {[type]} a id of selected button. 7 = language english, 8 = language Norwegian, 9 = closeMenu
-   * @return {void}
+   * Find active scene and set matching menu ekement selected
    */
-  onClick(a) {
-    switch (a) {
-      case 7:
-        this.props.actions.closeMenu();
-        this.props.actions.setLanguage("en");
-        this.props.actions.setContentStrings("en");
+  componentDidUpdate() {
+    switch (Actions.currentScene) {
+      case (Actions.Frontpage.name):
+        this.setState({ frontSelect: true, obsSelect: false });
         break;
-      case 8:
-        this.props.actions.closeMenu();
-        this.props.actions.setLanguage("no");
-        this.props.actions.setContentStrings("no");
-        break;
-      case 9:
-        this.props.actions.closeMenu();
+      case (Actions.Observation.name):
+        this.setState({ frontSelect: false, obsSelect: true });
         break;
     }
   }
+
+  /**
+   * Change language
+   */
+  onClickSelectLanguage(lang) {
+    switch (lang) {
+      case this.props.strings.en:
+        if (this.props.language !== "en") {
+          this.props.actions.closeMenu();
+          this.props.actions.setLanguage("en");
+          this.props.actions.setContentStrings("en");
+        }
+        break;
+      case this.props.strings.no:
+        if (this.props.language !== "no") {
+          this.props.actions.closeMenu();
+          this.props.actions.setLanguage("no");
+          this.props.actions.setContentStrings("no");
+        }
+        break;
+    }
+  }
+
+  /**
+ * closes menu and
+ * opens the user observation page.(Observation.js)
+ * @return {void} [description]
+ */
+  onClickKeys = () => {
+    this.props.actions.closeMenu();
+    Actions.pop();
+  };
+
 
   /**
    * closes menu and
@@ -80,16 +97,6 @@ class MenuContent extends React.PureComponent {
   onClickObs = () => {
     this.props.actions.closeMenu();
     Actions.Observation();
-  };
-
-  /**
-   * closes menu and
-   * opens the observation by location page(UpdateLocation.js).
-   * @return {void} [description]
-   */
-  onClickLocation = () => {
-    this.props.actions.closeMenu();
-    Actions.UpdateLocation();
   };
 
   /**
@@ -115,36 +122,42 @@ class MenuContent extends React.PureComponent {
   };
 
   /**
-   * closes menu and
-   * opens the admin key page(UpdateKeys.js)
-   * @return {void} [description]
-   */
-  onClickUpdateKeys = () => {
-    this.props.actions.closeMenu();
-    Actions.UpdateKeys();
-  };
-
-  /**
-   * handles alert for language changes.
-   * @return {void} [description]
+   * Show select language dialog
    */
   onClickLang = () => {
-    Alert.alert(
-      this.props.strings.langChoise,
-      this.props.strings.langText + " ",
+    new Alert.alert(
+      this.props.strings.langSelect,
+      this.props.strings.langText,
       [
-        { text: this.props.strings.en, onPress: () => this.onClick(7) },
-        { text: this.props.strings.no, onPress: () => this.onClick(8) },
-        { text: this.props.strings.cancel, onPress: () => this.onClick(9) }
+        { text: this.props.strings.cancel, style: "cancel" },
+        { text: this.props.strings.en, onPress: () => this.onClickSelectLanguage(this.props.strings.en) },
+        { text: this.props.strings.no, onPress: () => this.onClickSelectLanguage(this.props.strings.no) }
       ],
-      { cancelable: false }
+      { cancelable: true }
     );
   };
 
   renderList() {
     return (
       <List keyi={this.props.debugMode}>
-        <ListItem button noBorder onPress={this.onClickObs}>
+        <ListItem button noBorder onPress={this.onClickKeys} style={this.state.frontSelect ? styles.selectedElement : null}>
+          <Left style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.leftIcon : styles.leftIcon}>
+            <Icon name="map" size={this.props.deviceTypeAndroidTablet ? 36:  26} />
+          </Left>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? stylesAndroidTablet.text
+                : styles.text
+            }
+          >
+            {this.props.strings.keysView}
+          </Text>
+        </ListItem>
+        <ListItem button noBorder onPress={this.onClickObs} style={this.state.obsSelect ? styles.selectedElement : null}>
+          <Left style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.leftIcon : styles.leftIcon}>
+            <Icon name="drive" size={this.props.deviceTypeAndroidTablet ? 36:  26} />
+          </Left>
           <Text
             style={
               this.props.deviceTypeAndroidTablet
@@ -153,54 +166,6 @@ class MenuContent extends React.PureComponent {
             }
           >
             {this.props.strings.myObs}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickLocation}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.updateLocation}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickInfo}>
-          <Text
-            style={
-              this.props.scene.name === "Frontpage"
-                ? this.props.deviceTypeAndroidTablet
-                  ? stylesAndroidTablet.textKeyInfo
-                  : styles.textKeyInfo
-                : this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.keyInfo}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickLang}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.language}
-          </Text>
-        </ListItem>
-        <ListItem button noBorder onPress={this.onClickUpdateKeys}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? stylesAndroidTablet.text
-                : styles.text
-            }
-          >
-            {this.props.strings.manageKeys}
           </Text>
         </ListItem>
       </List>
@@ -248,8 +213,17 @@ class MenuContent extends React.PureComponent {
                 {this.props.strings.about}
               </Text>
             </Button>
+            <Button transparent style={styles.lang} onPress={this.onClickLang} >
+              <Text style={this.props.deviceTypeAndroidTablet ? stylesAndroidTablet.langTxt : styles.langTxt}>
+                {this.props.strings.language + ":"}
+              </Text>
+              {this.props.language === 'no' ? (
+                <Flag style={styles.flag} code="GB" type="flat" size={this.props.deviceTypeAndroidTablet ? 48 : 32} />
+              ) : (
+                  <Flag style={styles.flag} code="NO" type="flat" size={32} />
+                )}
+            </Button>
           </View>
-          <Toast ref="toast" />
         </Container>
       </StyleProvider>
     );
@@ -281,7 +255,8 @@ const styles = {
   logoImg: {
     resizeMode: "contain",
     width: 37,
-    height: 37
+    height: 37,
+    marginBottom: 20
   },
   drawerCover: {
     backgroundColor: "#553917",
@@ -295,7 +270,8 @@ const styles = {
     position: "absolute",
     backgroundColor: "transparent",
     justifyContent: "center",
-    bottom: 20
+    bottom: 50,
+    right: 0
   },
   text: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
@@ -305,14 +281,44 @@ const styles = {
   textAbout: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 20,
-    marginLeft: 20,
-    paddingBottom: 20 - 20 * 0.75
+    marginLeft: 10,
+    paddingBottom: 20 - 20 * 0.75,
+    color: '#553917'
   },
   textKeyInfo: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 16,
     marginLeft: 20,
     color: "#ababab"
+  },
+  selectedElement: {
+    backgroundColor: '#f0a00c'
+  },
+  leftIcon: {
+    maxWidth: 30,
+    marginLeft: 10
+  },
+  lang: {
+    position: "absolute",
+    right: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    ...Platform.select({
+      ios: {
+        bottom: 15,
+      },
+      android: {
+        bottom: 5,
+      }
+    })
+  },
+  langTxt: {
+    marginTop: 10,
+    color: 'black'
+  },
+  flag: {
+    padding: 20,
+    marginLeft: 5
   }
 };
 
@@ -328,7 +334,8 @@ const stylesAndroidTablet = {
   logoImg: {
     resizeMode: "contain",
     width: 76,
-    height: 76
+    height: 76,
+    marginBottom: 100
   },
   drawerCover: {
     backgroundColor: "#553917",
@@ -347,21 +354,31 @@ const stylesAndroidTablet = {
   },
   text: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
-    fontSize: 32,
+    fontSize: 26,
     marginLeft: 20
   },
   textAbout: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
-    fontSize: 40,
+    fontSize: 26,
     marginLeft: 20,
-    paddingBottom: 40 - 40 * 0.75
+    paddingBottom: 80,
+    color: '#553917'
   },
   textKeyInfo: {
     fontWeight: Platform.OS === "ios" ? "500" : "400",
     fontSize: 32,
     marginLeft: 20,
     color: "#ababab"
-  }
+  },
+  leftIcon: {
+    maxWidth: 40,
+    marginLeft: 20
+  },
+  langTxt: {
+    marginTop: 10,
+    color: 'black',
+    fontSize: 24
+  },
 };
 
 export default connect(

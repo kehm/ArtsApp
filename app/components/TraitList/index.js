@@ -1,10 +1,7 @@
 import React from 'react';
 import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
-
 import TraitListElement from '../TraitListElement';
-
 import { arraysDiffer, reshape } from '../../utilities/array';
-
 import styles  from './styles.js';
 
 type Props = {
@@ -25,7 +22,6 @@ class TraitList extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log('did update');
     this._scrollView.scrollTo({x: 0, y: 0, animated: false});
   }
 
@@ -74,7 +70,7 @@ class TraitList extends React.Component {
     return (
       <ScrollView style={styles.container} ref={(ref) => this._scrollView = ref}>
         {traitPairs.map( traitPair => (
-          <View style={styles.row} key={traitPair[0].trait_id}>
+          <View collapsable={false} style={styles.row} key={traitPair[0].trait_id}>
             {this.renderItem(traitPair[0])}
             {traitPair.length == 2 && this.renderItem(traitPair[1])}
           </View>

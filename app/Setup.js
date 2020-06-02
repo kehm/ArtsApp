@@ -1,17 +1,14 @@
 
 /**
-* @file Setup.js
+* @file Sets redux store and starts AppSetup
 * @author Kjetil Fossheim
- * Function that provides the redux store to the main application and starts AppSetup
  */
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import AppSetup from './AppSetup';
 import configureStore from './lib/configureStore';
 
-
-
-function Setup():React.Component {
+function Setup(): React.Component {
   class Root extends Component {
 
     constructor(props) {
@@ -24,14 +21,12 @@ function Setup():React.Component {
 
     render() {
       return (
-          <Provider store={this.state.store}>
-            <AppSetup/>
-          </Provider>
-
+        <Provider store={this.state.store}>
+          <AppSetup />
+        </Provider>
       );
     }
   }
-
   return Root;
 }
 

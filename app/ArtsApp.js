@@ -1,7 +1,6 @@
 /**
- * @file ArtsApp.js
+ * @file Application entry point. Wrap Redux wrapper and menu drawer to underlying scenes.
  * @author Kjetil Fossheim
- * Entry point for the app. Wraps the application in a wrapper of redux and wrap the Menu Drawer to underlying scenes.
  */
 import React, { Component } from "react";
 import { BackHandler, ToastAndroid, Platform, UIManager } from "react-native";
@@ -12,9 +11,7 @@ import { bindActionCreators } from "redux";
 import * as MenuAction from "./actions/MenuAction";
 import MenuContent from "./components/MenuContent";
 import Frontpage from "./Screens/Frontpage";
-import Frontpage2 from "./Screens/Frontpage2";
 import Key from "./Screens/Key";
-import Key2 from "./Screens/Key2";
 import Observation from "./Screens/Observation";
 import Species from "./Screens/Species";
 import Splash from "./Screens/Splash";
@@ -22,10 +19,9 @@ import ValueInfo from "./Screens/ValueInfo";
 import Debug from "./Screens/Debug";
 import SpeciesLeft from "./Screens/SpeciesLeft";
 import About from "./Screens/About";
+import Help from "./Screens/Help";
 import Info from "./Screens/Info";
-import UpdateLocation from "./Screens/UpdateLocation";
-import UpdateKeys from "./Screens/UpdateKeys";
-import SpeciesImageViewer from "./Screens/SpeciesImageViewer";
+import { MenuProvider } from "react-native-popup-menu";
 
 const mapStateToProps = state => ({
   ...state.nav,
@@ -56,12 +52,12 @@ const scenes = Actions.create(
     />
     <Scene
       key="Frontpage"
-      component={Frontpage2}
+      component={Frontpage}
       panHandlers={null}
       hideNavBar
       type={ActionConst.RESET}
     />
-    <Scene key="Key" hideNavBar panHandlers={null} component={Key2} />
+    <Scene key="Key" hideNavBar panHandlers={null} component={Key} />
     <Scene
       key="ValueInfo"
       hideNavBar
@@ -69,19 +65,8 @@ const scenes = Actions.create(
       component={ValueInfo}
     />
     <Scene key="About" hideNavBar panHandlers={null} component={About} />
+    <Scene key="Help" hideNavBar panHandlers={null} component={Help} />
     <Scene key="Info" hideNavBar panHandlers={null} component={Info} />
-    <Scene
-      key="UpdateLocation"
-      hideNavBar
-      panHandlers={null}
-      component={UpdateLocation}
-    />
-    <Scene
-      key="UpdateKeys"
-      hideNavBar
-      panHandlers={null}
-      component={UpdateKeys}
-    />
     <Scene
       key="SpeciesLeft"
       hideNavBar
@@ -89,12 +74,6 @@ const scenes = Actions.create(
       component={SpeciesLeft}
     />
     <Scene key="Species" hideNavBar component={Species} panHandlers={null} />
-    <Scene
-      key="SpeciesImageViewer"
-      component={SpeciesImageViewer}
-      panHandlers={null}
-      hideNavBar
-    />
     <Scene
       key="Observation"
       hideNavBar
@@ -119,27 +98,29 @@ class ArtsApp extends Component {
   }
 
   componentDidMount() {
-    console.log("Mounted");
+    BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
   }
 
-  componentWillMount = () => {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      try {
-        Actions.pop();
-        return true;
-      } catch (err) {
-        ToastAndroid.show(this.props.strings.exit, ToastAndroid.SHORT);
-        if (this.state.exit === 1) {
-          BackHandler.exitApp();
-        }
-        this.setState({ exit: 1 });
-        return true;
-      }
-    });
-  };
-
   componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress");
+    BackHandler.removeEventListener("hardwareBackPress", this.handleBackPress);
+  }
+
+  /**
+   * Handle back button press
+   */
+  handleBackPress = () => {
+    try {
+      this.closeDrawer();
+      Actions.pop();
+      return true;
+    } catch (err) {
+      ToastAndroid.show(this.props.strings.exit, ToastAndroid.SHORT);
+      if (this.state.exit === 1) {
+        BackHandler.exitApp();
+      }
+      this.setState({ exit: 1 });
+      return true;
+    }
   }
 
   /**
@@ -171,28 +152,31 @@ class ArtsApp extends Component {
 
   render() {
     return (
-      <Drawer
-        ref={ref => {
-          this._drawer = ref;
-        }}
-        content={<MenuContent />}
-        tapToClose
-        type="overlay"
-        onClose={() => this.closeDrawer()}
-        openDrawerOffset={0.35}
-        panCloseMask={0.35}
-        styles={{
-          drawer: {
-            marginTop: Platform.OS === "ios" ? 20 : 0,
-            marginBottom: 20,
-            shadowColor: "#000000",
-            shadowOpacity: 0.8,
-            shadowRadius: 3
-          }
-        }}
-      >
-        <RouterWithRedux hideNavBar={true} scenes={scenes} />
-      </Drawer>
+      <MenuProvider>
+        <Drawer
+          ref={ref => {
+            this._drawer = ref;
+          }}
+          content={<MenuContent />}
+          tapToClose
+          type="overlay"
+          onClose={() => this.closeDrawer()}
+          openDrawerOffset={0.35}
+          panCloseMask={0.35}
+          panOpenMask={0.35}
+          styles={{
+            drawer: {
+              marginTop: Platform.OS === "ios" ? 20 : 0,
+              marginBottom: 20,
+              shadowColor: "#000000",
+              shadowOpacity: 0.8,
+              shadowRadius: 3,
+            }
+          }}
+        >
+          <RouterWithRedux hideNavBar={true} scenes={scenes} />
+        </Drawer>
+      </MenuProvider>
     );
   }
 }

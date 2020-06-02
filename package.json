@@ -4,44 +4,60 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "npx jetify"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "native-base": "^2.12.0",
-    "react": "16.6.3",
-    "react-native": "0.58.6",
-    "react-native-collapsible": "^1.4.0",
-    "react-native-device-info": "^0.26.4",
+    "@react-native-community/async-storage": "^1.10.0",
+    "@react-native-community/geolocation": "^2.0.2",
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/netinfo": "^5.8.1",
+    "@react-navigation/native": "^5.1.1",
+    "@react-navigation/stack": "^5.2.3",
+    "jsc-android": "241213.x.x",
+    "lodash": "^4.17.15",
+    "native-base": "^2.13.12",
+    "react": "16.13.1",
+    "react-native": "^0.61.5",
+    "react-native-collapsible": "^1.5.1",
+    "react-native-device-info": "^5.5.3",
     "react-native-easy-toast": "^1.2.0",
-    "react-native-htmlview": "^0.13.0",
-    "react-native-image-pan-zoom": "^2.1.11",
-    "react-native-image-zoom-viewer": "^2.2.25",
-    "react-native-router-flux": "^4.0.6",
-    "react-native-simple-modal": "^9.0.1",
-    "react-native-sqlite-storage": "^3.3.10",
-    "react-native-swiper": "^1.5.14",
-    "react-native-vector-icons": "^6.3.0",
-    "react-redux": "^6.0.1",
-    "redux": "^4.0.1",
+    "react-native-flags-typescript": "^1.0.1",
+    "react-native-gesture-handler": "^1.6.1",
+    "react-native-htmlview": "^0.15.0",
+    "react-native-image-viewing": "^0.1.8",
+    "react-native-popup-menu": "^0.15.7",
+    "react-native-reanimated": "^1.8.0",
+    "react-native-router-flux": "^4.2.0-beta.2",
+    "react-native-screens": "^2.3.0",
+    "react-native-sqlite-storage": "^5.0.0",
+    "react-native-swipe-list-view": "^2.5.0",
+    "react-native-swiper": "^1.6.0-rc.3",
+    "react-native-vector-icons": "^6.6.0",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-promise": "^0.6.0",
-    "redux-promise-middleware": "^6.1.0",
+    "redux-promise-middleware": "^6.1.2",
     "redux-thunk": "^2.3.0",
-    "rn-fetch-blob": "^0.10.15",
-    "jsc-android": "241213.x.x"
+    "rn-fetch-blob": "^0.12.0",
+    "save": "^2.4.0"
   },
   "devDependencies": {
-    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-flow": "^7.8.3",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "24.1.0",
+    "babel-jest": "25.1.0",
     "babel-preset-react-native": "^5.0.1",
-    "flow-bin": "^0.94.0",
-    "jest": "24.1.0",
-    "metro-react-native-babel-preset": "0.53.0",
-    "react-test-renderer": "16.6.3"
+    "flow-bin": "^0.121.0",
+    "jest": "25.1.0",
+    "jetifier": "^1.6.5",
+    "metro-react-native-babel-preset": "0.59.0",
+    "react-test-renderer": "16.13.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "./node_modules/react-native-gesture-handler/jestSetup.js"
+    ]
   }
 }

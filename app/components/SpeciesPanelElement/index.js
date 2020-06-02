@@ -1,10 +1,16 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-import styles  from './styles.js';
+import { styles, androidTabletStyles } from './styles.js';
 import SpeciesImageButton from '../SpeciesImageButton';
+import { connect } from "react-redux";
 
 import * as Colors from '../../lib/colors';
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {
   species: Object,
@@ -24,7 +30,7 @@ class SpeciesPanelElement extends React.Component<Props> {
 
     const elementColor = state === 'match' ?
       Colors.AAIconGreenL : state === 'nearby' ?
-      Colors.AAIconGreen : Colors.AAIconBrown;
+        Colors.AAIconGreen : Colors.AAIconBrown;
 
     return (
       <View style={styles.container}>
@@ -34,7 +40,7 @@ class SpeciesPanelElement extends React.Component<Props> {
           borderColor={elementColor}
         />
         <Text
-          style={styles.name}
+          style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.name : styles.name}
           numberOfLines={1}
           ellipsizeMode='tail'
           textColor={elementColor}
@@ -46,4 +52,4 @@ class SpeciesPanelElement extends React.Component<Props> {
 
 }
 
-export default SpeciesPanelElement;
+export default connect(mapStateToProps)(SpeciesPanelElement);

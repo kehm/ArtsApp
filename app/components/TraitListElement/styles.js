@@ -2,7 +2,7 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 import * as Colors from '../../lib/colors';
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     margin: 16,
     marginBottom: 0,
@@ -65,4 +65,30 @@ export default StyleSheet.create({
   numberBadgeEmpty: {
     backgroundColor: '#AA0000',
   }
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  text: {
+    flex: 1,
+    paddingRight: 5,
+    textAlign: 'center',
+    maxHeight: 70,
+    fontSize: 20
+  },
+  numbers: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  numberBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 17,
+    borderWidth: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 14,
+    top: 0,
+  },
 });

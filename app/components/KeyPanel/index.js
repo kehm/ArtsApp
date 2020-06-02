@@ -1,44 +1,71 @@
+/**
+ * Front page key panel
+ */
 import React from "react";
 import { View, Text, Dimensions, Platform } from "react-native";
 import Swiper from "react-native-swiper";
-
 import HorizontalList from "../HorizontalList";
 import KeyPanelElement from "../KeyPanelElement";
-
 import styles from "./styles.js";
 
 type Props = {
   keys: Array,
+  index: String,
+  selected: Number,
   strings: Object,
-  onPress: Function
-};
-
-type State = {
-  currentKeyId: Number
+  onPress: Function,
+  onInfo: Function,
+  onUpdate: Function,
 };
 
 class KeyPanel extends React.PureComponent<Props, State> {
   constructor(props) {
     super(props);
+    this.state = ({
+      currentIndex: 0,
+      prevIndex: 0,
+      currentKey: undefined,
+    });
   }
 
-  _currentKeyId: null;
+  /**
+  * Change visible swiper element on new list item selected
+  */
+  componentDidUpdate() {
+    if (this.state.currentKey !== this.props.selected) {
+      this.props.keys.some((key, i) => {
+        if (key.key_id === this.props.selected) {
+          if (i !== this.state.currentIndex) {
+            this._swiper.scrollBy(i - this.state.currentIndex)
+            this.setState({
+              currentIndex: i,
+              prevIndex: this.state.currentIndex,
+              currentKey: key.key_id
+            })
+          }
+          return key;
+        }
+      });
+    }
+  }
+
+  /**
+   * Change swiper index on swipe
+   */
+  handleIndexChanged = index => {
+    if (this.props.selected !== this.props.keys[index].key_id) {
+      this.setState({ currentKey: this.props.keys[index].key_id });
+      this.props.onUpdate(this.props.keys[index]);
+    }
+  };
 
   getElementSize = () => {
     const { width } = Dimensions.get("window");
     return Math.min(width - 60, 500);
   };
 
-  handleIndexChanged = index => {
-    const keyId = this.props.keys[index].key_id;
-    if (keyId !== this._currentKeyId) {
-      this._currentKeyId = keyId;
-    }
-  };
-
   renderItem = (item, size) => {
-    const { strings, onPress } = this.props;
-
+    const { strings, onPress, onInfo } = this.props;
     return (
       <KeyPanelElement
         key={item.key_id}
@@ -46,50 +73,31 @@ class KeyPanel extends React.PureComponent<Props, State> {
         strings={strings}
         size={size}
         onPress={onPress}
+        onInfo={onInfo}
       />
     );
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (this._currentKeyId !== null && this._swiper) {
-      const oldIndex = this.props.keys.findIndex(
-        k => k.key_id === this._currentKeyId
-      );
-      const newIndex = nextProps.keys.findIndex(
-        k => k.key_id === this._currentKeyId
-      );
-
-      if (newIndex !== oldIndex) {
-        const offset = newIndex - oldIndex;
-        setTimeout(() => {
-          this._swiper.scrollBy(offset, true);
-        }, 500);
-      }
-    }
-  }
-
   render() {
-    const { keys } = this.props;
     const size = this.getElementSize();
-    const containerSize = { height: size + 40 };
+    const containerSize = { height: size + 10 };
     const isAndroid = Platform.OS === "android";
     const dotStyle = isAndroid ? styles.dotStyleAndroid : styles.dotStyleIos;
-    const activeDotStyle = isAndroid
-      ? styles.activeDotStyleAndroid
-      : styles.activeDotStyleIos;
-
+    const activeDotStyle = isAndroid ? styles.activeDotStyleAndroid : styles.activeDotStyleIos;
     return (
       <View style={[styles.container, containerSize]}>
-        <Swiper
+        <Swiper scrollEnabled={false}
           style={styles.swiper}
           dotStyle={dotStyle}
           activeDotStyle={activeDotStyle}
+          showsPagination={false}
           onIndexChanged={this.handleIndexChanged}
           ref={swiper => {
             this._swiper = swiper;
           }}
+          loop={false}
         >
-          {keys.map(k => this.renderItem(k, size))}
+          {this.props.keys.map(k => this.renderItem(k, size))}
         </Swiper>
       </View>
     );

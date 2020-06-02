@@ -1,18 +1,13 @@
 /**
- * @file Splash.js
+ * @file Show loading screen on startup while loading data and setting up the app
  * @author Kjetil Fossheim
- *
- * First screen the user sees. It is a screen to cover loading of data and setups of the app. Setup and download for first time use of the app.
  */
-
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Image, Alert } from "react-native";
-import { Spinner } from "native-base";
+import { StyleSheet, Text, View, Image, Modal, TouchableOpacity } from "react-native";
+import { Spinner, Button } from "native-base";
 import { Actions } from "react-native-router-flux";
 import DbHelper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
-
-// redux
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as SettingsAction from "../actions/SettingsAction";
@@ -28,7 +23,6 @@ function mapDispatchToProps(dispatch) {
 }
 /**
  * Strings of welcome text
- * @type {Object}
  */
 const introstrings = {
   a1: "Gjør ArtsApp klar",
@@ -50,58 +44,60 @@ class Splash extends React.PureComponent {
     this.KeyDownload = new KeyDownload();
     this.state = {
       progress: [],
-      text: introstrings["a" + this.getRandomInt()]
+      text: introstrings["a" + this.getRandomInt()],
+      openModal: false
     };
   }
 
   /**
-   * @return {Integer} random number between 1 - 10
+   * Download list of available keys if app is started for the first time. Requires network.
+   */
+  componentDidMount() {
+    this.initialize();
+  }
+
+  /**
+   * Initialize key list and set last download timestamp
+   */
+  initialize() {
+    this.DbHelper.testDatabase().then(() => {
+      this.props.actions.getLastDownload().then((date) => {
+        if (date.value === null) {
+          if (this.props.isConnected) {
+            this.setState({text: this.props.strings.firstStart});
+            this.props.actions.getKeysFromAPI().then(() => {
+              // Set last download timestamp after getting keys
+              let date = new Date();
+              let month = date.getMonth();
+              if (month < 10) {
+                month = "0" + month;
+              }
+              this.props.actions.setLastDownload(
+                date.getFullYear() + "" + month + "" + date.getDate()
+              );
+              Actions.Frontpage(); // Redirect to frontpage
+            }).catch(err => {
+              this.setState({ openModal: true });
+            });
+          } else {
+            this.setState({ openModal: true });
+          }
+        } else {
+          Actions.Frontpage();
+        }
+      });
+    });
+  }
+
+  /**
+   * Get random integer between 1 and 10
+   * 
+   * @return {Integer} Random integer between 1 and 10
    */
   getRandomInt() {
     min = Math.ceil(1);
     max = Math.floor(11);
     return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  componentWillReceiveProps(newprops) {
-    if (newprops.keysformApi_succsess) {
-      let d = new Date();
-      this.props.actions.setlastDownloaddate(
-        d.getDate() + "-" + d.getMonth() + "-" + d.getFullYear()
-      );
-      this.startUp();
-    }
-  }
-
-  componentDidMount() {
-    this.startApp();
-  }
-
-  startUp() {
-    Actions.Frontpage();
-  }
-  /**
-   * Test if the app has been used before, if not, downloads the list of available keys.
-   * Asks for network if not available.
-   * @return {void} starts the app when ready
-   * @see SettingsAction
-   */
-  startApp() {
-    this.DbHelper.testDatabase().then(() => {
-      if (this.props.lastDownloaddate === -1) {
-        if (this.props.isConnected) {
-          this.props.actions.getkeysFromApi();
-        } else {
-          Alert.alert(
-            this.props.strings.noNetWorkTitle,
-            this.props.strings.firstNoNett + " ",
-            [{ text: this.props.strings.ok, onPress: () => this.startApp() }]
-          );
-        }
-      } else {
-        this.startUp();
-      }
-    });
   }
 
   render() {
@@ -124,13 +120,15 @@ class Splash extends React.PureComponent {
         >
           {this.props.strings.introText}
         </Text>
-        {this.props.lastDownloaddate === -1 && (
+        {this.props.lastDownloadDate === undefined && (
           <View>
             <Spinner color="green" />
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
               style={{
+                paddingLeft: 5,
+                paddingRight: 5,
                 textAlign: "center",
                 color: "#ffffff",
                 fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15
@@ -140,6 +138,21 @@ class Splash extends React.PureComponent {
             </Text>
           </View>
         )}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.state.openModal}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.noNetWorkTitle}</Text>
+              <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.firstNoNett}</Text>
+              <TouchableOpacity style={styles.modalBtn} onPress={() => { this.setState({ openModal: false }, this.initialize()) }} >
+                <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.tryAgain}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -162,7 +175,7 @@ const styles = StyleSheet.create({
     height: 350,
     width: 350,
     margin: 30,
-    marginTop: 70,
+    marginTop: 30,
     marginBottom: 0,
     justifyContent: "center"
   },
@@ -171,6 +184,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#ffffff",
     marginBottom: 5
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  modalBtn: {
+    backgroundColor: '#f0a00c',
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    borderRadius: 16,
   }
 });
 
@@ -194,7 +240,13 @@ const AndroidTabletStyles = StyleSheet.create({
     textAlign: "center",
     color: "#ffffff",
     marginBottom: 5
-  }
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 22
+  },
 });
 
 export default connect(

@@ -1,45 +1,17 @@
 /**
- * @file Species.js
+ * @file Show information about the selected species and prompt the user to save the observation
  * @author Kjetil Fossheim
- *
- * Screen for showcase the selected species and information about it. Information contains: -images -description -distribution -local regestraited observations.
- * In addition the user has a possibility to store its own observations.
  */
-
 import React, { Component } from "react";
-import {
-  StyleProvider,
-  Button,
-  Container,
-  Header,
-  Title,
-  Subtitle,
-  Content,
-  Footer,
-  FooterTab,
-  Icon,
-  Tabs,
-  Tab,
-  Grid,
-  Row,
-  Col,
-  Left,
-  Right,
-  Body
-} from "native-base";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableHighlight,
-  Image
-} from "react-native";
+import { StyleProvider, Button, Container, Content, Tabs, Tab, Row, Col, Left, Form, Picker } from "native-base";
+import { Alert, StyleSheet, Text, View, TextInput, TouchableHighlight, Image, Modal } from "react-native";
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
-import Modal from "react-native-simple-modal";
-import TabInfo from "../components/TabInfo";
-import TabDistribution from "../components/TabDistribution";
+import ImageView from "react-native-image-viewing";
+import Icon from 'react-native-vector-icons/Entypo';
+import InfoTab from "../components/InfoTab";
+import DistributionTab from "../components/DistributionTab";
+
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -51,6 +23,10 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
 import * as ObservationAction from "../actions/ObservationAction";
+import * as SettingsAction from "../actions/SettingsAction";
+
+import SubPageHeader from "../components/SubPageHeader";
+import { county } from "../config/county";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -62,7 +38,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(
-      { ...KeyAction, ...ObservationAction },
+      { ...KeyAction, ...ObservationAction, ...SettingsAction },
       dispatch
     )
   };
@@ -76,338 +52,165 @@ class Species extends React.PureComponent {
       longitude: "",
       open: false,
       place: "",
-      county: "",
+      county: county.counties[0].name,
       images: [],
       selectedSpeciesImages: [],
-      nerby: props.nerby
+      nerby: props.nerby,
+      openImages: false,
+      currentTab: 0,
+      defaultImage: require("../images/AA_logo.png"),
+      saved: false,
+      countyItems: undefined,
+      missingText: false,
+      openMap: false,
+      mapImg: undefined
     };
   }
 
-  componentWillMount() {
-    date = new Date();
+  componentDidMount() {
+    let date = new Date();
     this.setState({
       obsDateTime:
         date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear()
     });
-  }
-
-  componentDidMount() {
-    if (
-      typeof this.props.spesiecImageList.get(
-        this.props.selectedSpecies.species_id
-      ) !== "undefined"
-    ) {
+    let imageList = this.props.speciesImageList.get(this.props.selectedSpecies.species_id);
+    if (imageList !== undefined) {
       this.setState({
-        selectedSpeciesImages: this.props.spesiecImageList.get(
-          this.props.selectedSpecies.species_id
-        )
+        selectedSpeciesImages: imageList.map(image => {
+          if (this.props.platform === "ios") {
+            return { uri: image };
+          } else {
+            return { uri: "file://" + image };
+          }
+        })
       });
     }
   }
-
-  componentWillUnmount() {}
 
   onClickBack = () => {
     Actions.pop();
   };
 
+  /**
+   * Handle on click save observation
+   */
   onClickNewObs = () => {
-    this.setState({ open: false });
-    this.saveNewObs();
-  };
-
-  onClickSPImage = () => {
-    if (this.state.selectedSpeciesImages.length !== 0) {
-      Actions.SpeciesImageViewer({ spImage: this.state.selectedSpeciesImages });
+    if (this.state.place !== '' && this.state.county !== '') {
+      this.setState({ open: false });
+      this.saveNewObs();
+    } else {
+      this.setState({ missingText: true });
     }
   };
 
   /**
-   * Function to store a new observation. makes a  observation object and saves it to DB
-   * @see ObservationAction.insertObservation
-   * @return {void}
+   * Open image gallery on image click
+   */
+  onClickImage = () => {
+    if (this.state.selectedSpeciesImages.length !== 0) {
+      this.setState({ openImages: true });
+    }
+  };
+
+  /**
+   * Open image gallery on map click
+   */
+  onClickMap = (img) => {
+    let arr = [];
+    arr.push({ key: 0, uri: img });
+    this.setState({ mapImg: arr, openMap: true });
+  }
+
+  /**
+   * Create new observation object and save it to the DB
    */
   saveNewObs() {
-    newObs = {
+    let longitude = 'undefined';
+    let latitude = 'undefined';
+    if (this.state.longitude !== '' && this.state.latitude !== '') {
+      longitude = this.state.longitude;
+      latitude = this.state.latitude;
+    }
+    this.props.actions.insertObservation({
       latinName: this.props.selectedSpecies.latinName,
       localName: this.props.selectedSpecies.localName,
       order: this.props.selectedSpecies.order,
       family: this.props.selectedSpecies.family,
       species_id: this.props.selectedSpecies.species_id,
-      latitude: this.state.latitude,
-      longitude: this.state.longitude,
+      latitude: latitude,
+      longitude: longitude,
       place: this.state.place,
       county: this.state.county,
       key_id: this.props.chosenKey,
       obsDateTime: this.state.obsDateTime
-    };
-    this.props.actions.insertObservation(newObs);
+    });
+    this.setState({ saved: true });
     this.refs.toast.show(this.props.strings.newObsAddeed);
   }
 
   /**
-   * Tests coordinate and sets it for use in new observations.
-   * @return {void} setState
+   * Set coordinates. Show dialog if position is unavailable.
    */
   getCoordinate = () => {
     if (this.props.latitude !== "undefined") {
       this.setState({
         latitude: this.props.latitude,
         longitude: this.props.longitude,
-        open: true
+        open: true,
+        missingText: false
       });
-    } else if (this.props.latitude === "undefined") {
-      alert(this.props.strings.noLocation);
+    } else {
+      new Alert.alert(
+        this.props.strings.noLocationHeader,
+        this.props.strings.noLocationDialog,
+        [
+          { text: this.props.strings.cancel, style: "cancel" },
+          {
+            text: this.props.strings.ok, onPress: () => {
+              this.setState({
+                latitude: '',
+                longitude: '',
+                open: true,
+                missingText: false
+              });
+            }
+          }
+        ],
+        { cancelable: true }
+      );
     }
   };
 
   /**
-   * Renders the header after the available information about the species.
-   * @return {View} Header View
+   * Render modal dialog for saving new observation
    */
-  renderHeader() {
-    if (
-      this.props.selectedSpecies.latinName === "NA" &&
-      this.props.selectedSpecies.localName === "NA"
-    ) {
-      return (
-        <Body style={{ flex: 3 }}>
-          <Title>{}</Title>
-          <Subtitle>{}</Subtitle>
-        </Body>
-      );
-    } else if (this.props.selectedSpecies.latinName === "NA") {
-      return (
-        <Body style={{ flex: 3 }}>
-          <Title>{this.props.selectedSpecies.localName}</Title>
-        </Body>
-      );
-    } else if (this.props.selectedSpecies.localName === "NA") {
-      return (
-        <Body style={{ flex: 3 }}>
-          <Title>{this.props.selectedSpecies.latinName}</Title>
-        </Body>
-      );
-    }
+  renderModal() {
+    let countyItems = county.counties.map((county) => {
+      return (<Picker.Item key={county.id} value={county.name} label={county.name} />);
+    });
     return (
-      <Body style={{ flex: 3 }}>
-        <Title>{this.props.selectedSpecies.localName}</Title>
-        <Subtitle
-          style={
-            this.props.deviceTypeAndroidTablet
-              ? {
-                  fontSize: 29,
-                  marginLeft: 10,
-                  marginBottom: 5,
-                  marginTop: -10
-                }
-              : {}
-          }
-        >
-          {this.props.selectedSpecies.latinName}
-        </Subtitle>
-      </Body>
-    );
-  }
-
-  /**
-   * render nearby observation if available.
-   * @return {View} Nearby text view
-   */
-  renderNerby() {
-    if (this.props.nerby !== 0) {
-      return (
-        <Row style={{ justifyContent: "center" }}>
-          <Text
-            style={
-              this.props.deviceTypeAndroidTablet
-                ? AndroidTabletStyles.containerSpecies
-                : styles.containerSpecies
-            }
-          >
-            {this.props.strings.nObs + this.props.nerby}
-          </Text>
-        </Row>
-      );
-    }
-    return (
-      <Row style={{ justifyContent: "center" }}>
-        <Text
-          style={
-            this.props.deviceTypeAndroidTablet
-              ? AndroidTabletStyles.containerSpecies
-              : styles.containerSpecies
-          }
-        >
-          {""}
-        </Text>
-      </Row>
-    );
-  }
-
-  render() {
-    return (
-      <StyleProvider
-        style={
-          this.props.deviceTypeAndroidTablet
-            ? getTheme(androidTablet)
-            : getTheme(common)
-        }
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={this.state.open}
+        onRequestClose={() => this.setState({ open: false })}
       >
-        <Container>
-          <Header hasTabs>
-            <Left>
-              <Button transparent onPress={this.onClickBack}>
-                <Icon name="ios-arrow-back" />
-              </Button>
-            </Left>
-            {this.renderHeader()}
-            <Right />
-          </Header>
-          <Content scrollEnabled={false}>
-            <Grid>
-              <Row
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "space-between"
-                }}
-              >
-                <Col style={{ flex: 1 }}>
-                  <Button
-                    transparent
-                    success
-                    block
-                    style={{ flexDirection: "column", height: 100 }}
-                    title={this.props.strings.image}
-                    onPress={this.onClickSPImage}
-                    disabled={
-                      this.state.selectedSpeciesImages.length === 0
-                        ? true
-                        : false
-                    }
-                  >
-                    <Icon
-                      name="md-photos"
-                      style={
-                        this.state.selectedSpeciesImages.length === 0
-                          ? { color: "grey" }
-                          : {}
-                      }
-                    />
-                    <Text
-                      style={
-                        this.props.deviceTypeAndroidTablet
-                          ? AndroidTabletStyles.text3
-                          : styles.text3
-                      }
-                    >
-                      {this.props.strings.image}
-                    </Text>
-                  </Button>
-                </Col>
-                <Col style={{ flex: 2 }}>
-                  <TouchableHighlight
-                    underlayColor={"rgba(223, 223, 223, 0.14)"}
-                    onPress={this.onClickSPImage}
-                  >
-                    <Image
-                      style={
-                        this.props.deviceTypeAndroidTablet
-                          ? AndroidTabletStyles.image
-                          : styles.image
-                      }
-                      source={
-                        this.props.platform === "ios"
-                          ? { uri: this.state.selectedSpeciesImages[0] }
-                          : {
-                              uri:
-                                "file://" + this.state.selectedSpeciesImages[0]
-                            }
-                      }
-                    />
-                  </TouchableHighlight>
-                </Col>
-                <Col style={{ flex: 1 }}>
-                  <Button
-                    title={this.props.strings.save}
-                    transparent
-                    success
-                    block
-                    style={{ flexDirection: "column", height: 100 }}
-                    onPress={this.getCoordinate}
-                  >
-                    <Icon name="ios-folder-open" />
-                    <Text
-                      style={
-                        this.props.deviceTypeAndroidTablet
-                          ? AndroidTabletStyles.text3
-                          : styles.text3
-                      }
-                    >
-                      {this.props.strings.save}
-                    </Text>
-                  </Button>
-                </Col>
-              </Row>
-              {this.renderNerby()}
-            </Grid>
-            <Tabs style={{ flex: 1 }}>
-              <Tab heading={this.props.strings.spInfo}>
-                <View
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 670 : 335,
-                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5
-                  }}
-                >
-                  <TabInfo
-                    tablet={this.props.deviceTypeAndroidTablet}
-                    style={styles.container}
-                    info={this.props.selectedSpecies.speciesText}
-                  />
-                </View>
-              </Tab>
-              <Tab heading={this.props.strings.distribution}>
-                <View
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 670 : 335,
-                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5
-                  }}
-                >
-                  <TabDistribution
-                    distributionLocal={
-                      this.props.selectedSpecies.distributionLocal
-                    }
-                    distributionCountry={
-                      this.props.selectedSpecies.distributionCountry
-                    }
-                  />
-                </View>
-              </Tab>
-            </Tabs>
-          </Content>
-          <Modal
-            offset={0}
-            animationDuration={200}
-            animationTension={40}
-            closeOnTouchOutside={false}
-            open={this.state.open}
-            modalDidClose={() => this.setState({ open: false })}
-          >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
             <View>
               <Text
                 style={{
-                  fontSize: this.props.deviceTypeAndroidTablet ? 40 : 20,
+                  fontSize: this.props.deviceTypeAndroidTablet ? 30 : 20,
                   marginBottom: 10,
-                  textAlign: "center"
+                  textAlign: "center",
+                  color: 'black',
+                  marginBottom: 20,
+                  fontWeight: 'bold'
                 }}
               >
                 {this.props.strings.newObs}
               </Text>
-              <View
-                key="divider"
-                style={{ height: 2, backgroundColor: "#dadada" }}
-              />
+
               <View style={{ flexDirection: "row" }}>
                 <Text
                   style={
@@ -425,9 +228,9 @@ class Species extends React.PureComponent {
                       : styles.text3
                   }
                 >
-                  {this.props.selectedSpecies.latinName +
-                    " / " +
-                    this.props.selectedSpecies.localName}
+                  {this.props.selectedSpecies.localName +
+                    " (" +
+                    this.props.selectedSpecies.latinName + ")"}
                 </Text>
               </View>
               <View style={{ flexDirection: "row" }}>
@@ -450,79 +253,51 @@ class Species extends React.PureComponent {
                   {this.state.obsDateTime}
                 </Text>
               </View>
-              <View style={{ flexDirection: "row" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
+              <Form>
+                <Picker note
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.picker : undefined}
+                  mode="dropdown"
+                  selectedValue={this.state.county}
+                  onValueChange={(value) => { this.setState({ county: value }) }}
                 >
-                  {this.props.strings.coordinate + ":   "}
-                </Text>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.state.latitude + ", " + this.state.longitude}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "column" }}>
-                <Text
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text3
-                      : styles.text3
-                  }
-                >
-                  {this.props.strings.location + ":   "}
-                </Text>
+                  {countyItems}
+                </Picker>
                 <TextInput
                   placeholder={this.props.strings.place}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 60 : 35,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    margin: 5,
-                    marginBottom: 1
-                  }}
-                  onChangeText={place => this.setState({ place })}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  onChangeText={place => this.setState({ place: place })}
                   value={this.state.place}
                 />
-                <View style={{ height: 10 }} />
                 <TextInput
-                  placeholder={this.props.strings.county}
-                  style={{
-                    height: this.props.deviceTypeAndroidTablet ? 60 : 35,
-                    fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    margin: 5,
-                    marginTop: 1
-                  }}
-                  onChangeText={county => this.setState({ county })}
-                  value={this.state.county}
+                  placeholder={this.props.strings.latitude}
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
+                  onChangeText={latitude => this.setState({ latitude: latitude })}
+                  value={this.state.latitude.toString()}
+                  keyboardType='numeric'
                 />
-              </View>
+                <TextInput
+                  placeholder={this.props.strings.longitude}
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput}
+                  onChangeText={longitude => this.setState({ longitude: longitude })}
+                  value={this.state.longitude.toString()}
+                  keyboardType='numeric'
+                />
+              </Form>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  padding: 10
+                  padding: 10,
+                  marginTop: 20
                 }}
               >
                 <Button
                   iconLeft
                   style={{ padding: 10 }}
                   transparent
-                  bordered
                   onPress={() => this.setState({ open: false })}
                 >
-                  <Icon name="ios-close-circle" />
+                  <Icon name="chevron-left" size={26} />
                   <Text
                     style={
                       this.props.deviceTypeAndroidTablet
@@ -534,19 +309,11 @@ class Species extends React.PureComponent {
                   </Text>
                 </Button>
                 <Button
-                  disabled={
-                    this.state.county === "" ||
-                    this.state.place === "" ||
-                    this.state.latitude === ""
-                      ? true
-                      : false
-                  }
                   transparent
                   iconLeft
-                  bordered
                   onPress={this.onClickNewObs}
                 >
-                  <Icon name="ios-folder-open" />
+                  <Icon name="save" size={26} />
                   <Text
                     style={
                       this.props.deviceTypeAndroidTablet
@@ -559,7 +326,129 @@ class Species extends React.PureComponent {
                 </Button>
               </View>
             </View>
-          </Modal>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+  /**
+   * render nearby observation if available.
+   * @return {View} Nearby text view
+   */
+  renderNearby() {
+    if (this.props.nerby !== 0) {
+      return (
+        <Row style={{ justifyContent: "center" }}>
+          <Text
+            style={
+              this.props.deviceTypeAndroidTablet
+                ? AndroidTabletStyles.containerSpecies
+                : styles.containerSpecies
+            }
+          >
+            {this.props.strings.nObs + this.props.nerby}
+          </Text>
+        </Row>
+      );
+    }
+    return (
+      <View />
+    );
+  }
+
+  render() {
+    return (
+      <StyleProvider
+        style={
+          this.props.deviceTypeAndroidTablet
+            ? getTheme(androidTablet)
+            : getTheme(common)
+        }
+      >
+        <Container>
+          <ImageView
+            images={this.state.selectedSpeciesImages}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+          />
+          <ImageView
+            images={this.state.mapImg}
+            imageIndex={0}
+            visible={this.state.openMap}
+            onRequestClose={() => this.setState({ openMap: false })}
+          />
+          <SubPageHeader
+            title={this.props.selectedSpecies.localName}
+            subtitle={this.props.selectedSpecies.latinName}
+            onClick={this.onClickBack}
+            rightIcon={!this.state.saved ? (
+              <Icon name="drive" style={styles.icon} size={this.props.deviceTypeAndroidTablet ? 34 : 28} onPress={this.getCoordinate} />
+            ) : (
+                <Icon name="home" style={styles.icon} size={this.props.deviceTypeAndroidTablet ? 34 : 28} onPress={() => Actions.Frontpage()} />
+              )} />
+          <Content>
+            <TouchableHighlight
+              underlayColor={"rgba(223, 223, 223, 0.14)"}
+              onPress={this.onClickImage}
+            >
+              <View>
+                <Image
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.image
+                      : styles.image
+                  }
+                  source={this.state.selectedSpeciesImages.length !== 0 ? this.state.selectedSpeciesImages[0] : this.state.defaultImage}
+                />
+              </View>
+            </TouchableHighlight>
+            <View style={styles.topContainer} onPress={this.onClickImage}>
+              <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topText : styles.topText}>{this.props.strings.imageClickable}</Text>
+            </View>
+            {this.renderNearby()}
+            <Tabs>
+              <Tab heading={this.props.strings.spInfo} textStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTextStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.activeTabStyle : styles.activeTabStyle}
+                tabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tab : undefined}>
+                <View
+                  style={{
+                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
+                    marginTop: this.props.deviceTypeAndroidTablet ? 50 : undefined
+                  }}
+                >
+                  <InfoTab
+                    style={styles.container}
+                    info={this.props.selectedSpecies.speciesText !== 'NA' ? this.props.selectedSpecies.speciesText : this.props.strings.noSpInfo}
+                  />
+                </View>
+              </Tab>
+              <Tab heading={this.props.strings.distribution} textStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTextStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tabTextStyle : styles.tabTextStyle}
+                activeTabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.activeTabStyle : styles.activeTabStyle}
+                tabStyle={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.tab : undefined}>
+                <View
+                  style={{
+                    margin: this.props.deviceTypeAndroidTablet ? 20 : 5,
+                    marginTop: this.props.deviceTypeAndroidTablet ? 50 : undefined
+                  }}
+                >
+                  <DistributionTab
+                    distributionLocal={
+                      this.props.selectedSpecies.distributionLocal
+                    }
+                    distributionCountry={
+                      this.props.selectedSpecies.distributionCountry
+                    }
+                    onClickMap={(img) => this.onClickMap(img)}
+                  />
+                </View>
+              </Tab>
+            </Tabs>
+          </Content>
+          {this.renderModal()}
           <Toast ref="toast" />
         </Container>
       </StyleProvider>
@@ -582,22 +471,80 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: "center",
-    borderRadius: 75,
-    borderWidth: 1,
-    borderColor: "#c2c2c2",
-    width: 150,
-    height: 150,
+    width: '100%',
+    height: 180,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
     margin: 20,
-    padding: 20
-  }
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  activeTabStyle: {
+    backgroundColor: '#f0a00c'
+  },
+  tabTextStyle: {
+    color: 'black',
+  },
+  icon: {
+    color: 'black'
+  },
+  overlayIcon: {
+    color: 'white',
+    position: 'absolute',
+    top: 60,
+    right: 0
+  },
+  topContainer: {
+    backgroundColor: 'black',
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    width: '100%'
+  },
+  topText: {
+    fontSize: 14,
+    textAlign: 'center',
+    padding: 10,
+    color: 'white'
+  },
+  text3: {
+    color: 'black',
+  },
+  textInput: {
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 5,
+    marginBottom: 10
+  },
+  missingText: {
+    borderColor: "red",
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({
   text3: {
-    fontSize: 30,
+    fontSize: 22,
     marginBottom: 5,
     textAlign: "center",
-    color: "#000000"
+    color: 'black'
   },
   containerSpecies: {
     alignItems: "center",
@@ -606,14 +553,45 @@ const AndroidTabletStyles = StyleSheet.create({
   },
   image: {
     alignSelf: "center",
-    borderRadius: 150,
+    width: '100%',
+    height: 180,
+  },
+  topText: {
+    fontSize: 20,
+    textAlign: 'center',
+    padding: 10,
+    color: 'white'
+  },
+  tabTextStyle: {
+    color: 'black',
+    fontSize: 22
+  },
+  textInput: {
+    borderColor: "black",
     borderWidth: 1,
-    borderColor: "#c2c2c2",
-    width: 300,
-    height: 300,
-    margin: 40,
-    padding: 40
-  }
+    padding: 5,
+    marginBottom: 10,
+    fontSize: 20,
+  },
+  picker: {
+    fontSize: 22,
+    height: 30,
+  },
+  tabStyle: {
+    top: 70,
+    marginBottom: 50,
+  },
+  activeTabStyle: {
+    backgroundColor: '#f0a00c',
+    height: 80,
+  },
+  tab: {
+    height: 80
+  },
+  tabTextStyle: {
+    color: 'black',
+    fontSize: 24
+  },
 });
 
 export default connect(

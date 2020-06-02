@@ -1,44 +1,16 @@
 /**
- * @file Info.js
+ * @file Show information about the selected key
  * @author Kjetil Fossheim
- *
- * An screen showing information about the Key the user is currently are using.
- * It is also used in as a screen showing the same information before the key is downloaded, then with a download button.
  */
-
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  BackHandler,
-  Dimensions,
-  Alert
-} from "react-native";
-import {
-  Container,
-  StyleProvider,
-  Header,
-  Footer,
-  FooterTab,
-  Title,
-  Spinner,
-  Content,
-  Button,
-  Left,
-  Right,
-  Body,
-  Icon,
-  H2,
-  Grid,
-  Col
-} from "native-base";
+import { View, StyleSheet, Image, Text, Dimensions, Alert, Modal, TouchableOpacity } from "react-native";
+import { Container, StyleProvider, Spinner, Content, Left, Grid, Col } from "native-base";
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
+import Icon from "react-native-vector-icons/Entypo";
 import { Actions } from "react-native-router-flux";
-import Modal from "react-native-simple-modal";
-import Toast, { DURATION } from "react-native-easy-toast";
 import HTMLView from "react-native-htmlview";
-import ImageZoom from "react-native-image-pan-zoom";
+import ImageView from "react-native-image-viewing";
+import deviceInfoModule from "react-native-device-info";
 
 // theme
 import getTheme from "../native-base-theme/components";
@@ -50,6 +22,9 @@ import ImageConfig from "../config/network/ImageConfig";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as KeyAction from "../actions/KeyAction";
+import * as SettingsAction from "../actions/SettingsAction";
+
+import SubPageHeader from "../components/SubPageHeader";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -59,144 +34,153 @@ const mapStateToProps = state => ({
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ ...KeyAction }, dispatch)
+    actions: bindActionCreators({ ...KeyAction, ...SettingsAction }, dispatch)
   };
 }
 
 class Info extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      key: ""
-    };
-  }
-
-  componentWillMount() {
-    this.getSelectedKey();
-  }
-
-  componentDidMount() {
-    BackHandler.addEventListener("hardwareBackModal", () => {
-      if (this.props.keyDownloaded_LOADING) {
-        return true;
-      }
-      return false;
-    });
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackModal");
-  }
-
-  /**
-   * Retrives the information about the selected key.
-   * @return {void} sets key to state
-   */
-  getSelectedKey() {
-    for (let i = 0; i < this.props.keys.length; i++) {
-      if (this.props.keys[i].key_id === this.props.chosenKey) {
-        return this.setState({ key: this.props.keys[i] });
-      }
+    let isDownloaded = false;
+    if (this.props.selectedKey.keyDownloaded > 0) {
+      isDownloaded = true;
     }
-    // default
-    return this.setState({
-      key: {
-        keyDownloaded: 0,
-        keyImage: "",
-        keyInfo:
-          "NANANANAANANANANANNANANANANANANANANANANANANANANA___NA___NANANANANANANANANANANANANA",
-        keyWeb: "NA",
-        key_id: 999999,
-        title: "Ikke noe navn",
-        updateTrigger: 0,
-        version: 0,
-        level: "low"
-      }
-    });
+    let imageSource = [];
+    if (this.props.platform === "ios") {
+      imageSource.push({ uri: ImageConfig.getInfoImg(this.props.chosenKey) });
+    } else {
+      imageSource.push({ uri: "file://" + ImageConfig.getInfoImg(this.props.chosenKey) });
+    }
+    this.state = {
+      isDownloaded: isDownloaded,
+      isDownloading: false,
+      imageSource: imageSource,
+      openImages: false
+    }
   }
 
   /**
-   * [onClickBack description]
+   * If new props, trigger state update
+   */
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.keyDownloaded_LOADING && !prevState.isDownloading) {
+      return { isDownloading: true };
+    } else if (prevState.isDownloading && !nextProps.keyDownloaded_LOADING) {
+      if (nextProps.keyDownloaded_SUCCESS) {
+        return {
+          isDownloaded: true,
+          isDownloading: false
+        }
+      } else {
+        return {
+          isDownloaded: false,
+          isDownloading: false
+        }
+      }
+    } else return null;
+  }
+
+  /**
+   * Check if key download is successful
+   */
+  componentDidUpdate(prevProps, prevState) {
+    const { isDownloaded, isDownloading } = prevState;
+    if (isDownloaded !== this.state.isDownloaded) {
+      this.setState({ isDownloaded: isDownloaded });
+      this.props.onKeyUpdate();
+      Actions.pop();
+    }
+    if (isDownloading !== this.state.isDownloading) {
+      this.setState({ isDownloading: isDownloading });
+    }
+  }
+
+  /**
+   * Handle on click back
    */
   onClickBack = () => {
     Actions.pop();
   };
 
   /**
-   * function for after download modal is closed
-   * @return {void} returns to Frontpage if success and shows error toast if failed.
+   * Go to key or open download dialog if key is not downloaded
    */
-  modalClose = () => {
-    if (this.props.keyDownloaded_SUCCESS) {
-      this.refs.toast.show(this.props.strings.downloaded, 1500);
-      setTimeout(() => {
-        Actions.pop();
-      }, 800);
-    } else if (typeof this.props.keyDownloaded_ERROR !== "undefined") {
-      this.refs.toast.show(this.props.strings.updateError, 1500);
+  onClickUse = () => {
+    if (this.state.isDownloaded) {
+      Actions.Key();
+    } else {
+      new Alert.alert(
+        this.props.strings.download,
+        this.props.strings.downloadDialog,
+        [
+          { text: this.props.strings.cancel, style: "cancel" },
+          { text: this.props.strings.ok, onPress: () => { this.downloadKey() } }
+        ],
+        { cancelable: true }
+      );
     }
   };
 
   /**
-   * shows download dialog. downloads key if internet is available.
-   * @see KeyAction
+   * Handle on click delete event
    */
-  onClickDownload = () => {
+  onClickDelete = () => {
+    new Alert.alert(
+      this.props.strings.deleteKeyHeader,
+      this.props.strings.deleteKey,
+      [
+        { text: this.props.strings.cancel, style: "cancel" },
+        { text: this.props.strings.ok, onPress: () => { this.deleteKey() } }
+      ],
+      { cancelable: true }
+    );
+  }
+
+  /**
+   * Delete key from device and refresh frontpage
+   */
+  deleteKey = () => {
+    this.props.actions.deletedata(this.props.selectedKey.key_id).then(() => {
+      this.props.onKeyDelete();
+      Actions.pop();
+    });
+  }
+
+  /**
+   * Download key if network connection is active
+   */
+  downloadKey = () => {
     if (this.props.isConnected === false) {
       new Alert.alert(
-        this.props.strings.noNetwork,
         "",
-        [{ text: this.props.strings.ok, onPress: () => {} }],
+        this.props.strings.noNetwork,
+        [
+          { text: this.props.strings.ok, onPress: () => { } }
+        ],
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
-      this.props.actions.downloadKey(this.state.key.keyWeb);
+      this.props.actions.downloadKey(this.props.selectedKey.keyWeb).catch(() => {
+        new Alert.alert(
+          "",
+          this.props.strings.noNetwork,
+          [
+            { text: this.props.strings.ok, onPress: () => { } }
+          ],
+          { cancelable: false }
+        );
+      });
     }
-  };
+  }
 
   /**
    * Cleans HTML removing <br>
    */
   removeHtmlBr() {
-    if (this.state.key.keyInfo === null) {
-      return this.props.strings.noText;
+    if (this.props.selectedKey.keyInfo === undefined || this.props.selectedKey.keyInfo === null) {
+      return this.props.strings.noKeySelected;
     }
-    return this.state.key.keyInfo.replace(/(\n|<br>)/gm, "");
-  }
-
-  /**
-   * shows the hidden download buttons
-   * @return {View} Fotter for the Screen
-   */
-  showDownload() {
-    return (
-      <Footer>
-        <FooterTab>
-          <Button transparent onPress={this.onClickBack}>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.strings.cancel}
-            </Text>
-          </Button>
-          <Button transparent onPress={this.onClickDownload}>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.text3
-                  : styles.text3
-              }
-            >
-              {this.props.strings.download}
-            </Text>
-          </Button>
-        </FooterTab>
-      </Footer>
-    );
+    return this.props.selectedKey.keyInfo.replace(/(\n|<br>)/gm, "");
   }
 
   render() {
@@ -209,92 +193,96 @@ class Info extends React.PureComponent {
         }
       >
         <Container>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.onClickBack}>
-                <Icon name="ios-arrow-back" />
-              </Button>
-            </Left>
-            <Body style={{ flex: 3 }}>
-              <Title>{this.props.strings.keyInfo}</Title>
-            </Body>
-            <Right />
-          </Header>
+          <ImageView
+            images={this.state.imageSource}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+          />
+          <SubPageHeader title={this.props.selectedKey.title} onClick={this.onClickBack}
+            rightIcon={this.state.isDownloaded ?
+              <Menu>
+                <MenuTrigger>
+                  <Icon name='dots-three-vertical' size={28} color={'black'} />
+                </MenuTrigger>
+                <MenuOptions style={styles.dotMenu}>
+                  <MenuOption onSelect={() => { this.onClickUse() }} >
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.useKey}</Text>
+                  </MenuOption>
+                  <MenuOption onSelect={() => { this.onClickDelete() }}>
+                    <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.dotMenuTxt : styles.dotMenuTxt}>{this.props.strings.deleteKeyHeader}</Text>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
+              : undefined} />
+          {this.state.isDownloaded ? (
+            <View />
+          ) : (
+              <View style={[
+                this.props.deviceTypeAndroidTablet
+                  ? AndroidTabletStyles.topContainer
+                  : styles.topContainer,
+                deviceInfoModule.getModel().includes("iPhone 11") ? { "top": 128 } : undefined]
+              }>
+                <Text style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.topText
+                    : styles.topText
+                }>{this.props.strings.downloadHeader}</Text>
+              </View>
+            )}
           <Content>
             <Grid>
               <Col style={styles.container}>
-                {this.state.key.image === 1 && (
-                  <ImageZoom
-                    cropWidth={Dimensions.get("window").width - 20}
-                    cropHeight={this.props.deviceTypeAndroidTablet ? 560 : 280}
-                    imageWidth={Dimensions.get("window").width - 20}
-                    imageHeight={this.props.deviceTypeAndroidTablet ? 540 : 270}
-                  >
+                {this.props.selectedKey.image === 1 && (
+                  <TouchableOpacity onPress={() => this.setState({ openImages: true })}>
                     <Image
                       style={
                         this.props.deviceTypeAndroidTablet
                           ? AndroidTabletStyles.image
                           : styles.image
                       }
-                      source={
-                        this.props.platform === "ios"
-                          ? {
-                              uri: ImageConfig.getInfoImg(this.props.chosenKey)
-                            }
-                          : {
-                              uri:
-                                "file://" +
-                                ImageConfig.getInfoImg(this.props.chosenKey)
-                            }
-                      }
+                      source={this.state.imageSource.length !== 0 ? this.state.imageSource[0] : undefined}
                     />
-                  </ImageZoom>
+                  </TouchableOpacity>
                 )}
-                <Text
-                  numberOfLines={2}
-                  style={
-                    this.props.deviceTypeAndroidTablet
-                      ? AndroidTabletStyles.text
-                      : styles.text
-                  }
-                >
-                  {this.state.key.title}
-                </Text>
                 <View style={styles.separator} />
                 <View style={styles.textBox}>
-                  <HTMLView
-                    value={this.removeHtmlBr()}
-                    stylesheet={
-                      this.props.deviceTypeAndroidTablet
-                        ? htmlstylesAndroidTablet
-                        : htmlstyles
-                    }
-                  />
+                  <HTMLView value={this.removeHtmlBr()} stylesheet={this.props.deviceTypeAndroidTablet ? htmlstylesAndroidTablet : htmlstyles} />
                 </View>
               </Col>
             </Grid>
           </Content>
-          {this.props.showDownload ? this.showDownload() : null}
+          {!this.state.isDownloaded ? (
+            <TouchableOpacity style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.downloadBtn : styles.downloadBtn,
+            this.props.keyDownloaded_LOADING ? styles.loading : undefined,
+            deviceInfoModule.getModel().includes("iPhone 11") ? { "height": 64 } : undefined]} onPress={() => { this.onClickUse(); }}>
+              <Text
+                style={[
+                  this.props.deviceTypeAndroidTablet ?
+                    AndroidTabletStyles.btnText :
+                    styles.btnText
+                ]}
+              >
+                {this.props.strings.download}
+              </Text>
+              <Icon name='download' style={styles.download} size={24} />
+            </TouchableOpacity>
+          ) : (
+              <View />
+            )}
           <Modal
-            offset={0}
-            animationDuration={200}
-            animationTension={40}
-            closeOnTouchOutside={false}
-            open={this.props.keyDownloaded_LOADING}
-            modalDidOpen={() => {}}
-            modalDidClose={this.modalClose}
+            animationType="fade"
+            transparent={true}
+            visible={this.props.keyDownloaded_LOADING}
           >
-            <Text
-              style={{
-                fontSize: this.props.deviceTypeAndroidTablet ? 30 : 15,
-                textAlign: "center"
-              }}
-            >
-              {this.props.strings.downloading}
-            </Text>
-            <Spinner color="green" />
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.modalText : styles.modalText}>{this.props.strings.downloading}</Text>
+                <Spinner color="green" />
+              </View>
+            </View>
           </Modal>
-          <Toast ref="toast" />
         </Container>
       </StyleProvider>
     );
@@ -305,7 +293,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff"
+    backgroundColor: "#ffffff",
+    marginTop: 80
   },
   image: {
     width: Dimensions.get("window").width - 50,
@@ -319,7 +308,8 @@ const styles = StyleSheet.create({
     backgroundColor: "grey"
   },
   textBox: {
-    margin: 10
+    margin: 10,
+    paddingBottom: 20
   },
   text3: {
     fontSize: 15,
@@ -333,6 +323,83 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#000000"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold"
+  },
+  topContainer: {
+    backgroundColor: '#E1ECDF',
+    position: 'absolute',
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    width: '100%',
+    ...Platform.select({
+      ios: {
+        top: 84,
+      },
+      android: {
+        top: 56,
+      }
+    })
+  },
+  topText: {
+    fontSize: 14,
+    textAlign: 'center',
+    padding: 10
+  },
+  downloadBtn: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#f0a00c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    height: 50
+  },
+  btnText: {
+    color: '#000',
+    fontSize: 18,
+    marginTop: 16,
+    marginBottom: 5,
+  },
+  download: {
+    color: '#000',
+    marginLeft: 20
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 16,
+    padding: 10,
+  },
+  loading: {
+    backgroundColor: '#ccc'
   }
 });
 
@@ -352,8 +419,11 @@ const htmlstylesAndroidTablet = StyleSheet.create({
     padding: 0
   },
   p: {
-    fontSize: 30
-  }
+    fontSize: 22
+  },
+  i: {
+    fontSize: 20
+  },
 });
 
 const AndroidTabletStyles = StyleSheet.create({
@@ -374,7 +444,8 @@ const AndroidTabletStyles = StyleSheet.create({
     backgroundColor: "grey"
   },
   textBox: {
-    margin: 10
+    margin: 10,
+    paddingBottom: 20
   },
   text3: {
     fontSize: 30,
@@ -388,7 +459,49 @@ const AndroidTabletStyles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#000000"
-  }
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 22
+  },
+  topContainer: {
+    backgroundColor: '#E1ECDF',
+    position: 'absolute',
+    top: 80,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    width: '100%'
+  },
+  topText: {
+    fontSize: 22,
+    textAlign: 'center',
+    padding: 10
+  },
+  downloadBtn: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#f0a00c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
+    height: 60
+  },
+  btnText: {
+    color: '#000',
+    fontSize: 28,
+    marginTop: 14,
+  },
+  dotMenuTxt: {
+    color: '#000',
+    fontSize: 20,
+    padding: 10,
+  },
 });
 
 export default connect(

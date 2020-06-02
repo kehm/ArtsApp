@@ -1,10 +1,14 @@
+/**
+ * @file Select traits page
+ */
 import React from 'react';
 import { View, LayoutAnimation } from 'react-native';
-import { Container, StyleProvider, Header, Footer, Subtitle,
-  FooterTab, Thumbnail, Title, Content, Button, Icon, ListItem,
-  Left, Body, Right} from 'native-base';
+import { Container, StyleProvider, Header, Title, Left, Right } from 'native-base';
+import ImageView from "react-native-image-viewing";
+import Icon from 'react-native-vector-icons/Entypo';
+import Geolocation from '@react-native-community/geolocation';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { bindActionCreators } from 'redux';
 
@@ -12,15 +16,17 @@ import getTheme from '../../native-base-theme/components';
 import common from '../../native-base-theme/variables/commonColor';
 import androidTablet from '../../native-base-theme/variables/androidTablet';
 
-import KeyHeader from '../../components/KeyHeader';
 import TraitPanel from '../../components/TraitPanel';
 import TraitList from '../../components/TraitList';
 import SpeciesPanel from '../../components/SpeciesPanel';
 import TraitDialog from '../../components/TraitDialog';
+import SubPageHeader from "../../components/SubPageHeader";
 
 import * as KeyAction from '../../actions/KeyAction';
+import * as SettingsAction from '../../actions/SettingsAction';
+import * as ObservationAction from "../../actions/ObservationAction";
 
-import styles  from './styles.js';
+import styles from './styles.js';
 
 type Props = {
   title: String,
@@ -32,38 +38,50 @@ type State = {
   selectedTrait: Object,
 }
 
-class Key2 extends React.Component<Props, State> {
+class Key extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
       isSpeciesPanelToggled: true,
       isTraitDialogVisible: false,
       selectedTrait: null,
+      selectedSpeciesImages: [],
+      openImages: false,
     };
   }
 
-  // TODO: Toggle panel not working on Android
-  // componentWillReceiveProps(nextProps) {
-  //   const prevValues = this.props.chosenValues;
-  //   const nextValues = nextProps.chosenValues;
-  //   const { isSpeciesPanelToggled } = this.state;
-
-  //   if(prevValues.length === 0 && nextValues.length > 0 && isSpeciesPanelToggled) {
-  //     this.toggleSpeciesPanel();
-  //   }
-  // }
+  /**
+   * Get nearby observations based on current position
+   */
+  componentDidMount() {
+    if (this.props.useLocation && this.props.latitude !== "undefined") {
+      this.props.actions.updateNearbyList([this.props.selectedKey], this.props.latitude, this.props.longitude).then(() => {
+        this.props.actions.getNearbyObservations(this.props.selectedKey.key_id);
+      });
+    }
+  }
 
   setStateAnimated(callback: (state: State) => void) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState(callback);
   }
 
-  onClose = () => {
+  /**
+   * Open image gallery
+   */
+  openImageGallery = (images) => {
+    this.setState({
+      selectedSpeciesImages: images,
+      openImages: true
+    })
+  }
+
+  onClickBack = () => {
     Actions.pop();
   }
 
-  onKeyInfo = () => {
-    Actions.Info();
+  onClickClose = () => {
+    Actions.pop();
   }
 
   toggleSpeciesPanel = () => {
@@ -74,7 +92,7 @@ class Key2 extends React.Component<Props, State> {
   }
 
   onSpeciesSelected = (species) => {
-    Actions.Species({nerby: 0, selectedSpecies: species});
+    Actions.Species({ nerby: 0, selectedSpecies: species });
   }
 
   onViewAllSpecies = () => {
@@ -84,19 +102,15 @@ class Key2 extends React.Component<Props, State> {
 
   onValueSelected = (value) => {
     const { actions, keyId } = this.props;
-
-    // Update state
-    actions.selectTraitValue(keyId, value);
-
-    // Hide dialog (not in state)
-    this.onTraitSelected(undefined);
+    actions.selectTraitValue(keyId, value); // Update state
+    this.onTraitSelected(undefined); // Hide dialog (not in state)
   }
 
   onValueInfo = (value) => {
     const { valueImages } = this.props;
     let images = valueImages.get(value.value_id);
-    if(!images) images = [];
-    Actions.ValueInfo({valueInfo: value.valueInfo, title: value.valueText, images});
+    if (!images) images = [];
+    Actions.ValueInfo({ valueInfo: value.valueInfo, title: value.valueText, images });
   }
 
   onTraitSelected = (trait) => {
@@ -116,7 +130,6 @@ class Key2 extends React.Component<Props, State> {
     const { title, traits, species, speciesImages, valueImages,
       chosenValues, totalSpecies, foundSpecies, chosenTraits, isFiltered,
       activeTraits, activeValues, observationsNearby, strings } = this.props;
-
     const { isSpeciesPanelToggled, isTraitDialogVisible, selectedTrait } = this.state;
 
     // Find selected value in selected trait (if dialog is visible)
@@ -133,24 +146,27 @@ class Key2 extends React.Component<Props, State> {
     return (
       <StyleProvider style={this.props.deviceTypeAndroidTablet ? getTheme(androidTablet) : getTheme(common)}>
         <Container>
-          <KeyHeader
-            title={title}
-            closeTitle="Lukk"
-            onClose={this.onClose}
-            onInfo={this.onKeyInfo}
+          <ImageView
+            images={this.state.selectedSpeciesImages}
+            imageIndex={0}
+            visible={this.state.openImages}
+            onRequestClose={() => this.setState({ openImages: false })}
+            backgroundColor='white'
           />
+          <SubPageHeader title={title} onClick={this.onClickBack}
+            rightIcon={<Icon name='cross' size={this.props.deviceTypeAndroidTablet ? 38 : 28} color='black' onPress={this.onClickClose} />} />
           <View style={styles.container} >
             <TraitPanel
-                traits={usedTraits}
-                chosenValues={chosenValues}
-                onSelect={this.onTraitSelected}
-                onReset={this.onTraitReset}
-                valueImages={valueImages}
-                header={strings.chosenTraits}
-                emptyHeader={strings.chosenTraitsHeader}
-                emptyDescription={strings.noTraitsSelected}
-                resetTitle={strings.reset}
-              />
+              traits={usedTraits}
+              chosenValues={chosenValues}
+              onSelect={this.onTraitSelected}
+              onReset={this.onTraitReset}
+              valueImages={valueImages}
+              header={strings.chosenTraits}
+              emptyHeader={strings.chosenTraitsHeader}
+              emptyDescription={strings.noTraitsSelected}
+              resetTitle={strings.reset}
+            />
             <TraitList
               traits={unusedTraits}
               activeTraits={activeTraits}
@@ -181,6 +197,7 @@ class Key2 extends React.Component<Props, State> {
               valueImages={valueImages}
               activeValues={activeValues}
               onInfo={this.onValueInfo}
+              onOpenImages={this.openImageGallery}
             />
           </View>
         </Container>
@@ -194,20 +211,24 @@ function mapStateToProps({ key, settings, observations }) {
   const isUnfiltered = key.speciesLeft.length === 0 && key.chosenValues.length === 0;
   return ({
     keyId: key.chosenKey,
+    useLocation: settings.useLocation,
+    latitude: settings.latitude,
+    longitude: settings.longitude,
     species: isUnfiltered ? key.fullSpList : key.speciesLeft,
     totalSpecies: key.fullSpList.length,
     foundSpecies: key.speciesLeft.length,
     title: key.chosenKeyTitle,
     traits: key.traitValueCombo,
-    speciesImages: key.spesiecImageList,
+    speciesImages: key.speciesImageList,
     valueImages: key.valueImages,
     chosenValues: key.chosenValues,
     chosenTraits: key.chosenTraits,
     activeTraits: isUnfiltered ? key.traitValueCombo : key.relevant,
     activeValues: key.spValues,
     strings: settings.strings,
+    deviceTypeAndroidTablet: settings.deviceTypeAndroidTablet,
     isFiltered: !isUnfiltered,
-    observationsNearby: observations.nerbyList
+    observationsNearby: observations.nearbyList
       .filter(obs => isUnfiltered ?
         key.fullSpList.find(s => obs.species_id === s.species_id) :
         key.speciesLeft.find(s => obs.species_id === s.species_id))
@@ -217,8 +238,8 @@ function mapStateToProps({ key, settings, observations }) {
 
 function mapDispatchToProps(dispatch) {
   return {
-	  actions: bindActionCreators({ ...KeyAction}, dispatch)
+    actions: bindActionCreators({ ...KeyAction, ...SettingsAction, ...ObservationAction }, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Key2);
+export default connect(mapStateToProps, mapDispatchToProps)(Key);

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     padding: 10,
     marginLeft: 10,
@@ -55,4 +55,26 @@ export default StyleSheet.create({
   icon: {
     color: '#AAA'
   }
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  title: {
+    flex: 1,
+    paddingRight: 5,
+    fontSize: 18
+  },
+  imageContainer: {
+    height: 50,
+    width: 50,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#CCC',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  image: {
+    height: 45,
+    width: 45,
+    borderRadius: 20,
+  },
 });

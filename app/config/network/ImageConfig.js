@@ -32,10 +32,7 @@ export default class ImageConfig {
       let url = keyObj.icon.replace(String.fromCharCode(92), "");
       promises.push(
         new Promise((resolve, reject) => {
-          RNFetchBlob.config({
-            path:
-              dirs + "/" + keyObj.id + keyThumbsDir + "/t" + keyObj.id + ".png"
-          })
+          RNFetchBlob.config({ path: dirs + "/" + keyObj.id + keyThumbsDir + "/t" + keyObj.id + ".png" })
             .fetch("GET", url, {})
             .then(res => {
               resolve(res);
@@ -43,6 +40,8 @@ export default class ImageConfig {
             .catch(err => {
               reject(err);
             });
+        }).catch((err) => {
+          Promise.reject(err);
         })
       );
     }
@@ -50,10 +49,7 @@ export default class ImageConfig {
       let url = keyObj.keyImageInfo.replace(String.fromCharCode(92), "");
       promises.push(
         new Promise((resolve, reject) => {
-          RNFetchBlob.config({
-            path:
-              dirs + "/" + keyObj.id + keyInfoDir + "/i" + keyObj.id + ".png"
-          })
+          RNFetchBlob.config({ path: dirs + "/" + keyObj.id + keyInfoDir + "/i" + keyObj.id + ".png" })
             .fetch("GET", url, {})
             .then(res => {
               resolve(res);
@@ -61,6 +57,8 @@ export default class ImageConfig {
             .catch(err => {
               reject(err);
             });
+        }).catch((err) => {
+          Promise.reject(err);
         })
       );
     }
@@ -75,49 +73,19 @@ export default class ImageConfig {
   saveContaintInmages(images) {
     let retList = images.map((img, index) => {
       if (img.type === "s") {
-        return RNFetchBlob.config({
-          path:
-            dirs + "/" + img.keyId + speciesDir + "/s" + img.typeId + img.image
-        })
+        return RNFetchBlob.config({ path: dirs + "/" + img.keyId + speciesDir + "/s" + img.typeId + img.image })
           .fetch("GET", img.imageWeb, {})
-          .then(res => {})
-          .catch(err => {});
+          .then(res => { })
+          .catch(err => { });
       } else if (img.type === "v") {
-        return RNFetchBlob.config({
-          path:
-            dirs + "/" + img.keyId + valueDir + "/v" + img.typeId + img.image
-        })
+        return RNFetchBlob.config({ path: dirs + "/" + img.keyId + valueDir + "/v" + img.typeId + img.image })
           .fetch("GET", img.imageWeb, {})
-          .then(res => {})
-          .catch(err => {});
+          .then(res => { })
+          .catch(err => { });
       }
       return false;
     });
     return new Promise.all(retList);
-  }
-
-  // not in use
-  static saveSpeciesImages(species) {
-    let url = speciesImgURL + species.id;
-    return new Promise.all(() => {
-      return species.names.map((img, index) => {
-        return RNFetchBlob.config({
-          path: dirs + "/" + keyObj.id + speciesDir + "/s" + species.id + img
-        }).fetch("GET", url, {});
-      });
-    });
-  }
-
-  // not in use
-  static saveValueImages(values) {
-    let url = speciesImgURL + values.id;
-    return new Promise.all(() => {
-      return values.names.map((img, index) => {
-        return RNFetchBlob.config({
-          path: dirs + "/" + keyObj.id + speciesDir + "/v" + values.id + img
-        }).fetch("GET", url, {});
-      });
-    });
   }
 
   static getkeyThumbs(keyId) {

@@ -1,7 +1,7 @@
 import * as actionTypes from "./actionTypes";
 import DB_helper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
-import { setSpNerby } from "./ObservationAction";
+import { getNearbyObservations } from "./ObservationAction";
 
 export function setTest() {
   return {
@@ -25,7 +25,7 @@ export function setKey(keyId, title, force = false) {
       dispatch(resetKey(keyId));
       dispatch(setTraitValuecombo(keyId));
       dispatch(setAllSpToKEy(keyId));
-      dispatch(setSpNerby(keyId));
+      dispatch(getNearbyObservations(keyId));
       dispatch(getAllSpImages(keyId));
       dispatch(getValueImages(keyId));
       dispatch(setSpeciesLeft([], keyId));
@@ -52,7 +52,6 @@ export function setAllSpToKEy(keyId) {
 
 export function setSpeciesLeft(chosenValues, keyId) {
   return {
-    // dette må være med
     type: actionTypes.ACTION_SP_LEFT,
     payload: {
       promise: new DB_helper().getSpeciesWithvalue(chosenValues, keyId)
@@ -119,11 +118,10 @@ export function getAllSpImages(keyId) {
 }
 
 export function downloadKey(keyWebName) {
-  this.KeyDownload = new KeyDownload();
   return {
     type: actionTypes.DOWNLOAD_KEY,
     payload: {
-      promise: this.KeyDownload.downloadKey(keyWebName)
+      promise: new KeyDownload().downloadKey(keyWebName)
     },
     meta: { keyWeb: keyWebName }
   };

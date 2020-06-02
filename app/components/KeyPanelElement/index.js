@@ -1,8 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, View, Text, Image, ActivityIndicator } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { TouchableOpacity, View, Text, Image } from 'react-native';
+import Icon from 'react-native-vector-icons/Entypo';
+import { connect } from "react-redux";
 
-import styles  from './styles.js';
+import { styles, androidTabletStyles } from './styles.js';
 import TraitImageButton from '../TraitImageButton';
 import { setContentStrings } from '../../actions/SettingsAction.js';
 
@@ -11,6 +12,11 @@ import {
   getKeyInfoImageSource
 } from '../../utilities/image';
 
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
+
 type Props = {
   size: Number,
   keyObject: Object,
@@ -18,6 +24,7 @@ type Props = {
   title: String,
   imageSource: Object,
   onPress: Function,
+  onInfo: Function,
   strings: Object,
 };
 
@@ -25,7 +32,6 @@ const mapKey = key => {
   const imageSource = (key.image === 1)
     ? getKeyInfoImageSource(key.key_id)
     : getKeyThumbImageSource(key.key_id);
-
   return {
     isBeta: key.keyStatus === 'beta',
     isDownloaded: key.keyDownloaded > 0,
@@ -35,9 +41,16 @@ const mapKey = key => {
 };
 
 class KeyPanelElement extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      defaultImage: false,
+      defaultImagePath: require("../../images/AA_logo.png")
+    };
+  }
 
   render() {
-    const { keyObject, size, strings, onPress, onDownload } = this.props;
+    const { keyObject, size, strings, onPress, onInfo } = this.props;
     const { isBeta, isDownloaded, title, imageSource } = mapKey(keyObject);
     const containerSize = { height: size, width: size };
     const imageMarginH = isBeta ? 50 : 20;
@@ -45,19 +58,22 @@ class KeyPanelElement extends React.Component<Props> {
     const imageSize = { height: size - 2 * imageMarginV, width: size - 2 * imageMarginH };
 
     return (
-      <TouchableOpacity activeOpacity={0.6} onPress={() => onPress(keyObject)}>
+      <TouchableOpacity activeOpacity={0.6} onLongPress={() => onPress(keyObject)}>
         <View style={[styles.outerContainer, containerSize]}>
           <View style={[styles.innerContainer, containerSize]}>
             {isBeta && <Text style={styles.beta}>{strings.beta}</Text>}
-            <Text style={styles.title}>{title}</Text>
+            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.title : styles.title}>{title}</Text>
             <View style={styles.imageContainer}>
-              <Image source={imageSource} resizeMode='contain' style={[styles.image, imageSize]} />
+              <Image source={this.state.defaultImage ? this.state.defaultImagePath : imageSource}
+                resizeMode='contain' style={[styles.image, imageSize]} onError={() => { this.setState({ defaultImage: true }); }} />
             </View>
-            {!isDownloaded &&
-             <View style={styles.downloadContainer}>
-              <Icon name='cloud-download' style={styles.download} size={24} />
-             </View>
-            }
+            {isDownloaded ? (
+              <TouchableOpacity style={styles.downloadContainer}>
+                <Icon name='info-with-circle' style={styles.info} onPress={() => onInfo(keyObject)} />
+              </TouchableOpacity>
+            ) : (
+                <View />
+              )}
           </View>
         </View>
       </TouchableOpacity>
@@ -65,4 +81,4 @@ class KeyPanelElement extends React.Component<Props> {
   }
 }
 
-export default KeyPanelElement;
+export default connect(mapStateToProps)(KeyPanelElement);

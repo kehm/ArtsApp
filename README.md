@@ -1,6 +1,7 @@
-# ArtsApp, Species identification made easy
+# ArtsApp
 
->
-> New information will soon be discovered and published.
->
-><img src="https://github.com/Feigdafugl/ArtsApp/blob/master/AA_logo.png" width="150" height="150">
+ArtsApp is a React Native application for species identification.
+
+The application is available in the Google Play Store for Android devices and the Apple App Store for iOS devices.
+
+Read more about ArtsApp here: <https://artsapp.uib.no>

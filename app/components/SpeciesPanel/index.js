@@ -2,10 +2,16 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 
-import styles from "./styles.js";
+import { styles, androidTabletStyles } from "./styles.js";
 import HorizontalList from "../HorizontalList";
 import SpeciesPanelElement from "../SpeciesPanelElement";
 import SelectionProgressBar from "../SelectionProgressBar";
+import { connect } from "react-redux";
+
+const mapStateToProps = state => ({
+  ...state.settings,
+  ...state.nav
+});
 
 type Props = {};
 type State = {
@@ -33,6 +39,14 @@ class SpeciesPanel extends React.Component<Props, State> {
     onSpeciesClick && onSpeciesClick(species);
   };
 
+  getStatusText = (foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies) => {
+    if (foundSpecies === 0) {
+      return (totalSpecies + " " + this.props.strings.artsTotal);
+    } else {
+      return (foundSpecies + " " + this.props.strings.artsPossible + " " + totalSpecies + " " + this.props.strings.artsTotal);
+    }
+  };
+
   renderItem = item => {
     const {
       onViewAllClick,
@@ -40,7 +54,6 @@ class SpeciesPanel extends React.Component<Props, State> {
       foundSpecies,
       observationsNearby
     } = this.props;
-
     if (item.type === "button") {
       return (
         <TouchableOpacity
@@ -53,22 +66,18 @@ class SpeciesPanel extends React.Component<Props, State> {
             size={30}
             color="#AAA"
           />
-          <Text style={styles.viewAllText}>{item.title}</Text>
+          <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.viewAllText : styles.viewAllText}>{item.title}</Text>
         </TouchableOpacity>
       );
     }
-
     const species = item.species;
-
     const imagePaths = speciesImages.get(species.species_id);
     let imagePath = null;
     if (imagePaths) imagePath = imagePaths[0];
-
     let state = "match";
     if (observationsNearby.find(obs => obs.species_id === species.species_id)) {
       state = "nearby";
     }
-
     return (
       <SpeciesPanelElement
         species={species}
@@ -109,11 +118,13 @@ class SpeciesPanel extends React.Component<Props, State> {
         return obsa < obsb;
       });
 
-    mappedElements.push({
+    const left = [{
       type: "button",
       title: strings.seeAllSpecies,
-      icon: "chevron-right"
-    });
+      icon: "chevron-left"
+    }];
+
+    const arr = [...left, ...mappedElements];
 
     let numberOfObservedSpecies = observationsNearby.length;
     let numberOfFoundSpecies = foundSpecies - numberOfObservedSpecies;
@@ -121,27 +132,20 @@ class SpeciesPanel extends React.Component<Props, State> {
       numberOfObservedSpecies = observationsNearby.length;
       numberOfFoundSpecies = totalSpecies - numberOfObservedSpecies;
     }
-
-    const statusText = getStatusText(
-      foundSpecies,
-      totalSpecies,
-      numberOfObservedSpecies,
-      numberOfFoundSpecies
-    );
-
+    const statusText = this.getStatusText(foundSpecies, totalSpecies, numberOfObservedSpecies, numberOfFoundSpecies);
     return (
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.panelHeader}
           onPress={this.handleToggleCollapsed}
         >
-          <Text>{statusText}</Text>
-          {isCollapsed && <Icon name="chevron-small-up" size={30} />}
-          {!isCollapsed && <Icon name="chevron-small-down" size={30} />}
+          <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.statusText : undefined} >{statusText}</Text>
+          {isCollapsed && <Icon name="chevron-small-up" size={this.props.deviceTypeAndroidTablet ? 38 : 30} />}
+          {!isCollapsed && <Icon name="chevron-small-down" size={this.props.deviceTypeAndroidTablet ? 38 : 30} />}
         </TouchableOpacity>
         {!isCollapsed && species.length > 0 && (
           <HorizontalList
-            data={mappedElements}
+            data={arr}
             keyExtractor={item =>
               item.species ? item.species.species_id.toString() : item.title
             }
@@ -163,26 +167,4 @@ class SpeciesPanel extends React.Component<Props, State> {
   }
 }
 
-const getStatusText = (
-  foundSpecies,
-  totalSpecies,
-  numberOfObservedSpecies,
-  numberOfFoundSpecies
-) => {
-  const observedCountText =
-    numberOfObservedSpecies > 0 ? numberOfObservedSpecies.toString() : "Ingen";
-  if (foundSpecies === 0) {
-    return observedCountText + " i nærheten, " + totalSpecies + " arter totalt";
-  }
-
-  return (
-    observedCountText +
-    " i nærheten av " +
-    foundSpecies +
-    " mulige - totalt " +
-    totalSpecies +
-    " arter."
-  );
-};
-
-export default SpeciesPanel;
+export default connect(mapStateToProps)(SpeciesPanel);

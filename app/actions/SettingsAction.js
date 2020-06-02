@@ -1,56 +1,53 @@
 import * as actionTypes from "./actionTypes";
-import AsyncStore from "../config/AsyncStore";
+import AsyncStorageHandler from "../config/AsyncStorageHandler";
 import LangStrings from "../config/LangStrings";
-import { NetInfo } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import DB_helper from "../config/DB/DB_helper";
 import KeyDownload from "../config/network/KeyDownload";
 import ImageConfig from "../config/network/ImageConfig";
 
 export function setLanguage(lang) {
-  this.AsyncStore = new AsyncStore();
   return {
     type: actionTypes.SET_LANGUAGE,
     payload: {
-      promise: this.AsyncStore.setLanguage(lang)
+      promise: new AsyncStorageHandler().setLanguage(lang),
+      language: lang
     }
   };
 }
 
 export function getLanguage() {
-  this.AsyncStore = new AsyncStore();
   return {
     type: actionTypes.GET_LANGUAGE,
     payload: {
-      promise: this.AsyncStore.getLanguage()
+      promise: new AsyncStorageHandler().getLanguage()
     }
   };
 }
 
-export function setlastDownloaddate(date) {
-  this.AsyncStore = new AsyncStore();
+export function setLastDownload(date) {
   return {
     type: actionTypes.SET_LAST_DOWNLOAD,
     payload: {
-      promise: this.AsyncStore.setLastDownloadDate(date)
+      promise: new AsyncStorageHandler().setLastDownload(date),
+      lastDownloadDate: date
     }
   };
 }
 
-export function getlastDownload() {
-  this.AsyncStore = new AsyncStore();
+export function getLastDownload() {
   return {
     type: actionTypes.GET_LAST_DOWNLOAD,
     payload: {
-      promise: this.AsyncStore.getLastDownloadDate()
+      promise: new AsyncStorageHandler().getLastDownload()
     }
   };
 }
 
 export function setContentStrings(lang) {
-  this.LangStrings = new LangStrings();
   return {
     type: actionTypes.GET_LANG_STRINGS,
-    strings: this.LangStrings.getLangStrings(lang)
+    strings: new LangStrings().getLangStrings(lang)
   };
 }
 
@@ -58,6 +55,13 @@ export function isOnline(isConnected) {
   return {
     type: actionTypes.UPDATE_CONNECTIVITY,
     isConnected: isConnected
+  };
+}
+
+export function useLocation(useLocation) {
+  return {
+    type: actionTypes.USE_LOCATION,
+    useLocation: useLocation
   };
 }
 
@@ -78,21 +82,19 @@ export function setUpDataBase() {
 }
 
 export function updateKeys(keys) {
-  this.KeyDownload = new KeyDownload();
   return {
     type: actionTypes.UPDATE_KEYS,
     payload: {
-      promise: this.KeyDownload.updateKeys(keys)
+      promise: new KeyDownload().updateKeys(keys)
     }
   };
 }
 
-export function getkeysFromApi() {
-  this.KeyDownload = new KeyDownload();
+export function getKeysFromAPI() {
   return {
     type: actionTypes.KEYS_FROM_API,
     payload: {
-      promise: this.KeyDownload.getkeyListFromApi()
+      promise: new KeyDownload().getkeyListFromApi()
     }
   };
 }
@@ -112,13 +114,12 @@ export function keyListUpdated() {
 }
 
 export function deletedata(key_id) {
-  this.ImageConfig = new ImageConfig();
   return {
     type: actionTypes.DELETE_KEY_DATA,
     payload: {
       promise: Promise.all([
         new DB_helper().deleteKeyData(key_id),
-        this.ImageConfig.deleteImagesToKeyData(key_id)
+        new ImageConfig().deleteImagesToKeyData(key_id)
       ])
     }
   };

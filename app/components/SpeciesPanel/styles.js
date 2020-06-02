@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import DeviceInfo from "react-native-device-info";
 
-export default StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     alignItems: "stretch",
     borderTopColor: "#CCC",
@@ -14,7 +14,7 @@ export default StyleSheet.create({
     paddingBottom: +(DeviceInfo.hasNotch() ? 25 : 0),
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   emptyDescription: {
     padding: 10,
@@ -46,5 +46,15 @@ export default StyleSheet.create({
   },
   viewAllText: {
     paddingTop: 14
+  }
+});
+
+export const androidTabletStyles = StyleSheet.create({
+  viewAllText: {
+    paddingTop: 14,
+    fontSize: 18
+  },
+  statusText: {
+    fontSize: 20
   }
 });
