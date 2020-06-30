@@ -500,7 +500,7 @@ export default class DB_helper {
               () => {
                 if (typeof responseJson.arter !== "undefined") {
                   for (let i = 0; i < responseJson.arter.length; i++) {
-                    if (responseJson.arter[i].ScientificName !== null || responseJson.arter[i].ScientificName !== undefined) {
+                    if (responseJson.arter[i].ScientificName !== null && responseJson.arter[i].ScientificName !== undefined) {
                       this.insertNearbyObservation({
                         species_id: responseJson.arter[i].ScientificName,
                         obsSmall: responseJson.arter[i].Counts.small,

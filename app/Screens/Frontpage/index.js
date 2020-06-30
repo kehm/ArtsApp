@@ -290,11 +290,9 @@ class Frontpage extends React.PureComponent<Props, State> {
                   style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.listItem : styles.listItem,
                   this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selected : undefined)]}
                   onPress={() => this.state.openFilter ? undefined : this.updateIndex(item.item)}>
-                  {item.item.keyDownloaded > 0 ? (
-                    <Icon style={styles.icon} name='align-bottom' size={this.props.deviceTypeAndroidTablet ? 42 : 26} color={'black'} />
-                  ) : (
-                      <View />
-                    )}
+                  {item.item.keyDownloaded === 0 && (
+                    <Icon style={styles.icon} name='icloud' size={this.props.deviceTypeAndroidTablet ? 42 : 26} color={'black'} />
+                  )}
                   <Text style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.listText : styles.listText, this.state.openFilter ? (undefined) : (item.item.key_id === this.state.selected ? styles.selectedText : undefined)]} >{item.item.title}</Text>
                   <Right>
                     <TouchableOpacity style={styles.iconContainer} onPress={() => { this.updateIndex(item.item); this.handleOnPressKey(item.item) }}>

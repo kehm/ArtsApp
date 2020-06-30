@@ -58,7 +58,7 @@ class Key extends React.Component<Props, State> {
       this.props.actions.updateNearbyList(this.props.selectedKey, this.props.latitude, this.props.longitude).then((payload) => {
         this.props.actions.setObservationLocation(payload.value.county, payload.value.municipality, payload.value.place);
         this.props.actions.getNearbyObservations(this.props.selectedKey.key_id);
-      });
+      }).catch(() => { });
     }
   }
 
