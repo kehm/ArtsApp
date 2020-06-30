@@ -485,52 +485,49 @@ export default class DB_helper {
   /**
    * Fetch numbers of nearby observations from api, and store them to DB.
    * @see this.insertNearbyObservation
-   * @param {array} keys      keys to get observations for.
+   * @param {} key      key to get observations for.
    * @param {double} latitude  latitude
    * @param {double} longitude longitude
    * @return {Promise} Resolves promise if DB transaction is successful.
    */
-  fethObservationNumbers(keys, latitude, longitude) {
-    let promises = keys.map((key, index) => {
-      return new Promise((res, rej) => {
-        fetch(URLs.OCCURENCE_BASE + key.keyWeb + "?lon=" + longitude + "&lat=" + latitude)
-          .then(response => response.json())
-          .then(responseJson => {
-            this.deleteObservationNumbers(key.key_id).then(() => {
-              this.db.transaction(
-                () => {
-                  if (typeof responseJson.arter !== "undefined") {
-                    for (let i = 0; i < responseJson.arter.length; i++) {
-                      if (responseJson.arter[i].ScientificName !== null || responseJson.arter[i].ScientificName !== undefined) {
-                        this.insertNearbyObservation({
-                          species_id: responseJson.arter[i].ScientificName,
-                          obsSmall: responseJson.arter[i].Counts.small,
-                          obsMedium: responseJson.arter[i].Counts.medium,
-                          obsLarge: responseJson.arter[i].Counts.large,
-                          obsCounty: responseJson.arter[i].Counts.fylke,
-                          key_id: key.key_id
-                        });
-                      }
+  fethObservationNumbers(key, latitude, longitude) {
+    return new Promise((resolve, reject) => {
+      fetch(URLs.OCCURENCE_BASE + key.keyWeb + "?lon=" + longitude + "&lat=" + latitude)
+        .then(response => response.json())
+        .then(responseJson => {
+          this.deleteObservationNumbers(key.key_id).then(() => {
+            this.db.transaction(
+              () => {
+                if (typeof responseJson.arter !== "undefined") {
+                  for (let i = 0; i < responseJson.arter.length; i++) {
+                    if (responseJson.arter[i].ScientificName !== null || responseJson.arter[i].ScientificName !== undefined) {
+                      this.insertNearbyObservation({
+                        species_id: responseJson.arter[i].ScientificName,
+                        obsSmall: responseJson.arter[i].Counts.small,
+                        obsMedium: responseJson.arter[i].Counts.medium,
+                        obsLarge: responseJson.arter[i].Counts.large,
+                        obsCounty: responseJson.arter[i].Counts.fylke,
+                        key_id: key.key_id
+                      });
                     }
-                  } else {
-                    rej("err_null_sp");
                   }
-                },
-                err => {
-                  rej(err);
-                },
-                value => {
-                  res(value);
+                } else {
+                  reject("err_null_sp");
                 }
-              );
-            });
-          })
-          .catch(err => {
-            rej(err);
+              },
+              err => {
+                reject(err);
+              }
+            );
+          }).then(() => {
+            resolve({ county: responseJson.fylke !== null ? responseJson.fylke : '', municipality: responseJson.kommune !== null ? responseJson.kommune : '', place: responseJson.lokalitet !== null ? responseJson.lokalitet : '' });
           });
-      });
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
-    return Promise.all(promises);
+
   }
 
   /**

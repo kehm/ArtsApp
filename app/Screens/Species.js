@@ -50,9 +50,10 @@ class Species extends React.PureComponent {
     this.state = {
       latitude: "",
       longitude: "",
-      open: false,
-      place: "",
       county: county.counties[0].name,
+      municipality: "",
+      place: "",
+      open: false,
       images: [],
       selectedSpeciesImages: [],
       nerby: props.nerby,
@@ -95,7 +96,7 @@ class Species extends React.PureComponent {
    * Handle on click save observation
    */
   onClickNewObs = () => {
-    if (this.state.place !== '' && this.state.county !== '') {
+    if (this.state.place !== '' && this.state.municipality !== '') {
       this.setState({ open: false });
       this.saveNewObs();
     } else {
@@ -139,7 +140,7 @@ class Species extends React.PureComponent {
       species_id: this.props.selectedSpecies.species_id,
       latitude: latitude,
       longitude: longitude,
-      place: this.state.place,
+      place: this.state.place + ", " + this.state.municipality,
       county: this.state.county,
       key_id: this.props.chosenKey,
       obsDateTime: this.state.obsDateTime
@@ -156,6 +157,9 @@ class Species extends React.PureComponent {
       this.setState({
         latitude: this.props.latitude,
         longitude: this.props.longitude,
+        county: this.props.county !== '' ? this.props.county : this.state.county,
+        municipality: this.props.municipality,
+        place: this.props.place,
         open: true,
         missingText: false
       });
@@ -170,6 +174,9 @@ class Species extends React.PureComponent {
               this.setState({
                 latitude: '',
                 longitude: '',
+                county: '',
+                municipality: '',
+                place: '',
                 open: true,
                 missingText: false
               });
@@ -228,9 +235,9 @@ class Species extends React.PureComponent {
                       : styles.text3
                   }
                 >
-                  {this.props.selectedSpecies.localName +
-                    " (" +
-                    this.props.selectedSpecies.latinName + ")"}
+                  {this.props.language === 'no' ? (this.props.selectedSpecies.localName + " (" + this.props.selectedSpecies.latinName + ")") : (
+                    this.props.selectedSpecies.latinName + " (" + this.props.selectedSpecies.localName + ")"
+                  )}
                 </Text>
               </View>
               <View style={{ flexDirection: "row" }}>
@@ -262,6 +269,12 @@ class Species extends React.PureComponent {
                 >
                   {countyItems}
                 </Picker>
+                <TextInput
+                  placeholder={this.props.strings.municipality}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  onChangeText={municipality => this.setState({ municipality: municipality })}
+                  value={this.state.municipality}
+                />
                 <TextInput
                   placeholder={this.props.strings.place}
                   style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
@@ -380,8 +393,8 @@ class Species extends React.PureComponent {
             onRequestClose={() => this.setState({ openMap: false })}
           />
           <SubPageHeader
-            title={this.props.selectedSpecies.localName}
-            subtitle={this.props.selectedSpecies.latinName}
+            title={this.props.language === 'no' ? this.props.selectedSpecies.localName : this.props.selectedSpecies.latinName}
+            subtitle={this.props.language === 'no' ? this.props.selectedSpecies.latinName : this.props.selectedSpecies.localName}
             onClick={this.onClickBack}
             rightIcon={!this.state.saved ? (
               <Icon name="drive" style={styles.icon} size={this.props.deviceTypeAndroidTablet ? 34 : 28} onPress={this.getCoordinate} />

@@ -113,7 +113,8 @@ class SpeciesLeft extends React.PureComponent {
         if (this.props.isConnected) {
             if (this.props.useLocation && this.props.latitude !== "undefined") {
                 let k = this.props.keys[findIndex(this.props.keys, { key_id: this.props.chosenKey })];
-                this.props.actions.updateNearbyList([k], this.props.latitude, this.props.longitude).then(() => {
+                this.props.actions.updateNearbyList(k, this.props.latitude, this.props.longitude).then((payload) => {
+                    this.props.actions.setObservationLocation(payload.value.county, payload.value.municipality, payload.value.place);
                     this.props.actions.getNearbyObservations(k.key_id);
                     this.refs.toast.show(this.props.strings.updateSuccess);
                 }).catch(() => {
@@ -175,7 +176,7 @@ class SpeciesLeft extends React.PureComponent {
                         <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topText : styles.topText}>{this.props.strings.speciesViewAll} {this.props.strings.imageClickable}.</Text>
                     </View>
                     <Content style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabStyle : styles.tabStyle,
-                    deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 10} : undefined]}>
+                    deviceInfoModule.getModel().includes("iPhone 11") ? { "top": 10 } : undefined]}>
                         <Tabs>
                             <Tab heading={this.props.strings.possible} textStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}

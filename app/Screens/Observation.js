@@ -52,6 +52,8 @@ class Observation extends React.PureComponent {
       selected: undefined,
       latitude: '',
       longitude: '',
+      place: '',
+      county: '',
       missingLatitude: false,
       missingLongitude: false
     };
@@ -120,11 +122,15 @@ class Observation extends React.PureComponent {
   onSelectCoordinates = (item) => {
     let longitude = '';
     let latitude = '';
+    let place = '';
+    let county = '';
     if (item.longitude !== 'undefined' && item.latitude !== 'undefined') {
       longitude = item.longitude;
       latitude = item.latitude;
+      place = item.place;
+      county = item.county;
     }
-    this.setState({ openCoordinates: true, selected: item, longitude: longitude, latitude: latitude, missingLatitude: false, missingLongitude: false });
+    this.setState({ openCoordinates: true, selected: item, longitude: longitude, latitude: latitude, place: place, county: county, missingLatitude: false, missingLongitude: false });
   }
 
   /**
@@ -198,8 +204,8 @@ class Observation extends React.PureComponent {
    */
   renderEmpty() {
     return (
-      <View style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topContainer : styles.topContainer, 
-      deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 128} : undefined]}>
+      <View style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topContainer : styles.topContainer,
+      deviceInfoModule.getModel().includes("iPhone 11") ? { "top": 128 } : undefined]}>
         <Text style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.topText : styles.topText}>{this.props.strings.noObservations}</Text>
       </View>
     );
@@ -298,6 +304,18 @@ class Observation extends React.PureComponent {
                   onChangeText={longitude => this.setState({ longitude: longitude })}
                   value={this.state.longitude.toString()}
                   keyboardType='numeric'
+                />
+                <TextInput
+                  placeholder={this.props.strings.county}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  onChangeText={county => this.setState({ county: county })}
+                  value={this.state.county}
+                />
+                <TextInput
+                  placeholder={this.props.strings.place}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  onChangeText={place => this.setState({ place: place })}
+                  value={this.state.place}
                 />
               </Form>
               <View
