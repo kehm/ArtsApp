@@ -114,13 +114,11 @@ export function keyListUpdated() {
 }
 
 export function deletedata(key_id) {
+  new ImageConfig().deleteImagesToKeyData(key_id)
   return {
     type: actionTypes.DELETE_KEY_DATA,
     payload: {
-      promise: Promise.all([
-        new DB_helper().deleteKeyData(key_id),
-        new ImageConfig().deleteImagesToKeyData(key_id)
-      ])
+      promise: new DB_helper().deleteKeyData(key_id)
     }
   };
 }

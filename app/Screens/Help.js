@@ -44,14 +44,23 @@ class Help extends React.PureComponent {
                     <SubPageHeader title={this.props.strings.helpHeader} onClick={this.onClickBack} />
                     <Content>
                         <View style={styles.container}>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.headerText : styles.headerText}>
+                                {this.props.strings.helpGeneral}
+                            </Text>
                             <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
                                 {this.props.strings.frontpageTopDescription + " " + this.props.strings.frontpageBottomDescription}
                             </Text>
                             <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
                                 {this.props.strings.keyAbout}
                             </Text>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.headerText : styles.headerText}>
+                                {this.props.strings.helpUse}
+                            </Text>
                             <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
                                 {this.props.strings.help}
+                            </Text>
+                            <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.headerText : styles.headerText}>
+                                {this.props.strings.helpUpdate}
                             </Text>
                             <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.text : styles.text}>
                                 {this.props.strings.goToUpdate}
@@ -71,11 +80,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         padding: 10
     },
+    headerText: {
+        fontWeight: 'bold',
+        marginTop: 10,
+    }
 });
 
 const androidTabletStyles = StyleSheet.create({
     text: {
         fontSize: 20
+    },
+    headerText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 10,
     }
 });
 

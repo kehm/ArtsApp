@@ -1497,7 +1497,7 @@
 			baseConfigurationReference = 1616DC63E3B37E2EEE4A9DE8 /* Pods-ArtsApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = LBW24J84AA;
 				HEADER_SEARCH_PATHS = (
@@ -1538,7 +1538,7 @@
 			baseConfigurationReference = C62CA88DDDBF5714AB6A4032 /* Pods-ArtsApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = LBW24J84AA;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

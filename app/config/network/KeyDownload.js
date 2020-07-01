@@ -110,19 +110,23 @@ export default class KeyDownload {
       fetch(URLs.BASE_URL + "keys/get/" + webname)
         .then(response => response.json())
         .then(retJSON => {
-          this.keyJSONParser(retJSON).then(value => {
-            Promise.all([
-              new DB_helper().insertKey(value),
-              this.ImageConfig.saveContaintInmages(value.content.image),
-              this.ImageConfig.saveKeyImages(value)
-            ])
-              .then(value => {
-                resolve();
-              })
-              .catch(err => {
-                reject(err);
-              });
-          });
+          if (retJSON !== undefined) {
+            this.keyJSONParser(retJSON).then(value => {
+              let promises = [];
+              promises.push(new Promise((resolve, reject) => {
+                new DB_helper().insertKey(value).then(() => { resolve(); }).catch((err) => { reject(err); })
+              }));
+              promises.push(new Promise((resolve, reject) => {
+                this.ImageConfig.saveContaintInmages(value.content.image).then(() => { resolve(); }).catch((err) => { reject(err); })
+              }));
+              promises.push(new Promise((resolve, reject) => {
+                this.ImageConfig.saveKeyImages(value).then(() => { resolve(); }).catch((err) => { reject(err); })
+              }));
+              Promise.all(promises).then(() => { resolve(); }).catch((err) => { reject(err); })
+            });
+          } else {
+            reject();
+          }
         })
         .catch(err => {
           reject(err);
