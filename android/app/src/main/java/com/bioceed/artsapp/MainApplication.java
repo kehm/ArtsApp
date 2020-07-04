@@ -3,6 +3,7 @@ package com.bioceed.artsapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -34,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
       // Packages that cannot be autolinked
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNCPickerPackage(),
             new AsyncStoragePackage(),
             new GeolocationPackage(),
             new RNFetchBlobPackage(),

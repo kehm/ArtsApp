@@ -70,22 +70,26 @@ export default class ImageConfig {
    * @param {Object} images Object containing all content images
    * @return {Promise} promises of all stored images
    */
-  saveContaintInmages(images) {
-    let retList = images.map((img, index) => {
+  saveContentImages(images) {
+    let promises = [];
+    images.map((img, index) => {
       if (img.type === "s") {
-        return RNFetchBlob.config({ path: dirs + "/" + img.keyId + speciesDir + "/s" + img.typeId + img.image })
-          .fetch("GET", img.imageWeb, {})
-          .then(res => { })
-          .catch(err => { });
+        promises.push(new Promise((resolve, reject) => {
+          RNFetchBlob.config({ path: dirs + "/" + img.keyId + speciesDir + "/s" + img.typeId + img.image })
+            .fetch("GET", img.imageWeb, {})
+            .then(res => { resolve(); })
+            .catch(err => { reject(); });
+        }));
       } else if (img.type === "v") {
-        return RNFetchBlob.config({ path: dirs + "/" + img.keyId + valueDir + "/v" + img.typeId + img.image })
-          .fetch("GET", img.imageWeb, {})
-          .then(res => { })
-          .catch(err => { });
+        promises.push(new Promise((resolve, reject) => {
+          RNFetchBlob.config({ path: dirs + "/" + img.keyId + valueDir + "/v" + img.typeId + img.image })
+            .fetch("GET", img.imageWeb, {})
+            .then(res => { resolve(); })
+            .catch(err => { reject(); });
+        }));
       }
-      return false;
     });
-    return new Promise.all(retList);
+    return new Promise.all(promises);
   }
 
   static getkeyThumbs(keyId) {

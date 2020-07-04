@@ -21,7 +21,7 @@ class ObservationElement extends React.PureComponent {
 
   render() {
     return (
-      <TouchableOpacity style={styles.itemContainer} onLongPress={() => this.menu.open()}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => this.menu.open()}>
         <Grid>
           {this.props.language === 'no' ? (
             <Row>
@@ -74,7 +74,7 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.place}
+              {this.props.place + ", " + this.props.municipality}
             </Text>
           </Row>
           <Row>

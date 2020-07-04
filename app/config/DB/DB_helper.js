@@ -860,8 +860,8 @@ export default class DB_helper {
     }
     return new Promise((resolve, reject) => {
       this.db.executeSql(
-        "INSERT INTO UserObservation ( latinName, localName, spOrder, family, species_id, latitude, longitude, place, county, key_id, obsDateTime) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,? )",
+        "INSERT INTO UserObservation ( latinName, localName, spOrder, family, species_id, latitude, longitude, place, county, municipality, key_id, obsDateTime) " +
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,? )",
         [
           observation.latinName,
           observation.localName,
@@ -872,6 +872,7 @@ export default class DB_helper {
           observation.longitude,
           observation.place,
           observation.county,
+          observation.municipality,
           observation.key_id,
           tempDateTime
         ],
@@ -892,14 +893,17 @@ export default class DB_helper {
    * @param {*} latitude Latitude
    * @param {*} longitude  Longitude
    */
-  updateUserObservationCoordinates(obsId, latitude, longitude) {
+  updateUserObservation(obsId, latitude, longitude, county, municipality, place) {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
-        "UPDATE UserObservation SET latitude = ?, longitude = ? " +
+        "UPDATE UserObservation SET latitude = ?, longitude = ?, county = ?, municipality = ?, place = ? " +
         "WHERE userObservation_id = ? ",
         [
           latitude,
           longitude,
+          county,
+          municipality,
+          place,
           obsId,
         ],
         () => {

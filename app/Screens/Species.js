@@ -3,8 +3,9 @@
  * @author Kjetil Fossheim
  */
 import React, { Component } from "react";
-import { StyleProvider, Button, Container, Content, Tabs, Tab, Row, Col, Left, Form, Picker } from "native-base";
+import { StyleProvider, Button, Container, Content, Tabs, Tab, Row, Col, Left, Form } from "native-base";
 import { Alert, StyleSheet, Text, View, TextInput, TouchableHighlight, Image, Modal } from "react-native";
+import { Picker } from '@react-native-community/picker';
 import { Actions } from "react-native-router-flux";
 import Toast, { DURATION } from "react-native-easy-toast";
 import ImageView from "react-native-image-viewing";
@@ -140,7 +141,8 @@ class Species extends React.PureComponent {
       species_id: this.props.selectedSpecies.species_id,
       latitude: latitude,
       longitude: longitude,
-      place: this.state.place + ", " + this.state.municipality,
+      place: this.state.place,
+      municipality: this.state.municipality,
       county: this.state.county,
       key_id: this.props.chosenKey,
       obsDateTime: this.state.obsDateTime
@@ -157,8 +159,8 @@ class Species extends React.PureComponent {
       this.setState({
         latitude: this.props.latitude,
         longitude: this.props.longitude,
-        county: this.props.county !== '' ? this.props.county : this.state.county,
         municipality: this.props.municipality,
+        county: this.props.county !== '' ? this.props.county : this.state.county,
         place: this.props.place,
         open: true,
         missingText: false
@@ -174,7 +176,6 @@ class Species extends React.PureComponent {
               this.setState({
                 latitude: '',
                 longitude: '',
-                county: '',
                 municipality: '',
                 place: '',
                 open: true,
@@ -193,7 +194,7 @@ class Species extends React.PureComponent {
    */
   renderModal() {
     let countyItems = county.counties.map((county) => {
-      return (<Picker.Item key={county.id} value={county.name} label={county.name} />);
+      return (<Picker.Item key={county.name} value={county.name} label={county.name} />);
     });
     return (
       <Modal
@@ -211,13 +212,12 @@ class Species extends React.PureComponent {
                   marginBottom: 10,
                   textAlign: "center",
                   color: 'black',
-                  marginBottom: 20,
+                  marginBottom: 10,
                   fontWeight: 'bold'
                 }}
               >
                 {this.props.strings.newObs}
               </Text>
-
               <View style={{ flexDirection: "row" }}>
                 <Text
                   style={
@@ -235,9 +235,27 @@ class Species extends React.PureComponent {
                       : styles.text3
                   }
                 >
-                  {this.props.language === 'no' ? (this.props.selectedSpecies.localName + " (" + this.props.selectedSpecies.latinName + ")") : (
-                    this.props.selectedSpecies.latinName + " (" + this.props.selectedSpecies.localName + ")"
-                  )}
+                  {this.props.selectedSpecies.localName}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <Text
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.text3
+                      : styles.text3
+                  }
+                >
+                  {this.props.strings.latin + ":   "}
+                </Text>
+                <Text
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.text3
+                      : styles.text3
+                  }
+                >
+                  {this.props.selectedSpecies.latinName}
                 </Text>
               </View>
               <View style={{ flexDirection: "row" }}>
@@ -263,6 +281,7 @@ class Species extends React.PureComponent {
               <Form>
                 <Picker note
                   style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.picker : undefined}
+                  itemStyle={{ color: "black" }}
                   mode="dropdown"
                   selectedValue={this.state.county}
                   onValueChange={(value) => { this.setState({ county: value }) }}
@@ -300,13 +319,11 @@ class Species extends React.PureComponent {
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  padding: 10,
-                  marginTop: 20
+                  paddingBottom: 10
                 }}
               >
                 <Button
                   iconLeft
-                  style={{ padding: 10 }}
                   transparent
                   onPress={() => this.setState({ open: false })}
                 >
@@ -491,13 +508,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    borderRadius: 10,
+    paddingTop: 10,
+    paddingRight: 20,
+    paddingLeft: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {

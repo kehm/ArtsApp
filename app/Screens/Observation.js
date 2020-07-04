@@ -5,6 +5,9 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, TextInput, View, Alert, FlatList, Modal, Platform } from "react-native";
 import { StyleProvider, Container, Content, Form, Button } from "native-base";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import deviceInfoModule from "react-native-device-info";
+import { Picker } from '@react-native-community/picker';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, } from 'react-native-popup-menu';
 import ObservationElement from "../components/ObservationElement";
 import Icon from 'react-native-vector-icons/Entypo';
@@ -20,8 +23,7 @@ import androidTablet from "../native-base-theme/variables/androidTablet";
 
 import FrontpageHeader from "../components/FrontpageHeader";
 import * as MenuAction from "../actions/MenuAction";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import deviceInfoModule from "react-native-device-info";
+import { county } from "../config/county";
 
 const mapStateToProps = state => ({
   ...state.key,
@@ -53,7 +55,8 @@ class Observation extends React.PureComponent {
       latitude: '',
       longitude: '',
       place: '',
-      county: '',
+      county: county.counties[0].name,
+      municipality: '',
       missingLatitude: false,
       missingLongitude: false
     };
@@ -122,27 +125,25 @@ class Observation extends React.PureComponent {
   onSelectCoordinates = (item) => {
     let longitude = '';
     let latitude = '';
-    let place = '';
-    let county = '';
     if (item.longitude !== 'undefined' && item.latitude !== 'undefined') {
       longitude = item.longitude;
       latitude = item.latitude;
-      place = item.place;
-      county = item.county;
     }
-    this.setState({ openCoordinates: true, selected: item, longitude: longitude, latitude: latitude, place: place, county: county, missingLatitude: false, missingLongitude: false });
+    this.setState({ openCoordinates: true, selected: item, longitude: longitude, latitude: latitude, place: item.place, county: item.county, municipality: item.municipality, missingLatitude: false, missingLongitude: false });
   }
 
   /**
-   * Save new coordinates for selected observation
+   * Save new position for selected observation
    */
-  setCoordinates = () => {
-    if (this.state.latitude === '') {
+  setLocation = () => {
+    if (this.state.longitude !== '' && this.state.latitude === '') {
       this.setState({ missingLatitude: true });
-    } else if (this.state.longitude === '') {
+    } else if (this.state.latitude !== '' && this.state.longitude === '') {
       this.setState({ missingLongitude: true });
     } else {
-      this.props.actions.updateObservationCoordinates(this.state.selected.userObservation_id, this.state.latitude, this.state.longitude).then(() => {
+      let longitude = this.state.longitude === '' ? 'undefined' : this.state.longitude;
+      let latitude = this.state.latitude === '' ? 'undefined' : this.state.latitude;
+      this.props.actions.updateUserObservation(this.state.selected.userObservation_id, latitude, longitude, this.state.county, this.state.municipality, this.state.place).then(() => {
         this.props.actions.getObservations().then(() => {
           this.setState({ openCoordinates: false });
         })
@@ -227,6 +228,7 @@ class Observation extends React.PureComponent {
             localName={item.item.localName}
             place={item.item.place}
             county={item.item.county}
+            municipality={item.item.municipality}
             obsLatitude={item.item.latitude}
             obsLongitude={item.item.longitude}
             obsDateTime={item.item.obsDateTime}
@@ -243,6 +245,9 @@ class Observation extends React.PureComponent {
    * Render modal dialog for saving new coordinates
    */
   renderModal() {
+    let countyItems = county.counties.map((county) => {
+      return (<Picker.Item key={county.name} value={county.name} label={county.name} />);
+    });
     return (
       <Modal
         animationType="fade"
@@ -262,10 +267,14 @@ class Observation extends React.PureComponent {
                     fontWeight: 'bold'
                   }}
                 >
-                  {this.state.selected !== undefined ? this.state.selected.localName : undefined}
+                  {this.props.language === "no" ? (
+                    this.state.selected !== undefined ? this.state.selected.localName : undefined
+                  ) : (
+                      this.state.selected !== undefined ? this.state.selected.latinName : undefined
+                    )}
                 </Text>
                 <Text style={{
-                  marginBottom: 20,
+                  marginBottom: 10,
                   color: 'black',
                   textAlign: "center"
                 }}>
@@ -274,7 +283,6 @@ class Observation extends React.PureComponent {
                 <Text>{this.props.strings.saveCoordinates}</Text>
                 <Button
                   iconLeft
-                  style={{ padding: 10 }}
                   transparent
                   onPress={this.getCoordinates}
                 >
@@ -306,29 +314,36 @@ class Observation extends React.PureComponent {
                   keyboardType='numeric'
                 />
                 <TextInput
-                  placeholder={this.props.strings.county}
-                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
-                  onChangeText={county => this.setState({ county: county })}
-                  value={this.state.county}
-                />
-                <TextInput
                   placeholder={this.props.strings.place}
                   style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
                   onChangeText={place => this.setState({ place: place })}
                   value={this.state.place}
                 />
+                <TextInput
+                  placeholder={this.props.strings.municipality}
+                  style={[this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.textInput : styles.textInput, this.state.missingText ? styles.missingText : undefined]}
+                  onChangeText={municipality => this.setState({ municipality: municipality })}
+                  value={this.state.municipality}
+                />
+                <Picker note
+                  style={this.props.deviceTypeAndroidTablet ? AndroidTabletStyles.picker : undefined}
+                  itemStyle={{ color: "black" }}
+                  mode="dropdown"
+                  selectedValue={this.state.county}
+                  onValueChange={(value) => { this.setState({ county: value }) }}
+                >
+                  {countyItems}
+                </Picker>
               </Form>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  padding: 10,
-                  marginTop: 20
+                  paddingBottom: 10
                 }}
               >
                 <Button
                   iconLeft
-                  style={{ padding: 10 }}
                   transparent
                   onPress={() => this.setState({ openCoordinates: false })}
                 >
@@ -346,7 +361,7 @@ class Observation extends React.PureComponent {
                 <Button
                   transparent
                   iconLeft
-                  onPress={this.setCoordinates}
+                  onPress={this.setLocation}
                 >
                   <Icon name="cycle" size={26} />
                   <Text
@@ -479,13 +494,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22
   },
   modalView: {
-    margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    borderRadius: 10,
+    paddingTop: 10,
+    paddingRight: 20,
+    paddingLeft: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -500,7 +515,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 1,
     padding: 5,
-    marginTop: 20,
+    marginTop: 10,
   },
   missingText: {
     borderColor: "red",

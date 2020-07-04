@@ -102,7 +102,7 @@ export default class KeyDownload {
    * Downloads key data and images for selected key.
    * @param {String} webname name of the key to be downloaded
    * @seenew DB_helper().insertKey
-   * @see ImageConfig .saveContaintInmages .saveKeyImages
+   * @see ImageConfig .saveContentImages .saveKeyImages
    * @return {Promise}
    */
   downloadKey(webname) {
@@ -117,7 +117,7 @@ export default class KeyDownload {
                 new DB_helper().insertKey(value).then(() => { resolve(); }).catch((err) => { reject(err); })
               }));
               promises.push(new Promise((resolve, reject) => {
-                this.ImageConfig.saveContaintInmages(value.content.image).then(() => { resolve(); }).catch((err) => { reject(err); })
+                this.ImageConfig.saveContentImages(value.content.image).then(() => { resolve(); }).catch((err) => { reject(err); })
               }));
               promises.push(new Promise((resolve, reject) => {
                 this.ImageConfig.saveKeyImages(value).then(() => { resolve(); }).catch((err) => { reject(err); })
@@ -138,7 +138,7 @@ export default class KeyDownload {
    * updates selected key
    * @param {String} webname name of the key update
    * @see DB_helper .insertKey .insertKeysSheel
-   * @see ImageConfig .saveKeyImages .saveContaintInmages
+   * @see ImageConfig .saveKeyImages .saveContentImages
    * @return {Promise}
    */
   downloadKeyUpdate(webname) {
@@ -153,7 +153,7 @@ export default class KeyDownload {
                 Promise.all([
                   new DB_helper().insertKey(value),
                   this.ImageConfig.saveKeyImages(value),
-                  this.ImageConfig.saveContaintInmages(value.content.image)
+                  this.ImageConfig.saveContentImages(value.content.image)
                 ])
                   .then(() => {
                     resolve();

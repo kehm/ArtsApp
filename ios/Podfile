@@ -47,6 +47,8 @@ target 'ArtsApp' do
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
 
+  pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
+
   #target 'RnDiffAppTests' do
    # inherit! :search_paths
     # Pods for testing

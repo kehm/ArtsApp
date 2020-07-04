@@ -28,11 +28,11 @@ export function insertObservation(observationId) {
   };
 }
 
-export function updateObservationCoordinates(obsId, latitude, longitude) {
+export function updateUserObservation(obsId, latitude, longitude, county, municipality, place) {
   return {
-    type: actionTypes.UPDATE_OBSERVATION_COORDINATES,
+    type: actionTypes.UPDATE_OBSERVATION,
     payload: {
-      promise: new DB_helper().updateUserObservationCoordinates(obsId, latitude, longitude)
+      promise: new DB_helper().updateUserObservation(obsId, latitude, longitude, county, municipality, place)
     }
   };
 }
