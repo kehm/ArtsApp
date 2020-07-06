@@ -17,33 +17,55 @@ const mapStateToProps = state => ({
 class ObservationElement extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
   }
 
   render() {
     return (
-      <TouchableOpacity style={styles.itemContainer} onLongPress={() => this.menu.open()}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => this.menu.open()}>
         <Grid>
-          <Row>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.headerTxt
-                  : styles.headerTxt
-              }
-            >
-              {this.props.localName}
-            </Text>
-            <Text
-              style={
-                this.props.deviceTypeAndroidTablet
-                  ? AndroidTabletStyles.subHeaderTxt
-                  : styles.subHeaderTxt
-              }
-            >
-              {" (" + this.props.latinName + ")"}
-            </Text>
-          </Row>
+          {this.props.language === 'no' ? (
+            <Row>
+              <Text
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.headerTxt
+                    : styles.headerTxt
+                }
+              >
+                {this.props.localName}
+              </Text>
+              <Text
+                style={
+                  this.props.deviceTypeAndroidTablet
+                    ? AndroidTabletStyles.subHeaderTxt
+                    : styles.subHeaderTxt
+                }
+              >
+                {" (" + this.props.latinName + ")"}
+              </Text>
+            </Row>
+          ) : (
+              <Row>
+                <Text
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.headerTxt
+                      : styles.headerTxt
+                  }
+                >
+                  {this.props.latinName}
+                </Text>
+                <Text
+                  style={
+                    this.props.deviceTypeAndroidTablet
+                      ? AndroidTabletStyles.subHeaderTxt
+                      : styles.subHeaderTxt
+                  }
+                >
+                  {" (" + this.props.localName + ")"}
+                </Text>
+              </Row>
+            )}
           <Row>
             <Text
               style={
@@ -52,8 +74,10 @@ class ObservationElement extends React.PureComponent {
                   : styles.text3
               }
             >
-              {this.props.place + ", "}
+              {this.props.place + ", " + this.props.municipality}
             </Text>
+          </Row>
+          <Row>
             <Text
               style={
                 this.props.deviceTypeAndroidTablet

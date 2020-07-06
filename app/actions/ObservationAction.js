@@ -28,11 +28,11 @@ export function insertObservation(observationId) {
   };
 }
 
-export function updateObservationCoordinates(obsId, latitude, longitude) {
+export function updateUserObservation(obsId, latitude, longitude, county, municipality, place) {
   return {
-    type: actionTypes.UPDATE_OBSERVATION_COORDINATES,
+    type: actionTypes.UPDATE_OBSERVATION,
     payload: {
-      promise: new DB_helper().updateUserObservationCoordinates(obsId, latitude, longitude)
+      promise: new DB_helper().updateUserObservation(obsId, latitude, longitude, county, municipality, place)
     }
   };
 }
@@ -46,11 +46,20 @@ export function getNearbyObservations(key) {
   };
 }
 
-export function updateNearbyList(keys, latitude, longitude) {
+export function updateNearbyList(key, latitude, longitude) {
   return {
     type: actionTypes.UPDATE_NEARBY,
     payload: {
-      promise: new DB_helper().fethObservationNumbers(keys, latitude, longitude)
+      promise: new DB_helper().fethObservationNumbers(key, latitude, longitude)
     }
   };
+}
+
+export function setObservationLocation(county, municipality, place) {
+  return {
+    type: actionTypes.SET_OBSERVATION_LOCATION,
+    county: county,
+    municipality: municipality,
+    place: place
+  }
 }

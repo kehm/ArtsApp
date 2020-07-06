@@ -485,52 +485,49 @@ export default class DB_helper {
   /**
    * Fetch numbers of nearby observations from api, and store them to DB.
    * @see this.insertNearbyObservation
-   * @param {array} keys      keys to get observations for.
+   * @param {} key      key to get observations for.
    * @param {double} latitude  latitude
    * @param {double} longitude longitude
    * @return {Promise} Resolves promise if DB transaction is successful.
    */
-  fethObservationNumbers(keys, latitude, longitude) {
-    let promises = keys.map((key, index) => {
-      return new Promise((res, rej) => {
-        fetch(URLs.OCCURENCE_BASE + key.keyWeb + "?lon=" + longitude + "&lat=" + latitude)
-          .then(response => response.json())
-          .then(responseJson => {
-            this.deleteObservationNumbers(key.key_id).then(() => {
-              this.db.transaction(
-                () => {
-                  if (typeof responseJson.arter !== "undefined") {
-                    for (let i = 0; i < responseJson.arter.length; i++) {
-                      if (responseJson.arter[i].ScientificName !== null || responseJson.arter[i].ScientificName !== undefined) {
-                        this.insertNearbyObservation({
-                          species_id: responseJson.arter[i].ScientificName,
-                          obsSmall: responseJson.arter[i].Counts.small,
-                          obsMedium: responseJson.arter[i].Counts.medium,
-                          obsLarge: responseJson.arter[i].Counts.large,
-                          obsCounty: responseJson.arter[i].Counts.fylke,
-                          key_id: key.key_id
-                        });
-                      }
+  fethObservationNumbers(key, latitude, longitude) {
+    return new Promise((resolve, reject) => {
+      fetch(URLs.OCCURENCE_BASE + key.keyWeb + "?lon=" + longitude + "&lat=" + latitude)
+        .then(response => response.json())
+        .then(responseJson => {
+          this.deleteObservationNumbers(key.key_id).then(() => {
+            this.db.transaction(
+              () => {
+                if (typeof responseJson.arter !== "undefined") {
+                  for (let i = 0; i < responseJson.arter.length; i++) {
+                    if (responseJson.arter[i].ScientificName !== null && responseJson.arter[i].ScientificName !== undefined) {
+                      this.insertNearbyObservation({
+                        species_id: responseJson.arter[i].ScientificName,
+                        obsSmall: responseJson.arter[i].Counts.small,
+                        obsMedium: responseJson.arter[i].Counts.medium,
+                        obsLarge: responseJson.arter[i].Counts.large,
+                        obsCounty: responseJson.arter[i].Counts.fylke,
+                        key_id: key.key_id
+                      });
                     }
-                  } else {
-                    rej("err_null_sp");
                   }
-                },
-                err => {
-                  rej(err);
-                },
-                value => {
-                  res(value);
+                } else {
+                  reject("err_null_sp");
                 }
-              );
-            });
-          })
-          .catch(err => {
-            rej(err);
+              },
+              err => {
+                reject(err);
+              }
+            );
+          }).then(() => {
+            resolve({ county: responseJson.fylke !== null ? responseJson.fylke : '', municipality: responseJson.kommune !== null ? responseJson.kommune : '', place: responseJson.lokalitet !== null ? responseJson.lokalitet : '' });
           });
-      });
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
-    return Promise.all(promises);
+
   }
 
   /**
@@ -610,62 +607,65 @@ export default class DB_helper {
    */
   insertKey(key) {
     return new Promise((resolve, reject) => {
-      this.db.transaction(
-        () => {
-          for (let i = 0; i < key.content.species.length; i++) {
-            this.insertSpecies(key.content.species[i]);
-          }
-          for (let i = 0; i < key.content.trait.length; i++) {
-            this.insertTrait(key.content.trait[i]);
-          }
-          for (let i = 0; i < key.content.value.length; i++) {
-            if (key.content.value[i].valueText !== null) {
-              this.insertValue(key.content.value[i]);
-            }
-          }
-          for (let i = 0; i < key.content.spHasValue.length; i++) {
-            this.spHasValue(key.content.spHasValue[i]);
-          }
-          for (let i = 0; i < key.content.image.length; i++) {
-            this.insertImage(key.content.image[i]);
-          }
-          for (let i = 0; i < key.content.traitEliminate.length; i++) {
-            this.insertTraitEliminate(key.content.traitEliminate[i]);
-          }
-          for (let i = 0; i < key.content.traitHasSpecies.length; i++) {
-            this.insertTraitHasSP(key.content.traitHasSpecies[i]);
-          }
-        },
-        e => {
-          reject();
-        },
-        () => {
-          this.db.transaction(
-            () => {
-              this.db.executeSql(
-                "UPDATE Key SET key_id = ?, title = ?, keyInfo = ?, keyStatus = ?, level = ?, author = ?, version = ?, keyDownloaded = ?  " +
-                "WHERE keyWeb = ? ",
-                [
-                  key.id,
-                  key.title,
-                  key.description,
-                  key.keyStatus,
-                  key.level,
-                  key.author,
-                  key.version,
-                  1,
-                  key.keyWeb
-                ]
-              );
-            },
-            e => {
-              reject();
-            },
-            () => {
-              resolve();
-            }
-          );
+      this.db.transaction(() => {
+        let promises = [];
+        for (let i = 0; i < key.content.species.length; i++) {
+          promises.push(this.insertSpecies(key.content.species[i]));
         }
+        for (let i = 0; i < key.content.trait.length; i++) {
+          promises.push(this.insertTrait(key.content.trait[i]));
+        }
+        for (let i = 0; i < key.content.value.length; i++) {
+          if (key.content.value[i].valueText !== null) {
+            promises.push(this.insertValue(key.content.value[i]));
+          }
+        }
+        for (let i = 0; i < key.content.spHasValue.length; i++) {
+          promises.push(this.spHasValue(key.content.spHasValue[i]));
+        }
+        for (let i = 0; i < key.content.image.length; i++) {
+          promises.push(this.insertImage(key.content.image[i]));
+        }
+        for (let i = 0; i < key.content.traitEliminate.length; i++) {
+          promises.push(this.insertTraitEliminate(key.content.traitEliminate[i]));
+        }
+        for (let i = 0; i < key.content.traitHasSpecies.length; i++) {
+          promises.push(this.insertTraitHasSP(key.content.traitHasSpecies[i]));
+        }
+        Promise.all(promises).then(() => {
+          this.updateKeyInfo(key).then(() => {
+            resolve();
+          }).catch((err) => {
+            reject(err);
+          });
+        }).catch((err) => {
+          reject();
+        });
+      });
+    });
+  }
+
+  /**
+   * Update key info and set status downloaded to true
+   */
+  updateKeyInfo(key) {
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "UPDATE Key SET key_id = ?, title = ?, keyInfo = ?, keyStatus = ?, level = ?, author = ?, version = ?, keyDownloaded = ?  " +
+        "WHERE keyWeb = ? ",
+        [
+          key.id,
+          key.title,
+          key.description,
+          key.keyStatus,
+          key.level,
+          key.author,
+          key.version,
+          1,
+          key.keyWeb
+        ],
+        () => resolve(),
+        e => reject(e)
       );
     });
   }
@@ -676,24 +676,32 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   insertSpecies(sp) {
-    this.db.executeSql(
-      "INSERT INTO Species (species_id, latinName, localName, speciesText, spOrder, family, distributionLocal, distributionCountry, key_id, spesialKey) " +
-      "VALUES (?,?,?,?,?,?,?,?,?,?);",
-      [
-        sp.speciesId,
-        sp.latinName,
-        sp.localName,
-        sp.speciesText,
-        sp.order,
-        sp.family,
-        sp.distributionLocal,
-        sp.distributionCountry,
-        sp.keyId,
-        sp.spesialKey
-      ],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO Species (species_id, latinName, localName, speciesText, spOrder, family, distributionLocal, distributionCountry, key_id, spesialKey) " +
+        "VALUES (?,?,?,?,?,?,?,?,?,?);",
+        [
+          sp.speciesId,
+          sp.latinName,
+          sp.localName,
+          sp.speciesText,
+          sp.order,
+          sp.family,
+          sp.distributionLocal,
+          sp.distributionCountry,
+          sp.keyId,
+          sp.spesialKey
+        ],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -702,13 +710,21 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   insertTrait(trait) {
-    this.db.executeSql(
-      "INSERT INTO Trait (trait_id, traitText, important, key_id) " +
-      "VALUES (?,?,?,?);",
-      [trait.traitId, trait.traitText, trait.important, trait.keyId],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO Trait (trait_id, traitText, important, key_id) " +
+        "VALUES (?,?,?,?);",
+        [trait.traitId, trait.traitText, trait.important, trait.keyId],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -717,19 +733,27 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   insertValue(value) {
-    this.db.executeSql(
-      "INSERT INTO Value (value_id, valueText, valueInfo, trait_id, key_id) " +
-      "VALUES (?,?,?,?,?);",
-      [
-        value.valueId,
-        value.valueText,
-        value.valueInfo,
-        value.traitId,
-        value.keyId
-      ],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO Value (value_id, valueText, valueInfo, trait_id, key_id) " +
+        "VALUES (?,?,?,?,?);",
+        [
+          value.valueId,
+          value.valueText,
+          value.valueInfo,
+          value.traitId,
+          value.keyId
+        ],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -738,13 +762,21 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   spHasValue(spHV) {
-    this.db.executeSql(
-      "INSERT INTO SpHasValue (spHasValue_id, species_id, value_id, key_id) " +
-      "VALUES (?,?,?,?);",
-      [spHV.spHasValueId, spHV.spId, spHV.valueId, spHV.keyId],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO SpHasValue (spHasValue_id, species_id, value_id, key_id) " +
+        "VALUES (?,?,?,?);",
+        [spHV.spHasValueId, spHV.spId, spHV.valueId, spHV.keyId],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -753,13 +785,21 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   insertImage(image) {
-    this.db.executeSql(
-      "INSERT INTO Image (image_id, type, typeId, img, key_id ) " +
-      "VALUES (?,?,?,?,?);",
-      [image.imageId, image.type, image.typeId, image.image, image.keyId],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO Image (image_id, type, typeId, img, key_id ) " +
+        "VALUES (?,?,?,?,?);",
+        [image.imageId, image.type, image.typeId, image.image, image.keyId],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -768,13 +808,21 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   insertTraitEliminate(trEl) {
-    this.db.executeSql(
-      "INSERT INTO TraitEliminate (trait_id, value_Id, key_id) " +
-      "VALUES (?,?,?);",
-      [trEl.traitId, trEl.valueId, trEl.keyId],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO TraitEliminate (trait_id, value_Id, key_id) " +
+        "VALUES (?,?,?);",
+        [trEl.traitId, trEl.valueId, trEl.keyId],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -783,13 +831,21 @@ export default class DB_helper {
    * @return {Promise} [description]
    */
   insertTraitHasSP(trSP) {
-    this.db.executeSql(
-      "INSERT INTO traitHasSP (trait_id, species_id, key_id) " +
-      "VALUES (?,?,?);",
-      [trSP.traitId, trSP.species_id, trSP.keyId],
-      () => { },
-      e => { }
-    );
+    return new Promise((resolve, reject) => {
+      this.db.executeSql(
+        "INSERT INTO traitHasSP (trait_id, species_id, key_id) " +
+        "VALUES (?,?,?);",
+        [trSP.traitId, trSP.species_id, trSP.keyId],
+        () => resolve(),
+        e => {
+          if (e.code === 0) {
+            resolve();
+          } else {
+            reject(e);
+          }
+        }
+      );
+    });
   }
 
   /**
@@ -804,8 +860,8 @@ export default class DB_helper {
     }
     return new Promise((resolve, reject) => {
       this.db.executeSql(
-        "INSERT INTO UserObservation ( latinName, localName, spOrder, family, species_id, latitude, longitude, place, county, key_id, obsDateTime) " +
-        "VALUES (?,?,?,?,?,?,?,?,?,?,? )",
+        "INSERT INTO UserObservation ( latinName, localName, spOrder, family, species_id, latitude, longitude, place, county, municipality, key_id, obsDateTime) " +
+        "VALUES (?,?,?,?,?,?,?,?,?,?,?,? )",
         [
           observation.latinName,
           observation.localName,
@@ -816,6 +872,7 @@ export default class DB_helper {
           observation.longitude,
           observation.place,
           observation.county,
+          observation.municipality,
           observation.key_id,
           tempDateTime
         ],
@@ -836,14 +893,17 @@ export default class DB_helper {
    * @param {*} latitude Latitude
    * @param {*} longitude  Longitude
    */
-  updateUserObservationCoordinates(obsId, latitude, longitude) {
+  updateUserObservation(obsId, latitude, longitude, county, municipality, place) {
     return new Promise((resolve, reject) => {
       this.db.executeSql(
-        "UPDATE UserObservation SET latitude = ?, longitude = ? " +
+        "UPDATE UserObservation SET latitude = ?, longitude = ?, county = ?, municipality = ?, place = ? " +
         "WHERE userObservation_id = ? ",
         [
           latitude,
           longitude,
+          county,
+          municipality,
+          place,
           obsId,
         ],
         () => {

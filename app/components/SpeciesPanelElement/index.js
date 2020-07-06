@@ -20,7 +20,6 @@ type Props = {
 };
 
 class SpeciesPanelElement extends React.Component<Props> {
-
   onSpeciesSelected = () => {
     const { species, onPress } = this.props;
     onPress && onPress(species);
@@ -44,7 +43,7 @@ class SpeciesPanelElement extends React.Component<Props> {
           numberOfLines={1}
           ellipsizeMode='tail'
           textColor={elementColor}
-        >{species.localName}
+        >{this.props.language === 'no' ? species.localName : species.latinName}
         </Text>
       </View>
     );

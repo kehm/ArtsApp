@@ -106,7 +106,7 @@ android {
         applicationId "com.bioceed.artsapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 12
+        versionCode 15
         versionName "2.0.1"
     }
     splits {
@@ -148,6 +148,7 @@ def enableHermes = project.ext.react.get("enableHermes", true);
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 dependencies {
+    implementation project(':@react-native-community_picker')
     implementation project(':@react-native-community_async-storage')
     implementation project(':@react-native-community_geolocation')
     implementation project(':rn-fetch-blob')

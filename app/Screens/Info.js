@@ -160,7 +160,7 @@ class Info extends React.PureComponent {
         { cancelable: false }
       );
     } else if (this.props.isConnected === true) {
-      this.props.actions.downloadKey(this.props.selectedKey.keyWeb).catch(() => {
+      this.props.actions.downloadKey(this.props.selectedKey.keyWeb).catch((err) => {
         new Alert.alert(
           "",
           this.props.strings.noNetwork,

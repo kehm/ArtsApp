@@ -105,7 +105,7 @@ class SpeciesElement extends React.PureComponent {
                       : styles.text1
                   }
                 >
-                  {this.props.localName}
+                  {this.props.language === 'no' ? this.props.localName : this.props.latinName}
                 </Text>
               </Row>
               <Row>
@@ -116,7 +116,7 @@ class SpeciesElement extends React.PureComponent {
                       : styles.text2
                   }
                 >
-                  {this.props.latinName}
+                  {this.props.language === 'no' ? this.props.latinName : this.props.localName}
                 </Text>
               </Row>
               <Row>

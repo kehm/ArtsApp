@@ -171,11 +171,11 @@ class SpeciesLeft extends React.PureComponent {
                         visible={this.state.openImages}
                         onRequestClose={() => this.setState({ openImages: false })}
                     />
-                    <View style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topContainer : styles.topContainer}>
+                    <View style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.topContainer : styles.topContainer, deviceInfoModule.getModel().includes("iPhone 11") ? { "top": 128 } : undefined]}>
                         <Text style={this.props.deviceTypeAndroidTablet ? androidTabletStyles.topText : styles.topText}>{this.props.strings.speciesViewAll} {this.props.strings.imageClickable}.</Text>
                     </View>
                     <Content style={[this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabStyle : styles.tabStyle,
-                    deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 10} : undefined]}>
+                    deviceInfoModule.getModel().includes("iPhone 11") ? {"top" : 56 } : undefined]}>
                         <Tabs>
                             <Tab heading={this.props.strings.possible} textStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}
                                 activeTextStyle={this.props.deviceTypeAndroidTablet ? androidTabletStyles.tabTextStyle : styles.tabTextStyle}

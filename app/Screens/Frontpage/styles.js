@@ -55,6 +55,7 @@ export const styles = StyleSheet.create({
     paddingRight: 4
   },
   icon: {
+    marginLeft: 4,
     marginTop: 4,
   },
   iconContainer: {

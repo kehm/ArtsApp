@@ -28,6 +28,9 @@ const DEFAULT_STATE = {
   modalOpen: false,
   getGerbyList: false,
   nerby_updatedErrorBool: false,
+  county: '',
+  municipality: '',
+  place: ''
 };
 
 export default function (state = DEFAULT_STATE, actions) {
@@ -78,15 +81,15 @@ export default function (state = DEFAULT_STATE, actions) {
         insertObs: 'fail',
         insertObsError: actions.payload
       };
-    case `${actionTypes.UPDATE_OBSERVATION_COORDINATES}_LOADING`:
+    case `${actionTypes.UPDATE_OBSERVATION}_LOADING`:
       return {
         ...state,
       };
-    case `${actionTypes.UPDATE_OBSERVATION_COORDINATES}_SUCCESS`:
+    case `${actionTypes.UPDATE_OBSERVATION}_SUCCESS`:
       return {
         ...state,
       };
-    case `${actionTypes.UPDATE_OBSERVATION_COORDINATES}_ERROR`:
+    case `${actionTypes.UPDATE_OBSERVATION}_ERROR`:
       return {
         ...state,
       };
@@ -129,6 +132,13 @@ export default function (state = DEFAULT_STATE, actions) {
         nerby_updatedError: actions.payload,
         nerby_updatedErrorBool: true,
         nerby_updated_loading: false,
+      };
+    case actionTypes.SET_OBSERVATION_LOCATION:
+      return {
+        ...state,
+        county: actions.county,
+        municipality: actions.municipality,
+        place: actions.place
       };
     default:
       return state;
